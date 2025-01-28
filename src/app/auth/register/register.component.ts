@@ -14,7 +14,7 @@ export class RegisterComponent {
   constructor(private authSvc: AuthService, private router: Router) {}
 
   register() {
-    this.authSvc.register(this.formData).subscribe((res) => {
+    this.authSvc.registerUser(this.formData).subscribe((res) => {
       this.router.navigate(['/auth/login']);
       alert('registrazione effettuata correttamente');
     });
