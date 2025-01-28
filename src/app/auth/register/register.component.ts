@@ -23,6 +23,7 @@ export class RegisterComponent implements OnInit {
 
   ngOnInit() {
     this.form = this.fb.group({
+      userType: ['user', Validators.required], // Aggiungi questo
       username: ['', Validators.required],
       name: ['', Validators.required],
       surname: ['', Validators.required],
@@ -31,6 +32,23 @@ export class RegisterComponent implements OnInit {
       avatar: [null],
       ragioneSociale: [''],
       partitaIva: [''],
+    });
+
+    // Aggiungi questo per gestire i validators dinamicamente
+    this.form.get('userType')?.valueChanges.subscribe((value) => {
+      const ragioneSocialeControl = this.form.get('ragioneSociale');
+      const partitaIvaControl = this.form.get('partitaIva');
+
+      if (value === 'reseller') {
+        ragioneSocialeControl?.setValidators(Validators.required);
+        partitaIvaControl?.setValidators(Validators.required);
+      } else {
+        ragioneSocialeControl?.clearValidators();
+        partitaIvaControl?.clearValidators();
+      }
+
+      ragioneSocialeControl?.updateValueAndValidity();
+      partitaIvaControl?.updateValueAndValidity();
     });
   }
 
