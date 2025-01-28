@@ -7,6 +7,7 @@ import { iAccessData } from '../interfaces/i-access-data';
 import { Router } from '@angular/router';
 import { iUser } from '../interfaces/i-user';
 import { iLoginRequest } from '../interfaces/i-login-request';
+import { iReseller } from '../interfaces/i-reseller';
 
 @Injectable({
   providedIn: 'root',
@@ -34,10 +35,27 @@ export class AuthService {
     this.restoreUser();
   }
 
-  registerUser(newUser: Partial<iUser>) {
-    return this.http.post<iAccessData>(this.registerUserUrl, newUser); //faccio la chiamata a register e aggiungo il newUser, restituisce un iAccessData con le sue 2 proprietà quindi (accessToken e user)
+  //endpoint per registrare un nuovo utente normale
+  registerUser(userData: Partial<iUser>, avatar?: File) {
+    const formData = new FormData();
+    formData.append('appUser', JSON.stringify(userData));
+    if (avatar) {
+      formData.append('avatar', avatar);
+    }
+    return this.http.post<iUser>(this.registerUserUrl, formData);
   }
 
+  //endpoint per registrare un nuovo rivenditore
+  registerReseller(resellerData: iReseller, avatar?: File) {
+    const formData = new FormData();
+    formData.append('appReseller', JSON.stringify(resellerData));
+    if (avatar) {
+      formData.append('avatar', avatar);
+    }
+    return this.http.post<iReseller>(this.registerResellerUrl, formData);
+  }
+
+  //metodo per ottenere il ruolo dell'utente loggato e quindi smistarlo nel suo component (da login.component)
   getUserRole(): string | null {
     const accessData = this.authSubject$.value;
     if (!accessData) return null;
