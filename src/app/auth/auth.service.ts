@@ -14,7 +14,8 @@ import { iLoginRequest } from '../interfaces/i-login-request';
 export class AuthService {
   jwtHelper: JwtHelperService = new JwtHelperService();
 
-  registerUrl: string = environment.registerUrl;
+  registerUserUrl: string = environment.registerUserUrl;
+  registerResellerUrl: string = environment.registerResellerUrl;
   loginUrl: string = environment.loginUrl;
   autoLogoutTimer: any;
 
@@ -33,8 +34,8 @@ export class AuthService {
     this.restoreUser();
   }
 
-  register(newUser: Partial<iUser>) {
-    return this.http.post<iAccessData>(this.registerUrl, newUser); //faccio la chiamata a register e aggiungo il newUser, restituisce un iAccessData con le sue 2 proprietà quindi (accessToken e user)
+  registerUser(newUser: Partial<iUser>) {
+    return this.http.post<iAccessData>(this.registerUserUrl, newUser); //faccio la chiamata a register e aggiungo il newUser, restituisce un iAccessData con le sue 2 proprietà quindi (accessToken e user)
   }
 
   getUserRole(): string | null {
