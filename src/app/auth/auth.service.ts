@@ -36,22 +36,12 @@ export class AuthService {
   }
 
   //endpoint per registrare un nuovo utente normale
-  registerUser(userData: Partial<iUser>, avatar?: File) {
-    const formData = new FormData();
-    formData.append('appUser', JSON.stringify(userData));
-    if (avatar) {
-      formData.append('avatar', avatar);
-    }
+  registerUser(formData: FormData) {
     return this.http.post<iUser>(this.registerUserUrl, formData);
   }
 
   //endpoint per registrare un nuovo rivenditore
-  registerReseller(resellerData: iReseller, avatar?: File) {
-    const formData = new FormData();
-    formData.append('appReseller', JSON.stringify(resellerData));
-    if (avatar) {
-      formData.append('avatar', avatar);
-    }
+  registerReseller(formData: FormData) {
     return this.http.post<iReseller>(this.registerResellerUrl, formData);
   }
 

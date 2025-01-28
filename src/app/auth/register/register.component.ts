@@ -23,7 +23,7 @@ export class RegisterComponent implements OnInit {
 
   ngOnInit() {
     this.form = this.fb.group({
-      userType: ['user', Validators.required], // Aggiungi questo
+      userType: ['user', Validators.required],
       username: ['', Validators.required],
       name: ['', Validators.required],
       surname: ['', Validators.required],
@@ -34,8 +34,8 @@ export class RegisterComponent implements OnInit {
       partitaIva: [''],
     });
 
-    // Aggiungi questo per gestire i validators dinamicamente
     this.form.get('userType')?.valueChanges.subscribe((value) => {
+      this.userType = value;
       const ragioneSocialeControl = this.form.get('ragioneSociale');
       const partitaIvaControl = this.form.get('partitaIva');
 
@@ -62,14 +62,20 @@ export class RegisterComponent implements OnInit {
     event.preventDefault(); // Prevenire il comportamento predefinito del form
 
     if (this.form.valid) {
-      const formData: Partial<iUser> = {
-        username: this.form.value.username,
-        name: this.form.value.name,
-        surname: this.form.value.surname,
-        email: this.form.value.email,
-        password: this.form.value.password,
-        avatar: this.avatarFile ? this.avatarFile.name : '',
-      };
+      const formData = new FormData();
+      formData.append(
+        'appUser',
+        JSON.stringify({
+          username: this.form.value.username,
+          name: this.form.value.name,
+          surname: this.form.value.surname,
+          email: this.form.value.email,
+          password: this.form.value.password,
+        })
+      );
+      if (this.avatarFile) {
+        formData.append('avatar', this.avatarFile);
+      }
 
       if (this.userType === 'user') {
         this.authSvc.registerUser(formData).subscribe((res) => {
@@ -77,13 +83,10 @@ export class RegisterComponent implements OnInit {
           alert('Registrazione utente effettuata correttamente');
         });
       } else if (this.userType === 'reseller') {
-        const resellerFormData: iReseller = {
-          ...formData,
-          ragioneSociale: this.form.value.ragioneSociale,
-          partitaIva: this.form.value.partitaIva,
-        };
+        formData.append('ragioneSociale', this.form.value.ragioneSociale);
+        formData.append('partitaIva', this.form.value.partitaIva);
 
-        this.authSvc.registerReseller(resellerFormData).subscribe((res) => {
+        this.authSvc.registerReseller(formData).subscribe((res) => {
           this.router.navigate(['/auth/login']);
           alert('Registrazione rivenditore effettuata correttamente');
         });
