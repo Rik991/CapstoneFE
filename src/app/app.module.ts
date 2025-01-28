@@ -9,12 +9,18 @@ import {
   withInterceptorsFromDi,
 } from '@angular/common/http';
 import { TokenInterceptor } from './auth/token.interceptor';
-import { LandingPagwComponent } from './pages/landing-pagw/landing-pagw.component';
-import { LandingPageComponent } from './pages/landing-page/landing-page.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { NavbarComponent } from './main-components/navbar/navbar.component';
+import { FooterComponent } from './main-components/footer/footer.component';
+import { LandingPageComponent } from './main-components/landing-page/landing-page.component';
 
 @NgModule({
-  declarations: [AppComponent, LandingPagwComponent, LandingPageComponent],
+  declarations: [
+    AppComponent,
+    NavbarComponent,
+    FooterComponent,
+    LandingPageComponent,
+  ],
   imports: [BrowserModule, AppRoutingModule, NgbModule],
   providers: [
     provideHttpClient(withInterceptorsFromDi()),
