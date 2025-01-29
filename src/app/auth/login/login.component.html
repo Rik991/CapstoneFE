@@ -1,12 +1,13 @@
 <div class="container">
   <h1>Login</h1>
-  <form>
+  <form (ngSubmit)="login()" #loginForm="ngForm">
     <input
       type="text"
       class="form-control mb-3"
       placeholder="username"
       name="username"
       [(ngModel)]="formData.username"
+      required
     />
     <input
       type="password"
@@ -14,7 +15,10 @@
       placeholder="Password"
       name="password"
       [(ngModel)]="formData.password"
+      required
     />
-    <button (click)="login()" class="btn btn-success">Accedi</button>
+    <button class="btn btn-success" type="submit" [disabled]="!loginForm.valid">
+      Accedi
+    </button>
   </form>
 </div>

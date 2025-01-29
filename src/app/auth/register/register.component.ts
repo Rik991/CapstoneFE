@@ -4,6 +4,7 @@ import { AuthService } from '../auth.service';
 import { Router } from '@angular/router';
 import { iUser } from '../../interfaces/i-user';
 import { iReseller } from '../../interfaces/i-reseller';
+import { take } from 'rxjs';
 
 @Component({
   selector: 'app-register',
@@ -59,8 +60,6 @@ export class RegisterComponent implements OnInit {
   }
 
   register(event: Event) {
-    event.preventDefault(); // Prevenire il comportamento predefinito del form
-
     if (this.form.valid) {
       const formData = new FormData();
       formData.append(
@@ -78,18 +77,34 @@ export class RegisterComponent implements OnInit {
       }
 
       if (this.userType === 'user') {
-        this.authSvc.registerUser(formData).subscribe((res) => {
-          this.router.navigate(['/auth/login']);
-          alert('Registrazione utente effettuata correttamente');
-        });
+        this.authSvc
+          .registerUser(formData)
+          .pipe(take(1))
+          .subscribe({
+            next: (res) => {
+              this.router.navigate(['/auth/login']);
+              alert('Registrazione utente effettuata correttamente');
+            },
+            error: (err) => {
+              alert('Errore durante la registrazione');
+            },
+          });
       } else if (this.userType === 'reseller') {
         formData.append('ragioneSociale', this.form.value.ragioneSociale);
         formData.append('partitaIva', this.form.value.partitaIva);
 
-        this.authSvc.registerReseller(formData).subscribe((res) => {
-          this.router.navigate(['/auth/login']);
-          alert('Registrazione rivenditore effettuata correttamente');
-        });
+        this.authSvc
+          .registerReseller(formData)
+          .pipe(take(1)) // Assicurati che la sottoscrizione venga completata
+          .subscribe({
+            next: (res) => {
+              this.router.navigate(['/auth/login']);
+              alert('Registrazione rivenditore effettuata correttamente');
+            },
+            error: (err) => {
+              alert('Errore durante la registrazione');
+            },
+          });
       }
     }
   }
