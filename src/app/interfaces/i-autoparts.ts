@@ -8,4 +8,6 @@ export interface iAutopart {
   categoria: string;
   immagine: string;
   veicoliCompatibili: iVehicle[];
+  prezzo: number;
+  ragioneSociale: string;
 }
