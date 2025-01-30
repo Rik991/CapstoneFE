@@ -2,7 +2,9 @@ import { Component } from '@angular/core';
 import { iUser } from '../interfaces/i-user';
 import { AuthService } from '../auth/auth.service';
 import { AutopartsService } from '../services/autopart.service';
-import { iAutopart } from '../interfaces/i-autoparts';
+import { iAutopart } from '../interfaces/i-autopart';
+import { iVehicle } from '../interfaces/i-vehicle';
+import { VehicleService } from '../services/vehicle.service';
 
 @Component({
   selector: 'app-user',
@@ -12,10 +14,12 @@ import { iAutopart } from '../interfaces/i-autoparts';
 export class UserComponent {
   user!: iUser | undefined;
   autoPartsArray: iAutopart[] = [];
+  vehicles: iVehicle[] = [];
 
   constructor(
     private authSvc: AuthService,
-    private autoPartsSvc: AutopartsService
+    private autoPartsSvc: AutopartsService,
+    private vehicleSvc: VehicleService
   ) {}
 
   ngOnInit() {
@@ -25,6 +29,10 @@ export class UserComponent {
 
     this.autoPartsSvc.getAllAutoparts().subscribe((autoparts) => {
       this.autoPartsArray = autoparts;
+    });
+
+    this.vehicleSvc.getAllVehicles().subscribe((vehicles) => {
+      this.vehicles = vehicles;
     });
   }
 }

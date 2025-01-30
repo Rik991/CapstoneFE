@@ -1,7 +1,9 @@
 export interface iVehicle {
   id: number;
-  nome: string;
   marca: string;
   modello: string;
-  anno: number;
+  tipiMotore: string[];
+  carrozzeria: string;
+  inizioProduzione: number;
+  fineProduzione?: number;
 }
