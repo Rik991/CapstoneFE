@@ -20,4 +20,8 @@ export class AutopartsService {
   createAutopart(autopart: iAutopart): Observable<iAutopart> {
     return this.http.post<iAutopart>(this.autopartsUrl, autopart);
   }
+
+  getAutopartByResellerId(resellerId: number): Observable<iAutopart[]> {
+    return this.http.get<iAutopart[]>(`${this.autopartsUrl}/${resellerId}`);
+  }
 }

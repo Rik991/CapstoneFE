@@ -26,7 +26,7 @@ const routes: Routes = [
     loadChildren: () =>
       import('./reseller/reseller.module').then((m) => m.ResellerModule),
   },
-  { path: 'reseller/new-autopart', component: NewAutopartComponent },
+  { path: 'new-autopart', component: NewAutopartComponent },
 ];
 
 @NgModule({

@@ -13,6 +13,6 @@ export class ResellerService {
   constructor(private http: HttpClient) {}
 
   getResellerById(id: number): Observable<iReseller> {
-    return this.http.get<iReseller>(`${this.resellerUrl}/${id}`);
+    return this.http.get<iReseller>(`${this.resellerUrl}/reseller/${id}`);
   }
 }

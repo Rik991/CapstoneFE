@@ -7,7 +7,7 @@ export enum Condizione {
 }
 
 export interface iAutopart {
-  id: number;
+  id?: number;
   nome: string;
   codiceOe: string;
   descrizione: string;

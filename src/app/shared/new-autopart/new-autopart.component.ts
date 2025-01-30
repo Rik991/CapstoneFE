@@ -5,6 +5,7 @@ import { AuthService } from '../../auth/auth.service';
 import { iReseller } from '../../interfaces/i-reseller';
 import { VehicleService } from '../../services/vehicle.service';
 import { iVehicle } from '../../interfaces/i-vehicle';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-new-autopart',
@@ -22,7 +23,8 @@ export class NewAutopartComponent {
     private fb: FormBuilder,
     private autopartSvc: AutopartsService,
     private authSvc: AuthService,
-    private vehicleSvc: VehicleService
+    private vehicleSvc: VehicleService,
+    private router: Router
   ) {}
 
   ngOnInit() {
@@ -68,5 +70,9 @@ export class NewAutopartComponent {
         this.modelliFiltrati = [];
       });
     }
+  }
+
+  goResellerHome() {
+    this.router.navigate(['/reseller']);
   }
 }

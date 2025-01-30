@@ -1,5 +1,27 @@
 Welcome {{ reseller?.name + " " + reseller?.surname }}
 
-<button class="btn btn-primary" routerLink="/reseller/newAutopart">
+<button class="btn btn-primary" routerLink="/reseller/new-autopart">
   Carica prodotto
 </button>
+
+<h2>I tuoi prodotti</h2>
+<div class="row">
+  <div
+    *ngFor="let autopart of autopartsByReseller"
+    class="col-12 col-md-6 col-lg-3 mb-4"
+  >
+    <div class="card h-100">
+      <img
+        [src]="autopart.immagine"
+        class="card-img-top img-fluid p-3"
+        alt="{{ autopart.nome }}"
+      />
+      <div class="card-body">
+        <h5 class="card-title">{{ autopart.nome }}</h5>
+        <p class="card-text">Prezzo: {{ autopart.codiceOe }}€</p>
+        <p class="card-text">Codice OE: {{ autopart.codiceOe }}</p>
+        <p class="card-text">Modello:</p>
+      </div>
+    </div>
+  </div>
+</div>
