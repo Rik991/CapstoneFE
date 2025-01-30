@@ -1,4 +1,10 @@
-import { iVehicle } from './i-vehicle';
+import { iResellerInfo } from './i-reseller-info';
+
+export enum Condizione {
+  NUOVO = 'NUOVO',
+  USATO = 'USATO',
+  RICONDIZIONATO = 'RICONDIZIONATO',
+}
 
 export interface iAutopart {
   id: number;
@@ -6,8 +12,7 @@ export interface iAutopart {
   codiceOe: string;
   descrizione: string;
   categoria: string;
+  condizione: Condizione;
   immagine: string;
-  veicoliCompatibili: iVehicle[];
-  prezzo: number;
-  ragioneSociale: string;
+  resellerInfo: iResellerInfo[];
 }
