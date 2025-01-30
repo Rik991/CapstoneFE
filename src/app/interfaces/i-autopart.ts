@@ -13,6 +13,6 @@ export interface iAutopart {
   descrizione: string;
   categoria: string;
   condizione: Condizione;
-  immagine: string;
+  immagine?: string;
   resellerInfo: iResellerInfo[];
 }

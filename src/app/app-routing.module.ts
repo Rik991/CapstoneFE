@@ -1,6 +1,7 @@
 import { NgModule, Component } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { LandingPageComponent } from './main-components/landing-page/landing-page.component';
+import { NewAutopartComponent } from './shared/new-autopart/new-autopart.component';
 
 const routes: Routes = [
   {
@@ -25,6 +26,7 @@ const routes: Routes = [
     loadChildren: () =>
       import('./reseller/reseller.module').then((m) => m.ResellerModule),
   },
+  { path: 'reseller/new-autopart', component: NewAutopartComponent },
 ];
 
 @NgModule({

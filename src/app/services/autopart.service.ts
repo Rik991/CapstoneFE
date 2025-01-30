@@ -17,7 +17,7 @@ export class AutopartsService {
     return this.http.get<iAutopart[]>(this.autopartsUrl);
   }
 
-  createAutoparts(autopart: iAutopart) {
-    this.http.post<iAutopart>(this.autopartsUrl, autopart);
+  createAutopart(autopart: iAutopart): Observable<iAutopart> {
+    return this.http.post<iAutopart>(this.autopartsUrl, autopart);
   }
 }

@@ -15,4 +15,14 @@ export class VehicleService {
   getAllVehicles(): Observable<iVehicle[]> {
     return this.http.get<iVehicle[]>(this.vehicleUrl);
   }
+
+  getAllVehicleBrands(): Observable<string[]> {
+    return this.http.get<string[]>(`${this.vehicleUrl}/marche`);
+  }
+
+  getVehicleModelsByBrand(brand: string): Observable<iVehicle[]> {
+    return this.http.get<iVehicle[]>(`${this.vehicleUrl}/bymarca`, {
+      params: { marca: brand },
+    });
+  }
 }

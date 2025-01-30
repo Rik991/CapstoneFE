@@ -33,23 +33,28 @@ export class RegisterComponent implements OnInit {
       avatar: [null],
       ragioneSociale: [''],
       partitaIva: [''],
+      sitoWeb: [''],
     });
 
     this.form.get('userType')?.valueChanges.subscribe((value) => {
       this.userType = value;
       const ragioneSocialeControl = this.form.get('ragioneSociale');
       const partitaIvaControl = this.form.get('partitaIva');
+      const sitoWebControl = this.form.get('sitoWeb');
 
       if (value === 'reseller') {
         ragioneSocialeControl?.setValidators(Validators.required);
         partitaIvaControl?.setValidators(Validators.required);
+        sitoWebControl?.setValidators(Validators.required);
       } else {
         ragioneSocialeControl?.clearValidators();
         partitaIvaControl?.clearValidators();
+        sitoWebControl?.clearValidators();
       }
 
       ragioneSocialeControl?.updateValueAndValidity();
       partitaIvaControl?.updateValueAndValidity();
+      sitoWebControl?.updateValueAndValidity();
     });
   }
 
@@ -92,6 +97,7 @@ export class RegisterComponent implements OnInit {
       } else if (this.userType === 'reseller') {
         formData.append('ragioneSociale', this.form.value.ragioneSociale);
         formData.append('partitaIva', this.form.value.partitaIva);
+        formData.append('sitoWeb', this.form.value.sitoWeb);
 
         this.authSvc
           .registerReseller(formData)

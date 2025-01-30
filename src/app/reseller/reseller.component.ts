@@ -18,6 +18,4 @@ export class ResellerComponent {
       this.reseller = user as iReseller;
     });
   }
-
-  createAutopart() {}
 }

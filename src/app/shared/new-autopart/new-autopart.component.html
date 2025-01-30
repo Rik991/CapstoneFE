@@ -1,0 +1,88 @@
+<div class="container">
+  <h2>Inserisci Nuovo Prodotto</h2>
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div class="mb-3">
+      <label for="nome" class="form-label">Nome</label>
+      <input
+        type="text"
+        id="nome"
+        formControlName="nome"
+        class="form-control"
+      />
+    </div>
+    <div class="mb-3">
+      <label for="codiceOe" class="form-label">Codice OE</label>
+      <input
+        type="text"
+        id="codiceOe"
+        formControlName="codiceOe"
+        class="form-control"
+      />
+    </div>
+    <div class="mb-3">
+      <label for="descrizione" class="form-label">Descrizione</label>
+      <textarea
+        id="descrizione"
+        formControlName="descrizione"
+        class="form-control"
+      ></textarea>
+    </div>
+    <div class="mb-3">
+      <label for="categoria" class="form-label">Categoria</label>
+      <input
+        type="text"
+        id="categoria"
+        formControlName="categoria"
+        class="form-control"
+      />
+    </div>
+    <div class="mb-3">
+      <label for="condizione" class="form-label">Condizione</label>
+      <select id="condizione" formControlName="condizione" class="form-select">
+        <option value="NUOVO">Nuovo</option>
+        <option value="USATO">Usato</option>
+        <option value="RICONDIZIONATO">Ricondizionato</option>
+      </select>
+    </div>
+    <div class="mb-3">
+      <label for="immagine" class="form-label">Immagine</label>
+      <input
+        type="text"
+        id="immagine"
+        formControlName="immagine"
+        class="form-control"
+      />
+    </div>
+    <div class="mb-3">
+      <label for="prezzo" class="form-label">Prezzo</label>
+      <input
+        type="number"
+        id="prezzo"
+        formControlName="prezzo"
+        class="form-control"
+      />
+    </div>
+    <div class="mb-3">
+      <label for="marca" class="form-label">Marca</label>
+      <select id="marca" class="form-select" (change)="onMarcaChange($event)">
+        <option *ngFor="let marca of marche" [value]="marca">
+          {{ marca }}
+        </option>
+      </select>
+    </div>
+    <div class="mb-3">
+      <label for="modello" class="form-label">Modello</label>
+      <select
+        id="modello"
+        class="form-select"
+        formControlName="veicoliCompatibiliIds"
+        multiple
+      >
+        <option *ngFor="let vehicle of modelliFiltrati" [value]="vehicle.id">
+          {{ vehicle.modello }}
+        </option>
+      </select>
+    </div>
+    <button type="submit" class="btn btn-primary">Inserisci</button>
+  </form>
+</div>

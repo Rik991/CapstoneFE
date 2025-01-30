@@ -51,6 +51,21 @@
           La partita IVA è richiesta
         </div>
       </div>
+      <div class="mb-3">
+        <label for="sitoWeb" class="form-label">Sito web</label>
+        <input
+          id="sitoWeb"
+          class="form-control"
+          type="text"
+          formControlName="sitoWeb"
+        />
+        <div
+          *ngIf="form.get('sitoWeb')?.invalid && form.get('sitoWeb')?.touched"
+          class="text-danger"
+        >
+          La partita IVA è richiesta
+        </div>
+      </div>
     </div>
 
     <div class="mb-3">
