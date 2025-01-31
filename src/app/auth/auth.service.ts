@@ -52,8 +52,7 @@ export class AuthService {
 
     const token = accessData.accessToken;
     const decodedToken = this.jwtHelper.decodeToken(token);
-    // Assuming your JWT token contains a 'roles' claim
-    return decodedToken.roles[0]; // Gets first role
+    return decodedToken.roles[0];
   }
   getCurrentUser(): iUser | iReseller | null {
     return this.authSubject$.value?.user || null;

@@ -12,61 +12,6 @@
         <option value="reseller">Rivenditore</option>
       </select>
     </div>
-    <div *ngIf="form.get('userType')?.value === 'reseller'">
-      <div class="mb-3">
-        <label for="ragioneSociale" class="form-label">Ragione Sociale</label>
-        <input
-          id="ragioneSociale"
-          class="form-control"
-          type="text"
-          formControlName="ragioneSociale"
-          required
-        />
-        <div
-          *ngIf="
-            form.get('ragioneSociale')?.invalid &&
-            form.get('ragioneSociale')?.touched
-          "
-          class="text-danger"
-        >
-          La ragione sociale è richiesta
-        </div>
-      </div>
-
-      <div class="mb-3">
-        <label for="partitaIva" class="form-label">Partita IVA</label>
-        <input
-          id="partitaIva"
-          class="form-control"
-          type="text"
-          formControlName="partitaIva"
-          required
-        />
-        <div
-          *ngIf="
-            form.get('partitaIva')?.invalid && form.get('partitaIva')?.touched
-          "
-          class="text-danger"
-        >
-          La partita IVA è richiesta
-        </div>
-      </div>
-      <div class="mb-3">
-        <label for="sitoWeb" class="form-label">Sito web</label>
-        <input
-          id="sitoWeb"
-          class="form-control"
-          type="text"
-          formControlName="sitoWeb"
-        />
-        <div
-          *ngIf="form.get('sitoWeb')?.invalid && form.get('sitoWeb')?.touched"
-          class="text-danger"
-        >
-          La partita IVA è richiesta
-        </div>
-      </div>
-    </div>
 
     <div class="mb-3">
       <label for="name" class="form-label">Nome</label>
@@ -150,6 +95,61 @@
         class="text-danger"
       >
         Inserisci una password di almeno 6 caratteri
+      </div>
+    </div>
+    <div *ngIf="form.get('userType')?.value === 'reseller'">
+      <div class="mb-3">
+        <label for="ragioneSociale" class="form-label">Ragione Sociale</label>
+        <input
+          id="ragioneSociale"
+          class="form-control"
+          type="text"
+          formControlName="ragioneSociale"
+          required
+        />
+        <div
+          *ngIf="
+            form.get('ragioneSociale')?.invalid &&
+            form.get('ragioneSociale')?.touched
+          "
+          class="text-danger"
+        >
+          La ragione sociale è richiesta
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label for="partitaIva" class="form-label">Partita IVA</label>
+        <input
+          id="partitaIva"
+          class="form-control"
+          type="text"
+          formControlName="partitaIva"
+          required
+        />
+        <div
+          *ngIf="
+            form.get('partitaIva')?.invalid && form.get('partitaIva')?.touched
+          "
+          class="text-danger"
+        >
+          La partita IVA è richiesta
+        </div>
+      </div>
+      <div class="mb-3">
+        <label for="sitoWeb" class="form-label">Sito web</label>
+        <input
+          id="sitoWeb"
+          class="form-control"
+          type="text"
+          formControlName="sitoWeb"
+        />
+        <div
+          *ngIf="form.get('sitoWeb')?.invalid && form.get('sitoWeb')?.touched"
+          class="text-danger"
+        >
+          La partita IVA è richiesta
+        </div>
       </div>
     </div>
 
