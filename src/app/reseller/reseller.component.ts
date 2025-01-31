@@ -1,16 +1,17 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../auth/auth.service';
 import { iReseller } from '../interfaces/i-reseller';
-import { iAutopart } from '../interfaces/i-autopart';
+import { iAutopartResponse } from '../interfaces/i-autopart-response';
 import { AutopartsService } from '../services/autopart.service';
+import { IPage } from '../interfaces/i-page';
 
 @Component({
   selector: 'app-reseller',
   templateUrl: './reseller.component.html',
-  styleUrl: './reseller.component.scss',
+  styleUrls: ['./reseller.component.scss'],
 })
-export class ResellerComponent {
-  autoparts: iAutopart[] = [];
+export class ResellerComponent implements OnInit {
+  autoparts: iAutopartResponse[] = [];
   reseller!: iReseller;
 
   constructor(
@@ -19,12 +20,26 @@ export class ResellerComponent {
   ) {}
 
   ngOnInit() {
-    const resellerId = this.authSvc.authSubject$.value?.user.id;
-    if (resellerId) {
-      this.autopartSvc.getAutopartByResellerId(resellerId).subscribe({
-        next: (autoparts) => (this.autoparts = autoparts),
-        error: (err) => console.error('Error loading autoparts:', err),
-      });
+    this.authSvc.user$.subscribe((user) => {
+      this.reseller = user as iReseller;
+      if (this.reseller && this.reseller.id) {
+        this.loadAutoparts();
+      }
+    });
+  }
+
+  private loadAutoparts(): void {
+    if (!this.reseller || !this.reseller.id) {
+      console.error('Reseller ID is not available');
+      return;
     }
+
+    this.autopartSvc.getByReseller(this.reseller.id).subscribe({
+      next: (page: IPage<iAutopartResponse>) => {
+        this.autoparts = page.content;
+        console.log('Autoparts loaded:', this.autoparts); // Debug
+      },
+      error: (err) => console.error('Error loading autoparts:', err),
+    });
   }
 }

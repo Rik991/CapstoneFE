@@ -14,7 +14,7 @@
 
   <div class="row">
     <div
-      *ngFor="let autopart of autoparts"
+      *ngFor="let autopart of autoparts; let i = index"
       class="col-12 col-md-6 col-lg-4 mb-4"
     >
       <div class="card h-100">
@@ -30,9 +30,11 @@
 
           <div class="d-flex justify-content-between align-items-center">
             <div>
-              <span class="badge bg-primary me-2">{{
-                autopart.categoria
-              }}</span>
+              <span class="badge bg-primary me-2">
+                <a class="text-white" href="{{ autopart.reseller.sitoWeb }}">{{
+                  autopart.reseller.ragioneSociale
+                }}</a>
+              </span>
               <span class="badge bg-secondary">{{ autopart.condizione }}</span>
             </div>
             <h4 class="text-success">
@@ -47,6 +49,19 @@
             <button class="btn btn-outline-danger">
               <i class="bi bi-heart"></i> Preferiti
             </button>
+            <div class="d-flex justify-content-center align-items-center mt-2">
+              <p>
+                {{ autopart.veicoliCompatibili.length }} veicoli compatibili
+              </p>
+              <button class="btn border-black" (click)="toggleExpand(i)">
+                {{ expanded[i] ? "Nascondi" : "Mostra" }}
+              </button>
+            </div>
+            <ul *ngIf="expanded[i]">
+              <li *ngFor="let vehicle of autopart.veicoliCompatibili">
+                {{ vehicle.marca }}, {{ vehicle.modello }}
+              </li>
+            </ul>
           </div>
         </div>
       </div>

@@ -50,12 +50,6 @@ export class AutopartsService {
     );
   }
 
-  getAutopartByResellerId(resellerId: number): Observable<iAutopart[]> {
-    return this.http.get<iAutopart[]>(
-      `${this.autopartsUrl}?resellerId=${resellerId}`
-    );
-  }
-
   searchAutoparts(
     filters: any,
     page: number = 0,

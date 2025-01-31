@@ -15,6 +15,7 @@ import { iAutopartResponse } from '../interfaces/i-autopart-response';
 export class UserComponent {
   user!: iUser | undefined;
   autoparts: iAutopartResponse[] = [];
+  expanded: { [key: number]: boolean } = {}; //per espandere la card
   vehicles: iVehicle[] = [];
   currentPage: number = 0;
   pageSize: number = 10;
@@ -58,5 +59,9 @@ export class UserComponent {
     this.currentPage = event.pageIndex;
     this.pageSize = event.pageSize;
     this.loadAutoparts();
+  }
+
+  toggleExpand(index: number) {
+    this.expanded[index] = !this.expanded[index];
   }
 }

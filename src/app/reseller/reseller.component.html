@@ -1,3 +1,5 @@
+<h1>Benvenuto {{ reseller.username }}</h1>
+
 <button class="btn btn-primary" routerLink="/reseller/new-autopart">
   Carica prodotto
 </button>
@@ -13,9 +15,10 @@
       />
       <div class="card-body">
         <h5 class="card-title">{{ autopart.nome }}</h5>
-        <p class="card-text">Prezzo: {{ autopart.prezzo }}€</p>
+        <p class="card-text">
+          Prezzo: {{ autopart.prezzi[0].importo | currency : "EUR" }}
+        </p>
         <p class="card-text">Codice OE: {{ autopart.codiceOe }}</p>
-        <p class="card-text">Modello:{{ autopart.veicoliCompatibiliIds[0] }}</p>
       </div>
     </div>
   </div>
