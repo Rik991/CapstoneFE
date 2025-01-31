@@ -1,47 +1,52 @@
+<!-- user.component.html -->
 <div class="container">
   <div class="row mb-5">
     <div class="col">
-      <h1>Welcome {{ user?.username }}</h1>
+      <h1>Benvenuto {{ user?.username }}</h1>
     </div>
   </div>
+
   <div class="row">
     <div class="col">
-      <h2>Novità</h2>
+      <h2>Ultimi ricambi aggiunti</h2>
     </div>
   </div>
+
   <div class="row">
     <div
-      *ngFor="let autopart of autoPartsArray"
-      class="col-12 col-md-6 col-lg-3 mb-4"
+      *ngFor="let autopart of autoparts"
+      class="col-12 col-md-6 col-lg-4 mb-4"
     >
       <div class="card h-100">
         <img
-          [src]="autopart.immagine"
+          [src]="autopart.immagine || 'assets/placeholder.png'"
           class="card-img-top img-fluid p-3"
           alt="{{ autopart.nome }}"
         />
-        <div
-          class="card-body d-flex flex-column"
-          *ngFor="let reseller of autopart.resellerInfo"
-        >
+
+        <div class="card-body d-flex flex-column">
           <h5 class="card-title">{{ autopart.nome }}</h5>
-          <div class="d-flex mb-2">
-            <p>venduto da:</p>
-            <a href="{{ reseller.sitoWeb }}">
-              {{ reseller.ragioneSociale }}
-            </a>
-          </div>
           <p class="card-text flex-grow-1">{{ autopart.descrizione }}</p>
+
           <div class="d-flex justify-content-between align-items-center">
-            <h2>{{ reseller.prezzo | currency : "EUR" }}</h2>
-            <div class="d-flex gap-2">
-              <button href="#" class="btn btn-outline-danger p-2">
-                <i class="bi bi-cart"></i>
-              </button>
-              <button href="#" class="btn btn-outline-danger p-2">
-                <i class="bi bi-heart"></i>
-              </button>
+            <div>
+              <span class="badge bg-primary me-2">{{
+                autopart.categoria
+              }}</span>
+              <span class="badge bg-secondary">{{ autopart.condizione }}</span>
             </div>
+            <h4 class="text-success">
+              {{ autopart.prezzi[0].importo | currency : "EUR" }}
+            </h4>
+          </div>
+
+          <div class="mt-2">
+            <button class="btn btn-outline-primary me-2">
+              <i class="bi bi-cart"></i> Aggiungi al carrello
+            </button>
+            <button class="btn btn-outline-danger">
+              <i class="bi bi-heart"></i> Preferiti
+            </button>
           </div>
         </div>
       </div>

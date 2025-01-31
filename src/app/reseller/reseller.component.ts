@@ -10,8 +10,8 @@ import { AutopartsService } from '../services/autopart.service';
   styleUrl: './reseller.component.scss',
 })
 export class ResellerComponent {
+  autoparts: iAutopart[] = [];
   reseller!: iReseller;
-  autopartsByReseller: iAutopart[] = [];
 
   constructor(
     private authSvc: AuthService,
@@ -19,15 +19,12 @@ export class ResellerComponent {
   ) {}
 
   ngOnInit() {
-    this.authSvc.user$.subscribe((user) => {
-      this.reseller = user as iReseller;
-    });
-    if (this.reseller && this.reseller.id) {
-      this.autopartSvc
-        .getAutopartByResellerId(this.reseller.id)
-        .subscribe((autoparts) => {
-          this.autopartsByReseller = autoparts;
-        });
+    const resellerId = this.authSvc.authSubject$.value?.user.id;
+    if (resellerId) {
+      this.autopartSvc.getAutopartByResellerId(resellerId).subscribe({
+        next: (autoparts) => (this.autoparts = autoparts),
+        error: (err) => console.error('Error loading autoparts:', err),
+      });
     }
   }
 }

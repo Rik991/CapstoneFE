@@ -55,6 +55,9 @@ export class AuthService {
     // Assuming your JWT token contains a 'roles' claim
     return decodedToken.roles[0]; // Gets first role
   }
+  getCurrentUser(): iUser | iReseller | null {
+    return this.authSubject$.value?.user || null;
+  }
 
   login(authData: iLoginRequest) {
     return this.http.post<iAccessData>(this.loginUrl, authData).pipe(

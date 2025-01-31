@@ -14,5 +14,7 @@ export interface iAutopart {
   categoria: string;
   condizione: Condizione;
   immagine?: string;
-  resellerInfo: iResellerInfo[];
+  prezzo: number;
+  veicoliIds: number[]; // Nome corretto
+  resellerId?: number;
 }
