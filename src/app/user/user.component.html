@@ -1,8 +1,60 @@
-<!-- user.component.html -->
 <div class="container">
   <div class="row mb-5">
     <div class="col">
       <h1>Benvenuto {{ user?.username }}</h1>
+    </div>
+  </div>
+
+  <!-- Filtri di ricerca -->
+  <div class="row mb-4">
+    <div class="col-md-4">
+      <input
+        type="text"
+        class="form-control"
+        placeholder="Codice OE"
+        [(ngModel)]="filters.codiceOe"
+      />
+    </div>
+    <div class="col-md-4">
+      <input
+        type="number"
+        class="form-control"
+        placeholder="Prezzo minimo"
+        [(ngModel)]="filters.minPrice"
+      />
+    </div>
+    <div class="col-md-4">
+      <input
+        type="number"
+        class="form-control"
+        placeholder="Prezzo massimo"
+        [(ngModel)]="filters.maxPrice"
+      />
+    </div>
+  </div>
+  <div class="row mb-4">
+    <div class="col-md-4">
+      <select
+        class="form-control"
+        [(ngModel)]="filters.brand"
+        (change)="onBrandSelected($event)"
+      >
+        <option value="">Seleziona Marca</option>
+        <option *ngFor="let brand of brands" [value]="brand">
+          {{ brand }}
+        </option>
+      </select>
+    </div>
+    <div class="col-md-4">
+      <select class="form-control" [(ngModel)]="filters.model">
+        <option value="">Seleziona Modello</option>
+        <option *ngFor="let model of filteredModels" [value]="model.id">
+          {{ model.marca }} {{ model.modello }}
+        </option>
+      </select>
+    </div>
+    <div class="col-md-4">
+      <button class="btn btn-primary" (click)="searchAutoparts()">Cerca</button>
     </div>
   </div>
 
@@ -27,18 +79,19 @@
         <div class="card-body d-flex flex-column">
           <h5 class="card-title">{{ autopart.nome }}</h5>
           <p class="card-text flex-grow-1">{{ autopart.descrizione }}</p>
+          <h5>Codice Oe: {{ autopart.codiceOe }}</h5>
 
           <div class="d-flex justify-content-between align-items-center">
             <div>
-              <span class="badge bg-primary me-2">
-                <a class="text-white" href="{{ autopart.reseller.sitoWeb }}">{{
+              <span class="badge bg-primary me-2" *ngIf="autopart.reseller">
+                <a class="text-white" [href]="autopart.reseller.sitoWeb">{{
                   autopart.reseller.ragioneSociale
                 }}</a>
               </span>
               <span class="badge bg-secondary">{{ autopart.condizione }}</span>
             </div>
-            <h4 class="text-success">
-              {{ autopart.prezzi[0].importo | currency : "EUR" }}
+            <h4>
+              {{ autopart.prezzi[0]?.importo | currency : "EUR" }}
             </h4>
           </div>
 
@@ -50,11 +103,12 @@
               <i class="bi bi-heart"></i> Preferiti
             </button>
             <div class="d-flex justify-content-center align-items-center mt-2">
-              <p>
-                {{ autopart.veicoliCompatibili.length }} veicoli compatibili
-              </p>
               <button class="btn border-black" (click)="toggleExpand(i)">
-                {{ expanded[i] ? "Nascondi" : "Mostra" }}
+                {{
+                  expanded[i]
+                    ? "Nascondi veicoli compatibili"
+                    : "Mostra veicoli compatibili"
+                }}
               </button>
             </div>
             <ul *ngIf="expanded[i]">
@@ -65,6 +119,32 @@
           </div>
         </div>
       </div>
+    </div>
+  </div>
+
+  <!-- Controllo di paginazione personalizzato -->
+  <div class="row">
+    <div class="col d-flex justify-content-center">
+      <nav aria-label="Page navigation">
+        <ul class="pagination">
+          <li class="page-item" [class.disabled]="currentPage === 0">
+            <a class="page-link" (click)="onPageChange(currentPage - 1)"
+              >Previous</a
+            >
+          </li>
+          <li class="page-item" *ngFor="let page of getPages()">
+            <a class="page-link" (click)="onPageChange(page)">{{ page + 1 }}</a>
+          </li>
+          <li
+            class="page-item"
+            [class.disabled]="currentPage === totalPages - 1"
+          >
+            <a class="page-link" (click)="onPageChange(currentPage + 1)"
+              >Next</a
+            >
+          </li>
+        </ul>
+      </nav>
     </div>
   </div>
 </div>
