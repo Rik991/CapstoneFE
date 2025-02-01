@@ -1,28 +1,28 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { iSearchFilters } from '../../../interfaces/i-search-filters';
 import { VehicleService } from '../../../services/vehicle.service';
-import { debounceTime, distinctUntilChanged } from 'rxjs';
+import { iVehicle } from '../../../interfaces/i-vehicle';
 
-// shared/components/autopart-search/autopart-search.component.ts
 @Component({
   selector: 'app-autopart-search',
   templateUrl: './autopart-search.component.html',
+  styleUrls: ['./autopart-search.component.scss'],
 })
 export class AutopartSearchComponent implements OnInit {
-  @Output() searchChange = new EventEmitter<iSearchFilters>();
-
   searchForm: FormGroup;
   brands: string[] = [];
+  filteredModels: iVehicle[] = [];
 
-  constructor(private fb: FormBuilder, private vehicleService: VehicleService) {
+  @Output() searchChange = new EventEmitter<any>();
+
+  constructor(private fb: FormBuilder, private vehicleSvc: VehicleService) {
     this.searchForm = this.fb.group({
       codiceOe: [''],
+      categoria: [''],
       marca: [''],
       modello: [''],
       minPrezzo: [''],
       maxPrezzo: [''],
-      categoria: [''],
       condizione: [''],
       search: [''],
     });
@@ -30,17 +30,40 @@ export class AutopartSearchComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadBrands();
-
-    this.searchForm.valueChanges
-      .pipe(debounceTime(500), distinctUntilChanged())
-      .subscribe((values) => {
-        this.searchChange.emit(values);
-      });
+    this.searchForm.valueChanges.subscribe((filters) => {
+      if (filters.search) {
+        filters.search = filters.search.toLowerCase();
+      }
+      this.searchChange.emit(filters);
+    });
   }
 
-  private loadBrands(): void {
-    this.vehicleService
-      .getAllVehicleBrands()
-      .subscribe((brands) => (this.brands = brands));
+  loadBrands(): void {
+    this.vehicleSvc.getAllVehicleBrands().subscribe({
+      next: (brands) => (this.brands = brands),
+      error: (err) => console.error('Error loading brands:', err),
+    });
+  }
+
+  onBrandSelected(event: any): void {
+    const brand = event.target.value;
+    this.vehicleSvc.getVehicleModelsByBrand(brand).subscribe({
+      next: (models) => (this.filteredModels = models),
+      error: (err) => console.error('Error loading models:', err),
+    });
+  }
+
+  resetForm(): void {
+    this.searchForm.reset({
+      codiceOe: '',
+      categoria: '',
+      marca: '',
+      modello: '',
+      minPrezzo: '',
+      maxPrezzo: '',
+      condizione: '',
+      search: '',
+    });
+    this.searchChange.emit(this.searchForm.value);
   }
 }

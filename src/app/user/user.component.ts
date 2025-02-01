@@ -39,24 +39,14 @@ export class UserComponent implements OnInit {
     });
 
     this.loadAutoparts();
-    this.loadVehicles();
-    this.loadBrands();
   }
 
   loadAutoparts(): void {
-    // Copia i filtri correnti
-    const filters = { ...this.currentFilters };
-
-    // Se il filtro condizione è valorizzato, convertilo in maiuscolo (oppure esegui eventuali altre conversioni)
-    if (filters.condizione) {
-      filters.condizione = filters.condizione.toUpperCase();
-    }
-
-    // Aggiungi parametri di paginazione e ordinamento (personalizza se necessario)
-    filters.page = this.currentPage - 1;
-    filters.size = this.pageSize;
-    filters.sortBy = filters.sortBy || 'nome';
-    filters.sortDir = filters.sortDir || 'asc';
+    const filters = {
+      ...this.currentFilters,
+      page: this.currentPage - 1,
+      size: this.pageSize,
+    };
 
     this.autopartsSvc.searchAutoparts(filters).subscribe({
       next: (response) => {
@@ -65,28 +55,6 @@ export class UserComponent implements OnInit {
         this.totalPages = Math.ceil(this.totalItems / this.pageSize);
       },
       error: (err) => console.error('Error loading autoparts:', err),
-    });
-  }
-
-  loadVehicles(): void {
-    this.vehicleSvc.getAllVehicles().subscribe({
-      next: (vehicles) => (this.vehicles = vehicles),
-      error: (err) => console.error('Error loading vehicles:', err),
-    });
-  }
-
-  loadBrands(): void {
-    this.vehicleSvc.getAllVehicleBrands().subscribe({
-      next: (brands) => (this.brands = brands),
-      error: (err) => console.error('Error loading brands:', err),
-    });
-  }
-
-  onBrandSelected(event: any): void {
-    const brand = event.target.value;
-    this.vehicleSvc.getVehicleModelsByBrand(brand).subscribe({
-      next: (models) => (this.filteredModels = models),
-      error: (err) => console.error('Error loading models:', err),
     });
   }
 
@@ -109,7 +77,7 @@ export class UserComponent implements OnInit {
   getPages(): number[] {
     return Array(this.totalPages)
       .fill(0)
-      .map((_, i) => i + 1);
+      .map((x, i) => i + 1);
   }
 
   toggleExpand(index: number) {
