@@ -1,0 +1,46 @@
+<!-- shared/components/autopart-search/autopart-search.component.html -->
+<form [formGroup]="searchForm" class="row g-3">
+  <div class="col-md-3">
+    <input
+      type="text"
+      formControlName="codiceOe"
+      class="form-control"
+      placeholder="Codice OE"
+    />
+  </div>
+
+  <div class="col-md-3">
+    <select formControlName="marca" class="form-control">
+      <option value="">Seleziona Marca</option>
+      <option *ngFor="let brand of brands" [value]="brand">
+        {{ brand }}
+      </option>
+    </select>
+  </div>
+
+  <div class="col-md-3">
+    <input
+      type="number"
+      formControlName="minPrezzo"
+      class="form-control"
+      placeholder="Prezzo min"
+    />
+  </div>
+
+  <div class="col-md-3">
+    <input
+      type="number"
+      formControlName="maxPrezzo"
+      class="form-control"
+      placeholder="Prezzo max"
+    />
+  </div>
+  <div class="col-md-6">
+    <input
+      type="text"
+      formControlName="search"
+      class="form-control"
+      placeholder="Cerca per nome o descrizione"
+    />
+  </div>
+</form>

@@ -5,6 +5,7 @@ import { AutopartsService } from '../services/autopart.service';
 import { iAutopartResponse } from '../interfaces/i-autopart-response';
 import { iVehicle } from '../interfaces/i-vehicle';
 import { VehicleService } from '../services/vehicle.service';
+import { environment } from '../../environments/environment.development';
 
 @Component({
   selector: 'app-user',
@@ -12,6 +13,7 @@ import { VehicleService } from '../services/vehicle.service';
   styleUrls: ['./user.component.scss'],
 })
 export class UserComponent implements OnInit {
+  imgUrl: string = environment.imgUrl;
   user!: iUser | undefined;
   autoparts: iAutopartResponse[] = [];
   expanded: { [key: number]: boolean } = {}; //per espandere la card
@@ -19,10 +21,11 @@ export class UserComponent implements OnInit {
   brands: string[] = [];
   filteredModels: iVehicle[] = [];
   filters: any = {};
-  currentPage: number = 0;
-  pageSize: number = 10;
+  currentPage: number = 1;
+  pageSize: number = 12;
   totalItems: number = 0;
   totalPages: number = 0;
+  currentFilters: any = {};
 
   constructor(
     private authSvc: AuthService,
@@ -41,16 +44,28 @@ export class UserComponent implements OnInit {
   }
 
   loadAutoparts(): void {
-    this.autopartsSvc
-      .getAllAutoparts(this.currentPage, this.pageSize)
-      .subscribe({
-        next: (response) => {
-          this.autoparts = response.content;
-          this.totalItems = response.totalElements;
-          this.totalPages = Math.ceil(this.totalItems / this.pageSize);
-        },
-        error: (err) => console.error('Error loading autoparts:', err),
-      });
+    // Copia i filtri correnti
+    const filters = { ...this.currentFilters };
+
+    // Se il filtro condizione è valorizzato, convertilo in maiuscolo (oppure esegui eventuali altre conversioni)
+    if (filters.condizione) {
+      filters.condizione = filters.condizione.toUpperCase();
+    }
+
+    // Aggiungi parametri di paginazione e ordinamento (personalizza se necessario)
+    filters.page = this.currentPage - 1;
+    filters.size = this.pageSize;
+    filters.sortBy = filters.sortBy || 'nome';
+    filters.sortDir = filters.sortDir || 'asc';
+
+    this.autopartsSvc.searchAutoparts(filters).subscribe({
+      next: (response) => {
+        this.autoparts = response.content;
+        this.totalItems = response.totalElements;
+        this.totalPages = Math.ceil(this.totalItems / this.pageSize);
+      },
+      error: (err) => console.error('Error loading autoparts:', err),
+    });
   }
 
   loadVehicles(): void {
@@ -75,21 +90,17 @@ export class UserComponent implements OnInit {
     });
   }
 
-  searchAutoparts(): void {
-    this.autopartsSvc
-      .searchAutoparts(this.filters, this.currentPage, this.pageSize)
-      .subscribe({
-        next: (response) => {
-          this.autoparts = response.content;
-          this.totalItems = response.totalElements;
-          this.totalPages = Math.ceil(this.totalItems / this.pageSize);
-        },
-        error: (err) => console.error('Error searching autoparts:', err),
-      });
+  onSearchChange(filters: any): void {
+    if (filters.search) {
+      filters.search = filters.search.toLowerCase();
+    }
+    this.currentFilters = filters;
+    this.currentPage = 1; // resetta la pagina al cambio dei filtri
+    this.loadAutoparts();
   }
 
   onPageChange(page: number): void {
-    if (page >= 0 && page < this.totalPages) {
+    if (page >= 1 && page <= this.totalPages) {
       this.currentPage = page;
       this.loadAutoparts();
     }
@@ -98,7 +109,7 @@ export class UserComponent implements OnInit {
   getPages(): number[] {
     return Array(this.totalPages)
       .fill(0)
-      .map((x, i) => i);
+      .map((_, i) => i + 1);
   }
 
   toggleExpand(index: number) {

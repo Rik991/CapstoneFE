@@ -6,72 +6,18 @@
   </div>
 
   <!-- Filtri di ricerca -->
-  <div class="row mb-4">
-    <div class="col-md-4">
-      <input
-        type="text"
-        class="form-control"
-        placeholder="Codice OE"
-        [(ngModel)]="filters.codiceOe"
-      />
-    </div>
-    <div class="col-md-4">
-      <input
-        type="number"
-        class="form-control"
-        placeholder="Prezzo minimo"
-        [(ngModel)]="filters.minPrice"
-      />
-    </div>
-    <div class="col-md-4">
-      <input
-        type="number"
-        class="form-control"
-        placeholder="Prezzo massimo"
-        [(ngModel)]="filters.maxPrice"
-      />
-    </div>
-  </div>
-  <div class="row mb-4">
-    <div class="col-md-4">
-      <select
-        class="form-control"
-        [(ngModel)]="filters.brand"
-        (change)="onBrandSelected($event)"
-      >
-        <option value="">Seleziona Marca</option>
-        <option *ngFor="let brand of brands" [value]="brand">
-          {{ brand }}
-        </option>
-      </select>
-    </div>
-    <div class="col-md-4">
-      <select class="form-control" [(ngModel)]="filters.model">
-        <option value="">Seleziona Modello</option>
-        <option *ngFor="let model of filteredModels" [value]="model.id">
-          {{ model.marca }} {{ model.modello }}
-        </option>
-      </select>
-    </div>
-    <div class="col-md-4">
-      <button class="btn btn-primary" (click)="searchAutoparts()">Cerca</button>
-    </div>
-  </div>
+  <app-autopart-search
+    (searchChange)="onSearchChange($event)"
+  ></app-autopart-search>
 
-  <div class="row">
-    <div class="col">
-      <h2>Ultimi ricambi aggiunti</h2>
-    </div>
-  </div>
-
-  <div class="row">
+  <div class="row mt-4">
     <div
       *ngFor="let autopart of autoparts; let i = index"
       class="col-12 col-md-6 col-lg-4 mb-4"
     >
       <div class="card h-100">
         <img
-          [src]="autopart.immagine || 'assets/placeholder.png'"
+          [src]="imgUrl + autopart.immagine || 'assets/placeholder.png'"
           class="card-img-top img-fluid p-3"
           alt="{{ autopart.nome }}"
         />
@@ -91,7 +37,7 @@
               <span class="badge bg-secondary">{{ autopart.condizione }}</span>
             </div>
             <h4>
-              {{ autopart.prezzi[0]?.importo | currency : "EUR" }}
+              {{ autopart.prezzi[0].importo | currency : "EUR" }}
             </h4>
           </div>
 
@@ -123,28 +69,26 @@
   </div>
 
   <!-- Controllo di paginazione personalizzato -->
-  <!-- <div class="row">
-    <div class="col d-flex justify-content-center">
-      <nav aria-label="Page navigation">
-        <ul class="pagination">
-          <li class="page-item" [class.disabled]="currentPage === 0">
-            <a class="page-link" (click)="onPageChange(currentPage - 1)"
-              >Previous</a
-            >
-          </li>
-          <li class="page-item" *ngFor="let page of getPages()">
-            <a class="page-link" (click)="onPageChange(page)">{{ page + 1 }}</a>
-          </li>
-          <li
-            class="page-item"
-            [class.disabled]="currentPage === totalPages - 1"
-          >
-            <a class="page-link" (click)="onPageChange(currentPage + 1)"
-              >Next</a
-            >
-          </li>
-        </ul>
-      </nav>
-    </div>
-  </div> -->
+
+  <nav *ngIf="totalPages > 1">
+    <ul class="pagination">
+      <li class="page-item" [class.disabled]="currentPage === 1">
+        <a class="page-link" (click)="onPageChange(currentPage - 1)"
+          >Precedente</a
+        >
+      </li>
+      <li
+        class="page-item"
+        *ngFor="let page of getPages()"
+        [class.active]="page === currentPage"
+      >
+        <a class="page-link" (click)="onPageChange(page)">{{ page }}</a>
+      </li>
+      <li class="page-item" [class.disabled]="currentPage === totalPages">
+        <a class="page-link" (click)="onPageChange(currentPage + 1)"
+          >Successivo</a
+        >
+      </li>
+    </ul>
+  </nav>
 </div>

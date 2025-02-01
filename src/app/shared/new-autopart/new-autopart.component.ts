@@ -1,11 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { AutopartsService } from '../../services/autopart.service';
-import { AuthService } from '../../auth/auth.service';
 import { VehicleService } from '../../services/vehicle.service';
 import { iVehicle } from '../../interfaces/i-vehicle';
-import { Router } from '@angular/router';
-import { iAutopart } from '../../interfaces/i-autopart';
 
 @Component({
   selector: 'app-new-autopart',
@@ -17,25 +15,22 @@ export class NewAutopartComponent implements OnInit {
   brands: string[] = [];
   filteredModels: iVehicle[] = [];
   selectedVehicles: number[] = [];
+  imagePreview: string | ArrayBuffer | null = null;
 
   constructor(
     private fb: FormBuilder,
+    private router: Router,
     private autopartsService: AutopartsService,
-    private authService: AuthService,
-    private vehicleService: VehicleService,
-    private router: Router
+    private vehicleSvc: VehicleService
   ) {
     this.form = this.fb.group({
       nome: ['', Validators.required],
-      codiceOe: [
-        '',
-        [Validators.required, Validators.pattern(/^[A-Z0-9]{6,10}$/)],
-      ],
-      descrizione: ['', [Validators.required, Validators.minLength(20)]],
-      categoria: ['', Validators.required],
-      condizione: ['NUOVO', Validators.required],
-      immagine: [''],
-      prezzo: ['', [Validators.required, Validators.min(0.01)]],
+      codiceOe: ['', Validators.required],
+      descrizione: [''],
+      categoria: [''],
+      condizione: ['', Validators.required],
+      immagine: [null], // Assicurati che 'immagine' sia il campo File
+      prezzo: [0, [Validators.required, Validators.min(0)]],
       veicoliIds: [[], Validators.required],
     });
   }
@@ -44,17 +39,17 @@ export class NewAutopartComponent implements OnInit {
     this.loadBrands();
   }
 
-  private loadBrands(): void {
-    this.vehicleService.getAllVehicleBrands().subscribe({
-      next: (marche: string[]) => (this.brands = marche),
+  loadBrands(): void {
+    this.vehicleSvc.getAllVehicleBrands().subscribe({
+      next: (brands) => (this.brands = brands),
       error: (err) => console.error('Error loading brands:', err),
     });
   }
 
   onBrandSelected(event: any): void {
-    const marca = event.target.value;
-    this.vehicleService.getVehicleModelsByBrand(marca).subscribe({
-      next: (models: iVehicle[]) => (this.filteredModels = models),
+    const brand = event.target.value;
+    this.vehicleSvc.getVehicleModelsByBrand(brand).subscribe({
+      next: (models) => (this.filteredModels = models),
       error: (err) => console.error('Error loading models:', err),
     });
   }
@@ -69,15 +64,41 @@ export class NewAutopartComponent implements OnInit {
     this.form.get('veicoliIds')?.setValue(this.selectedVehicles); // Aggiorna il form control corretto
   }
 
+  onFileChange(event: any): void {
+    const file = event.target.files[0];
+    this.form.patchValue({
+      immagine: file,
+    });
+    const reader = new FileReader();
+    reader.onload = () => {
+      this.imagePreview = reader.result;
+    };
+    reader.readAsDataURL(file);
+  }
+
   onSubmit(): void {
     if (this.form.valid) {
-      const newAutopart: iAutopart = {
-        ...this.form.value,
-        veicoliIds: this.selectedVehicles, // Campo corretto
-        resellerId: this.authService.authSubject$.value?.user.id,
-      };
+      const formData = new FormData();
+      formData.append('nome', this.form.get('nome')?.value);
+      formData.append('codiceOe', this.form.get('codiceOe')?.value);
+      formData.append('descrizione', this.form.get('descrizione')?.value);
+      formData.append('categoria', this.form.get('categoria')?.value);
+      formData.append('condizione', this.form.get('condizione')?.value);
 
-      this.autopartsService.createAutopart(newAutopart).subscribe({
+      const file: File = this.form.get('immagine')?.value;
+      if (file) {
+        formData.append('immagine', file, file.name);
+      }
+
+      formData.append('prezzo', this.form.get('prezzo')?.value);
+
+      // Aggiungi ogni veicolo id come parametro separato
+      const veicoliIds: number[] = this.form.get('veicoliIds')?.value;
+      veicoliIds.forEach((id) => {
+        formData.append('veicoliIds', id.toString());
+      });
+
+      this.autopartsService.createAutopart(formData).subscribe({
         next: () => {
           alert('Ricambio pubblicato con successo!');
           this.router.navigate(['/reseller']);

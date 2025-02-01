@@ -13,6 +13,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NavbarComponent } from './main-components/navbar/navbar.component';
 import { FooterComponent } from './main-components/footer/footer.component';
 import { LandingPageComponent } from './main-components/landing-page/landing-page.component';
+import { AutopartsListComponent } from './component/autoparts-list/autoparts-list.component';
 
 @NgModule({
   declarations: [
@@ -20,6 +21,7 @@ import { LandingPageComponent } from './main-components/landing-page/landing-pag
     NavbarComponent,
     FooterComponent,
     LandingPageComponent,
+    AutopartsListComponent,
   ],
   imports: [BrowserModule, AppRoutingModule, NgbModule],
   providers: [

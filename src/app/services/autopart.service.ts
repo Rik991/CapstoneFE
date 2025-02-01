@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import { iAutopart } from '../interfaces/i-autopart';
 import { iAutopartResponse } from '../interfaces/i-autopart-response';
 import { IPage } from '../interfaces/i-page';
+import { iSearchFilters } from '../interfaces/i-search-filters';
 
 @Injectable({
   providedIn: 'root',
@@ -27,37 +28,38 @@ export class AutopartsService {
     });
   }
 
-  createAutopart(autopart: iAutopart): Observable<iAutopart> {
-    // Verifica che l'array veicoliIds sia presente
-    if (!autopart.veicoliIds || autopart.veicoliIds.length === 0) {
-      throw new Error('Seleziona almeno un veicolo compatibile');
-    }
-    return this.http.post<iAutopart>(this.autopartsUrl, autopart);
-  }
-
-  getByReseller(
-    resellerId: number,
-    page: number = 0,
-    size: number = 10
-  ): Observable<IPage<iAutopartResponse>> {
-    const params = new HttpParams()
-      .set('page', page.toString())
-      .set('size', size.toString());
-
-    return this.http.get<IPage<iAutopartResponse>>(
-      `${this.autopartsUrl}/reseller/${resellerId}`,
-      { params }
+  createAutopart(formData: FormData): Observable<iAutopartResponse> {
+    return this.http.post<iAutopartResponse>(
+      `${environment.autopartsUrl}`,
+      formData
     );
   }
 
-  searchAutoparts(
-    filters: any,
-    page: number = 0,
-    size: number = 10
-  ): Observable<IPage<iAutopartResponse>> {
-    const params = new HttpParams({ fromObject: { ...filters, page, size } });
+  getByReseller(resellerId: number): Observable<IPage<iAutopartResponse>> {
     return this.http.get<IPage<iAutopartResponse>>(
-      `${this.autopartsUrl}/search`,
+      `${environment.autopartsUrl}/reseller`,
+      {
+        params: { resellerId: resellerId.toString() },
+      }
+    );
+  }
+
+  private removeEmptyParams(params: any): any {
+    const newParams: any = {};
+    Object.keys(params).forEach((key) => {
+      const value = params[key];
+      if (value !== null && value !== undefined && value !== '') {
+        newParams[key] = value;
+      }
+    });
+    return newParams;
+  }
+
+  searchAutoparts(filters: any): Observable<IPage<iAutopartResponse>> {
+    const validFilters = this.removeEmptyParams(filters);
+    const params = new HttpParams({ fromObject: validFilters });
+    return this.http.get<IPage<iAutopartResponse>>(
+      `${environment.autopartsUrl}/search`,
       { params }
     );
   }

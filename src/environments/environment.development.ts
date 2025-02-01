@@ -5,4 +5,5 @@ export const environment = {
   autopartsUrl: 'http://localhost:8080/api/autoparts',
   resellerUrl: 'http://localhost:8080/api/reseller',
   vehicleUrl: 'http://localhost:8080/api/vehicle',
+  imgUrl: 'http://localhost:8080/upload/',
 };

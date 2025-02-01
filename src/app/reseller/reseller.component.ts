@@ -4,6 +4,7 @@ import { iReseller } from '../interfaces/i-reseller';
 import { iAutopartResponse } from '../interfaces/i-autopart-response';
 import { AutopartsService } from '../services/autopart.service';
 import { IPage } from '../interfaces/i-page';
+import { environment } from '../../environments/environment.development';
 
 @Component({
   selector: 'app-reseller',
@@ -13,6 +14,7 @@ import { IPage } from '../interfaces/i-page';
 export class ResellerComponent implements OnInit {
   autoparts: iAutopartResponse[] = [];
   reseller!: iReseller;
+  imgUrl: string = environment.imgUrl;
 
   constructor(
     private authSvc: AuthService,

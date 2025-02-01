@@ -9,7 +9,7 @@
   <div *ngFor="let autopart of autoparts" class="col-12 col-md-6 col-lg-3 mb-4">
     <div class="card h-100">
       <img
-        [src]="autopart.immagine"
+        [src]="imgUrl + autopart.immagine || 'assets/placeholder.png'"
         class="card-img-top img-fluid p-3 h-100"
         alt="{{ autopart.nome }}"
       />
