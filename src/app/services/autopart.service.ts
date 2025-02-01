@@ -28,6 +28,10 @@ export class AutopartsService {
     });
   }
 
+  getAutopartById(id: number): Observable<iAutopartResponse> {
+    return this.http.get<iAutopartResponse>(`${this.autopartsUrl}/${id}`);
+  }
+
   getByReseller(resellerId: number): Observable<IPage<iAutopartResponse>> {
     return this.http.get<IPage<iAutopartResponse>>(
       `${this.autopartsUrl}/reseller`,

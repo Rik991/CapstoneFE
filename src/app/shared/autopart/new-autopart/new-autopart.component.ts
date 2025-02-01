@@ -30,7 +30,7 @@ export class NewAutopartComponent implements OnInit {
       categoria: [''],
       condizione: ['', Validators.required],
       immagine: [null], // Assicurati che 'immagine' sia il campo File
-      prezzo: [0, [Validators.required, Validators.min(0)]],
+      prezzo: ['', [Validators.required, Validators.min(0)]],
       veicoliIds: [[], Validators.required],
     });
   }

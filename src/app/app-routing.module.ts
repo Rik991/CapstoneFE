@@ -1,7 +1,9 @@
 import { NgModule, Component } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { LandingPageComponent } from './main-components/landing-page/landing-page.component';
-import { NewAutopartComponent } from './shared/new-autopart/new-autopart.component';
+
+import { EditAutopartComponent } from './shared/autopart/edit-autopart/edit-autopart.component';
+import { NewAutopartComponent } from './shared/autopart/new-autopart/new-autopart.component';
 
 const routes: Routes = [
   {
@@ -27,6 +29,7 @@ const routes: Routes = [
       import('./reseller/reseller.module').then((m) => m.ResellerModule),
   },
   { path: 'new-autopart', component: NewAutopartComponent },
+  { path: 'edit-autopart', component: EditAutopartComponent },
 ];
 
 @NgModule({
