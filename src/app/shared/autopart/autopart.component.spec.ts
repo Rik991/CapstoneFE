@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ResellerComponent } from './reseller.component';
+import { AutopartComponent } from './autopart.component';
 
-describe('ResellerComponent', () => {
-  let component: ResellerComponent;
-  let fixture: ComponentFixture<ResellerComponent>;
+describe('AutopartComponent', () => {
+  let component: AutopartComponent;
+  let fixture: ComponentFixture<AutopartComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ResellerComponent]
+      declarations: [AutopartComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(ResellerComponent);
+    fixture = TestBed.createComponent(AutopartComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

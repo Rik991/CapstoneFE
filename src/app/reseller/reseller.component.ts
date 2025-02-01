@@ -44,4 +44,18 @@ export class ResellerComponent implements OnInit {
       error: (err) => console.error('Error loading autoparts:', err),
     });
   }
+
+  deleteAutopart(autopartId: number): void {
+    if (confirm('Sei sicuro di voler eliminare questo ricambio?')) {
+      this.autopartSvc.deleteAutopart(autopartId).subscribe({
+        //mi iscrivo all'Observable del service (il metodo restituisce un Observable come tutti gli altri)
+        next: () => {
+          //in caso la richiesta http ha successo parte il next che gestisce la risposta, con il filter creiamo un array che non contiene il ricambio eliminato
+          this.autoparts = this.autoparts.filter((a) => a.id !== autopartId);
+          alert('Ricambio eliminato');
+        },
+        error: (err) => console.error('Errore durante la cancellazione:', err),
+      });
+    }
+  }
 }

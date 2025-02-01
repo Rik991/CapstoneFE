@@ -28,22 +28,34 @@ export class AutopartsService {
     });
   }
 
-  createAutopart(formData: FormData): Observable<iAutopartResponse> {
-    return this.http.post<iAutopartResponse>(
-      `${environment.autopartsUrl}`,
-      formData
-    );
-  }
-
   getByReseller(resellerId: number): Observable<IPage<iAutopartResponse>> {
     return this.http.get<IPage<iAutopartResponse>>(
-      `${environment.autopartsUrl}/reseller`,
+      `${this.autopartsUrl}/reseller`,
       {
         params: { resellerId: resellerId.toString() },
       }
     );
   }
 
+  createAutopart(formData: FormData): Observable<iAutopartResponse> {
+    return this.http.post<iAutopartResponse>(`${this.autopartsUrl}`, formData);
+  }
+
+  updateAutopart(
+    id: number,
+    formData: FormData
+  ): Observable<iAutopartResponse> {
+    return this.http.put<iAutopartResponse>(
+      `${this.autopartsUrl}/${id}`,
+      formData
+    );
+  }
+
+  deleteAutopart(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.autopartsUrl}/${id}`);
+  }
+
+  // gestione filtri per ricerca autopart
   private removeEmptyParams(params: any): any {
     const newParams: any = {};
     Object.keys(params).forEach((key) => {
