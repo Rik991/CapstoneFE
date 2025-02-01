@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { AutopartsService } from '../../services/autopart.service';
-import { VehicleService } from '../../services/vehicle.service';
-import { iVehicle } from '../../interfaces/i-vehicle';
+import { iVehicle } from '../../../interfaces/i-vehicle';
+import { AutopartsService } from '../../../services/autopart.service';
+import { VehicleService } from '../../../services/vehicle.service';
 
 @Component({
   selector: 'app-new-autopart',
@@ -20,7 +20,7 @@ export class NewAutopartComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private router: Router,
-    private autopartsService: AutopartsService,
+    private autopartSvc: AutopartsService,
     private vehicleSvc: VehicleService
   ) {
     this.form = this.fb.group({
@@ -98,7 +98,7 @@ export class NewAutopartComponent implements OnInit {
         formData.append('veicoliIds', id.toString());
       });
 
-      this.autopartsService.createAutopart(formData).subscribe({
+      this.autopartSvc.createAutopart(formData).subscribe({
         next: () => {
           alert('Ricambio pubblicato con successo!');
           this.router.navigate(['/reseller']);
