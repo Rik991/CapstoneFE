@@ -5,6 +5,7 @@ import { iAutopartResponse } from '../interfaces/i-autopart-response';
 import { AutopartsService } from '../services/autopart.service';
 import { IPage } from '../interfaces/i-page';
 import { environment } from '../../environments/environment.development';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-reseller',
@@ -15,6 +16,7 @@ export class ResellerComponent implements OnInit {
   autoparts: iAutopartResponse[] = [];
   reseller!: iReseller;
   imgUrl: string = environment.imgUrl;
+  private subscriptions: Subscription = new Subscription();
 
   constructor(
     private authSvc: AuthService,
@@ -28,6 +30,10 @@ export class ResellerComponent implements OnInit {
         this.loadAutoparts();
       }
     });
+  }
+
+  ngOnDestroy() {
+    this.subscriptions.unsubscribe();
   }
 
   private loadAutoparts(): void {
