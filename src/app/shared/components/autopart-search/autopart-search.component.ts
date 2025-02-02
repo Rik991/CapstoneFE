@@ -2,6 +2,7 @@ import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { VehicleService } from '../../../services/vehicle.service';
 import { iVehicle } from '../../../interfaces/i-vehicle';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-autopart-search',
@@ -12,6 +13,7 @@ export class AutopartSearchComponent implements OnInit {
   searchForm: FormGroup;
   brands: string[] = [];
   filteredModels: iVehicle[] = [];
+  private subscriptions: Subscription = new Subscription();
 
   @Output() searchChange = new EventEmitter<any>();
 
@@ -29,13 +31,22 @@ export class AutopartSearchComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    // Carica le marche all'inizializzazione
     this.loadBrands();
-    this.searchForm.valueChanges.subscribe((filters) => {
+    // Gestisce i cambiamenti del form e li emette al componente padre
+    const formSub = this.searchForm.valueChanges.subscribe((filters) => {
+      // Converti la stringa di ricerca in minuscolo, se presente
       if (filters.search) {
         filters.search = filters.search.toLowerCase();
       }
       this.searchChange.emit(filters);
     });
+    this.subscriptions.add(formSub);
+  }
+
+  ngOnDestroy(): void {
+    // Annulla tutte le subscription per evitare memory leak
+    this.subscriptions.unsubscribe();
   }
 
   loadBrands(): void {

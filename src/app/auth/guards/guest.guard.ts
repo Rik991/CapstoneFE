@@ -24,7 +24,7 @@ export class GuestGuard implements CanActivate, CanActivateChild {
     return this.authSvc.isLoggedIn$.pipe(
       map((isLoggedIn) => {
         if (isLoggedIn) {
-          this.router.navigate(['/dashboard']);
+          this.router.navigate(['/user']);
         }
 
         return !isLoggedIn;

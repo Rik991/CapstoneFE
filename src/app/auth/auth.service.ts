@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { environment } from '../../environments/environment.development';
-import { BehaviorSubject, map, tap } from 'rxjs';
+import { BehaviorSubject, map, Subscription, tap } from 'rxjs';
 import { iAccessData } from '../interfaces/i-access-data';
 import { Router } from '@angular/router';
 import { iUser } from '../interfaces/i-user';
@@ -25,6 +25,8 @@ export class AuthService {
   isLoggedIn$ = this.authSubject$.pipe(map((accessData) => !!accessData));
 
   ilLoggedIn: boolean = false;
+
+  private subscriptions: Subscription = new Subscription();
 
   user$ = this.authSubject$.asObservable().pipe(
     tap((accessData) => this.ilLoggedIn == !!accessData),
@@ -76,6 +78,7 @@ export class AuthService {
     this.authSubject$.next(null);
     localStorage.removeItem('accessData');
     this.router.navigate(['/']);
+    this.subscriptions.unsubscribe();
   }
 
   autoLogout(expDate: Date) {

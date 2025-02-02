@@ -6,6 +6,7 @@ import { iAutopartResponse } from '../interfaces/i-autopart-response';
 import { iVehicle } from '../interfaces/i-vehicle';
 import { VehicleService } from '../services/vehicle.service';
 import { environment } from '../../environments/environment.development';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-user',
@@ -26,6 +27,7 @@ export class UserComponent implements OnInit {
   totalItems: number = 0;
   totalPages: number = 0;
   currentFilters: any = {};
+  private subscriptions: Subscription = new Subscription();
 
   constructor(
     private authSvc: AuthService,
@@ -34,11 +36,16 @@ export class UserComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.authSvc.user$.subscribe((user) => {
+    // Gestione della subscription per ottenere l'utente corrente
+    const userSub = this.authSvc.user$.subscribe((user) => {
       this.user = user;
     });
-
+    this.subscriptions.add(userSub);
     this.loadAutoparts();
+  }
+
+  ngOnDestroy() {
+    this.subscriptions.unsubscribe();
   }
 
   loadAutoparts(): void {

@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 import { AuthService } from '../../auth/auth.service';
+import { Subscription } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-navbar',
@@ -8,17 +10,26 @@ import { AuthService } from '../../auth/auth.service';
 })
 export class NavbarComponent {
   isLoggedIn: boolean = false;
+  private subscriptions: Subscription = new Subscription();
 
-  constructor(private authSvc: AuthService) {}
+  constructor(private authSvc: AuthService, private router: Router) {}
 
   ngOnInit(): void {
-    this.authSvc.isLoggedIn$.subscribe(
+    // salvo nel contenitore sub (subscription) lo user loggato così da distruggerlo alla fine
+    const sub = this.authSvc.isLoggedIn$.subscribe(
       (isLogged) => (this.isLoggedIn = isLogged)
     );
+    this.subscriptions.add(sub);
+  }
+
+  ngOnDestroy(): void {
+    // Annulla tutte le subscription al momento della distruzione del componente
+    this.subscriptions.unsubscribe();
   }
 
   logout(): void {
     this.authSvc.logout();
+    this.router.navigate(['/auth/login']);
     alert('logout effettuato correttamente');
   }
 }
