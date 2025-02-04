@@ -14,6 +14,7 @@ import { NavbarComponent } from './main-components/navbar/navbar.component';
 import { FooterComponent } from './main-components/footer/footer.component';
 import { LandingPageComponent } from './main-components/landing-page/landing-page.component';
 import { AutopartsListComponent } from './component/autoparts-list/autoparts-list.component';
+import { FavouriteComponent } from './component/favourite/favourite.component';
 
 @NgModule({
   declarations: [
@@ -22,6 +23,7 @@ import { AutopartsListComponent } from './component/autoparts-list/autoparts-lis
     FooterComponent,
     LandingPageComponent,
     AutopartsListComponent,
+    FavouriteComponent,
   ],
   imports: [BrowserModule, AppRoutingModule, NgbModule],
   providers: [
