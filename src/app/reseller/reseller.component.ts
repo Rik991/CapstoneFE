@@ -27,10 +27,8 @@ export class ResellerComponent implements OnInit {
     // Salva la subscription in modo da poterla annullare quando il componente viene distrutto
     const userSub = this.authSvc.user$.subscribe((user) => {
       this.reseller = user as iReseller;
-      if (this.reseller && this.reseller.id) {
-        this.loadAutoparts();
-      }
     });
+    this.loadAutoparts();
     this.subscriptions.add(userSub);
   }
 

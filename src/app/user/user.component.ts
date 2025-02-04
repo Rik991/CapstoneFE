@@ -7,6 +7,8 @@ import { iVehicle } from '../interfaces/i-vehicle';
 import { VehicleService } from '../services/vehicle.service';
 import { environment } from '../../environments/environment.development';
 import { Subscription } from 'rxjs';
+import { FavouriteService } from '../services/favourite.service';
+import { IFavourite } from '../interfaces/i-favourite';
 
 @Component({
   selector: 'app-user',
@@ -27,12 +29,13 @@ export class UserComponent implements OnInit {
   totalItems: number = 0;
   totalPages: number = 0;
   currentFilters: any = {};
+  favouriteIds: Set<number> = new Set<number>(); // Per tenere traccia dei preferiti
   private subscriptions: Subscription = new Subscription();
 
   constructor(
     private authSvc: AuthService,
     private autopartsSvc: AutopartsService,
-    private vehicleSvc: VehicleService
+    private favouriteSvc: FavouriteService
   ) {}
 
   ngOnInit(): void {
@@ -41,11 +44,25 @@ export class UserComponent implements OnInit {
       this.user = user;
     });
     this.subscriptions.add(userSub);
+    this.loadFavourites();
     this.loadAutoparts();
   }
 
   ngOnDestroy() {
     this.subscriptions.unsubscribe();
+  }
+
+  loadFavourites(): void {
+    this.favouriteSvc.getFavouriteByUser().subscribe({
+      next: (favourites: IFavourite[]) => {
+        // Popola il set favouriteIds con gli autopartId ricevuti
+        favourites.forEach((fav) => {
+          this.favouriteIds.add(fav.autopartId);
+        });
+      },
+      error: (err) =>
+        console.error('Errore nel caricamento dei preferiti', err),
+    });
   }
 
   loadAutoparts(): void {
@@ -89,5 +106,27 @@ export class UserComponent implements OnInit {
 
   toggleExpand(index: number) {
     this.expanded[index] = !this.expanded[index];
+  }
+
+  //toggle per fare add e remove del favourite
+
+  toggleFavourite(autoparId: number) {
+    if (this.favouriteIds.has(autoparId)) {
+      this.favouriteSvc.removeFavourite(autoparId).subscribe({
+        next: () => {
+          this.favouriteIds.delete(autoparId);
+          alert('Ricambio rimosso ai preferiti');
+        },
+        error: (err) => console.error('Errore nella rimozione del preferito'),
+      });
+    } else {
+      this.favouriteSvc.addFavourite(autoparId).subscribe({
+        next: () => {
+          this.favouriteIds.add(autoparId);
+          alert('Ricambio aggiunto ai preferiti');
+        },
+        error: (err) => console.error('Impossibile aggiungere preferito'),
+      });
+    }
   }
 }

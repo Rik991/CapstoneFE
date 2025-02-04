@@ -2,8 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../auth.service';
 import { Router } from '@angular/router';
-import { iUser } from '../../interfaces/i-user';
-import { iReseller } from '../../interfaces/i-reseller';
 import { take } from 'rxjs';
 
 @Component({

@@ -45,7 +45,15 @@
             <button class="btn btn-outline-primary me-2">
               <i class="bi bi-cart"></i> Aggiungi al carrello
             </button>
-            <button class="btn btn-outline-danger">
+            <button
+              class="btn"
+              [ngClass]="
+                favouriteIds.has(autopart.id)
+                  ? 'btn-danger'
+                  : 'btn-outline-danger'
+              "
+              (click)="toggleFavourite(autopart.id)"
+            >
               <i class="bi bi-heart"></i> Preferiti
             </button>
             <div class="d-flex justify-content-center align-items-center mt-2">

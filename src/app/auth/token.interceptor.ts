@@ -5,7 +5,8 @@ import {
   HttpEvent,
   HttpInterceptor,
 } from '@angular/common/http';
-import { Observable, switchMap } from 'rxjs';
+import { Observable } from 'rxjs';
+import { switchMap, take } from 'rxjs/operators';
 import { AuthService } from './auth.service';
 
 @Injectable()
@@ -17,6 +18,7 @@ export class TokenInterceptor implements HttpInterceptor {
     next: HttpHandler
   ): Observable<HttpEvent<unknown>> {
     return this.authSvc.authSubject$.pipe(
+      take(1), // prende solo il valore corrente e poi completa l'Observable
       switchMap((accessData) => {
         if (!accessData) {
           return next.handle(request);
@@ -28,7 +30,6 @@ export class TokenInterceptor implements HttpInterceptor {
             `Bearer ${accessData.accessToken}`
           ),
         });
-
         return next.handle(newRequest);
       })
     );
