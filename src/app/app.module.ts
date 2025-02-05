@@ -14,6 +14,7 @@ import { NavbarComponent } from './main-components/navbar/navbar.component';
 import { FooterComponent } from './main-components/footer/footer.component';
 import { LandingPageComponent } from './main-components/landing-page/landing-page.component';
 import { FavouriteComponent } from './favourite/favourite.component';
+import { SharedModule } from './shared/shared.module';
 
 @NgModule({
   declarations: [
@@ -23,7 +24,7 @@ import { FavouriteComponent } from './favourite/favourite.component';
     LandingPageComponent,
     FavouriteComponent,
   ],
-  imports: [BrowserModule, AppRoutingModule, NgbModule],
+  imports: [BrowserModule, AppRoutingModule, NgbModule, SharedModule],
   providers: [
     provideHttpClient(withInterceptorsFromDi()),
     {

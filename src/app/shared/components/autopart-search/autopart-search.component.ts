@@ -14,6 +14,7 @@ export class AutopartSearchComponent implements OnInit {
   brands: string[] = [];
   filteredModels: iVehicle[] = [];
   private subscriptions: Subscription = new Subscription();
+  isExpanded: boolean = false;
 
   @Output() searchChange = new EventEmitter<any>();
 
@@ -76,5 +77,9 @@ export class AutopartSearchComponent implements OnInit {
       search: '',
     });
     this.searchChange.emit(this.searchForm.value);
+  }
+
+  toggleFilters(): void {
+    this.isExpanded = !this.isExpanded; // Cambia lo stato di espansione
   }
 }

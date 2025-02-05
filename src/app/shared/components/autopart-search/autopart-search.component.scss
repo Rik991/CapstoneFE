@@ -1,0 +1,65 @@
+/* search-component.scss */
+.search-container {
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.form-floating {
+  > label {
+    opacity: 0.8;
+  }
+
+  > .form-control,
+  > .form-select {
+    height: calc(3.5rem + 2px);
+    line-height: 1.25;
+
+    &:focus {
+      box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.15);
+    }
+
+    &:disabled {
+      background-color: #f8f9fa;
+      cursor: not-allowed;
+    }
+  }
+}
+
+.form-select {
+  background-position: right 0.75rem center;
+
+  &:not([size]):not([multiple]) {
+    padding-right: 2.25rem;
+  }
+}
+
+.btn {
+  transition: all 0.2s ease-in-out;
+
+  &:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+/* Media Queries */
+@media (max-width: 768px) {
+  .search-container {
+    padding: 1rem !important;
+  }
+
+  .form-floating {
+    > .form-control,
+    > .form-select {
+      height: calc(3rem + 2px);
+    }
+  }
+
+  .btn {
+    padding: 0.5rem 1rem;
+  }
+}

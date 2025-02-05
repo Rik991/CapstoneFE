@@ -29,7 +29,9 @@ export class AutopartsService {
   }
 
   getAutopartById(id: number): Observable<iAutopartResponse> {
-    return this.http.get<iAutopartResponse>(`${this.autopartsUrl}/${id}`);
+    return this.http.get<iAutopartResponse>(
+      `${this.autopartsUrl}/public/${id}`
+    );
   }
 
   getByReseller(resellerId: number): Observable<IPage<iAutopartResponse>> {

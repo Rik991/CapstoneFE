@@ -1,33 +1,41 @@
 <nav class="navbar navbar-expand-lg bg-transparent border-bottom border-body">
-  <div class="container-fluid">
-    <a class="navbar-brand" href="#">Navbar</a>
-    <button
-      class="navbar-toggler"
-      type="button"
-      data-bs-toggle="collapse"
-      data-bs-target="#navbarSupportedContent"
-      aria-controls="navbarSupportedContent"
-      aria-expanded="false"
-      aria-label="Toggle navigation"
-    >
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="d-flex justify-content-beetween" id="navbarSupportedContent">
-      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        <!-- tasto home -->
-        <li class="nav-item">
-          <a class="nav-link" aria-current="page" href="#"
-            ><i class="bi bi-house-door-fill"></i
-          ></a>
-        </li>
-        <!-- search bar -->
+  <div
+    class="container-fluid d-flex justify-content-between align-items-center"
+  >
+    <!-- tasto home -->
+    <a class="navbar-brand" href="/user">
+      <i class="bi bi-house-door-fill" style="font-size: 1.75rem"></i>
+    </a>
 
+    <!-- RaikoParts al centro -->
+    <div class="navbar-brand mx-auto">
+      <a
+        class="navbar-brand fs-1 d-flex justify-content-center"
+        href="/user/home"
+      >
+        <img src="/assets/logo2.png" alt="RaikoParts Logo" />
+      </a>
+    </div>
+
+    <!-- Icone a destra -->
+    <div class="d-flex align-items-center">
+      <ul class="navbar-nav mb-2 mb-lg-0 d-flex flex-row">
         <!-- tasto notifiche -->
-        <li class="nav-item">
-          <a class="nav-link" href="#"><i class="bi bi-bell-fill"></i></a>
+        <li class="nav-item me-3">
+          <a class="nav-link" href="#">
+            <i class="bi bi-bell-fill" style="font-size: 1.75rem"></i>
+          </a>
         </li>
+
+        <!-- icona preferiti -->
+        <li class="nav-item">
+          <a class="nav-link" href="#">
+            <i class="bi bi-bookmark-heart" style="font-size: 1.75rem"></i>
+          </a>
+        </li>
+
         <!-- dropdown User -->
-        <li class="nav-item dropdown">
+        <li class="nav-item dropdown me-3">
           <a
             class="nav-link dropdown-toggle"
             href="#"
@@ -35,20 +43,31 @@
             data-bs-toggle="dropdown"
             aria-expanded="false"
           >
-            <i class="bi bi-person-circle"></i>
+            <i class="bi bi-person-circle" style="font-size: 1.75rem"></i>
           </a>
-          <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="#">Account</a></li>
+          <ul class="dropdown-menu dropdown-menu-end">
+            <li><a class="dropdown-item" href="/user/user-page">Account</a></li>
             <li><a class="dropdown-item" href="#">Settings</a></li>
             <li><hr class="dropdown-divider" /></li>
             <li><a class="dropdown-item" href="#">Preferiti</a></li>
+            <li>
+              <button
+                class="btn btn-outline-success w-100"
+                (click)="logout()"
+                type="submit"
+              >
+                <i class="bi bi-box-arrow-right"></i> Logout
+              </button>
+            </li>
           </ul>
         </li>
       </ul>
     </div>
-    <div *ngIf="!isLoggedIn">
+
+    <!-- Pulsanti di login e registrazione -->
+    <div *ngIf="!isLoggedIn" class="d-flex">
       <button
-        class="btn btn-outline-success"
+        class="btn btn-outline-success me-2"
         routerLink="/auth/login"
         type="submit"
       >
@@ -62,10 +81,6 @@
         Register
       </button>
     </div>
-    <div *ngIf="isLoggedIn">
-      <button class="btn btn-outline-success" (click)="logout()" type="submit">
-        Logout
-      </button>
-    </div>
+    <div *ngIf="isLoggedIn"></div>
   </div>
 </nav>
