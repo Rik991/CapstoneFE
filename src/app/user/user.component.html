@@ -1,7 +1,10 @@
 <div class="container">
   <!-- Header e componente di ricerca rimangono invariati -->
+  <app-autopart-search
+    (searchChange)="onSearchChange($event)"
+  ></app-autopart-search>
 
-  <!-- Unica grid responsiva -->
+  <!-- nuove card  -->
   <div class="row mt-4">
     <div *ngFor="let autopart of autoparts; let i = index" class="col-12 mb-3">
       <div class="card h-100">
@@ -53,6 +56,119 @@
                       >Codice OE: {{ autopart.codiceOe }}</span
                     >
                     <span class="d-none d-md-inline">|</span>
+                    <span class="badge fs-5 bg-light text-success border">{{
+                      autopart.prezzi[0].importo | currency : "EUR"
+                    }}</span>
+                  </div>
+                </div>
+
+                <!-- Pulsante veicoli compatibili -->
+                <div class="mt-auto">
+                  <button
+                    class="btn btn-outline-dark btn-sm w-100"
+                    (click)="toggleExpand(i)"
+                  >
+                    {{ expanded[i] ? "Nascondi" : "Mostra" }} veicoli
+                    compatibili
+                  </button>
+                  <div class="mt-2" *ngIf="expanded[i]">
+                    <div class="row row-cols-2 row-cols-md-3 g-2">
+                      <div
+                        class="col"
+                        *ngFor="let vehicle of autopart.veicoliCompatibili"
+                      >
+                        <div class="bg-light p-2 small rounded">
+                          {{ vehicle.marca }} {{ vehicle.modello }}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- Footer con reseller -->
+                <div class="row mt-3 g-2">
+                  <div class="col-12">
+                    <div
+                      class="d-flex justify-content-between align-items-center border-top pt-2"
+                    >
+                      <div class="text-muted small">
+                        Venduto da:
+                        <a
+                          [href]="autopart.reseller.sitoWeb"
+                          target="_blank"
+                          class="text-decoration-none"
+                        >
+                          {{ autopart.reseller.ragioneSociale }}
+                        </a>
+                      </div>
+                      <span class="d-md-none text-success fw-bold">
+                        {{ autopart.prezzi[0].importo | currency : "EUR" }}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- grid responsive -->
+  <div class="row mt-4">
+    <div *ngFor="let autopart of autoparts; let i = index" class="col-12 mb-3">
+      <div class="card h-100">
+        <div class="card-body">
+          <!-- Contenuto superiore: Immagine e informazioni principali -->
+          <div class="row g-3">
+            <!-- Colonna immagine -->
+            <div class="col-4 col-md-3 col-lg-2">
+              <div class="position-relative">
+                <img
+                  [src]="imgUrl + autopart.immagine || 'assets/placeholder.png'"
+                  class="img-fluid rounded-start"
+                  alt="{{ autopart.nome }}"
+                  loading="lazy"
+                />
+                <span
+                  class="badge bg-primary position-absolute top-0 start-0 m-1"
+                >
+                  {{ autopart.condizione }}
+                </span>
+                <button
+                  class="btn btn-link position-absolute bottom-0 end-0 m-1 p-1"
+                  (click)="toggleFavourite(autopart.id)"
+                >
+                  <i
+                    [ngClass]="{
+                      'bi-heart-fill text-danger': favouriteIds.has(
+                        autopart.id
+                      ),
+                      'bi-heart text-muted': !favouriteIds.has(autopart.id)
+                    }"
+                    class="bi fs-5"
+                  ></i>
+                </button>
+              </div>
+            </div>
+
+            <!-- Colonna informazioni -->
+            <div class="col-8 col-md-9 col-lg-10">
+              <div class="d-flex flex-column h-100">
+                <!-- Titolo e descrizione -->
+                <div class="mb-2">
+                  <h6 class="mb-1 fw-bold">{{ autopart.nome }}</h6>
+                  <p class="text-muted small mb-1">
+                    {{ autopart.descrizione }}
+                  </p>
+                  <div class="d-flex gap-2 align-items-center">
+                    <span class="badge bg-light text-dark border"
+                      >Codice OE: {{ autopart.codiceOe }}</span
+                    >
+                    <span class="d-none d-md-inline">|</span>
+                    <span class="badge fs-5 bg-light text-success border">{{
+                      autopart.prezzi[0].importo | currency : "EUR"
+                    }}</span>
                   </div>
                 </div>
 
@@ -109,5 +225,5 @@
     </div>
   </div>
 
-  <!-- Paginazione rimane invariata -->
+  <!-- Paginazione -->
 </div>

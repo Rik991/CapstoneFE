@@ -15,6 +15,7 @@ export class AutopartSearchComponent implements OnInit {
   filteredModels: iVehicle[] = [];
   private subscriptions: Subscription = new Subscription();
   isExpanded: boolean = false;
+  isFiltersExpanded: boolean = false;
 
   @Output() searchChange = new EventEmitter<any>();
 
@@ -81,5 +82,8 @@ export class AutopartSearchComponent implements OnInit {
 
   toggleFilters(): void {
     this.isExpanded = !this.isExpanded; // Cambia lo stato di espansione
+  }
+  toggleAdvancedFilters(): void {
+    this.isFiltersExpanded = !this.isFiltersExpanded; // Cambia lo stato di espansione dei filtri avanzati
   }
 }
