@@ -7,12 +7,17 @@
     <div *ngFor="let autopart of autoparts; let i = index" class="col-12 mb-3">
       <div class="card h-100">
         <div class="card-body">
-          <!-- Vista desktop: due colonne -->
+          <!-- Vista desktop: due colonne, info sempre visibili -->
           <div class="row g-3 d-none d-md-flex">
-            <!-- Colonna sinistra: Immagine, badge, pulsante preferiti e prezzo sotto l’immagine -->
+            <!-- Colonna sinistra: Immagine standardizzata e badge -->
             <div class="col-md-2">
-              <div class="position-relative text-center">
+              <div class="img-container-standard position-relative text-center">
                 <img
+                  (click)="
+                    openLightbox(
+                      imgUrl + (autopart.immagine || 'assets/placeholder.png')
+                    )
+                  "
                   [src]="imgUrl + autopart.immagine || 'assets/placeholder.png'"
                   class="img-fluid rounded-start"
                   alt="{{ autopart.nome }}"
@@ -23,35 +28,13 @@
                 >
                   {{ autopart.condizione }}
                 </span>
-                <button
-                  class="btn btn-link position-absolute bottom-0 end-0 m-1 p-1"
-                  (click)="toggleFavourite(autopart.id)"
-                >
-                  <i
-                    [ngClass]="{
-                      'bi-heart-fill text-danger': favouriteIds.has(
-                        autopart.id
-                      ),
-                      'bi-heart text-muted': !favouriteIds.has(autopart.id)
-                    }"
-                    class="bi fs-5"
-                  ></i>
-                </button>
-                <div class="mt-2">
-                  <span class="badge fs-5 bg-light text-success border">
-                    {{ autopart.prezzi[0].importo | currency : "EUR" }}
-                  </span>
-                </div>
               </div>
             </div>
 
-            <!-- Colonna destra: Titolo, info toggle e veicoli compatibili -->
+            <!-- Colonna destra: Informazioni e riga inferiore con cuore, prezzo e tasto veicoli -->
             <div class="col-md-10">
               <h6 class="mb-1 fw-bold text-truncate">{{ autopart.nome }}</h6>
-              <button class="btn btn-link btn-sm p-0" (click)="toggleInfo(i)">
-                {{ infoExpanded[i] ? "Nascondi info" : "Mostra info" }}
-              </button>
-              <div *ngIf="infoExpanded[i]" class="mb-2">
+              <div class="mb-2">
                 <p class="text-muted small mb-1">{{ autopart.descrizione }}</p>
                 <span class="badge bg-light text-dark border">
                   Codice OE: {{ autopart.codiceOe }}
@@ -67,12 +50,40 @@
                   </a>
                 </small>
               </div>
-              <button
-                class="btn btn-outline-dark btn-sm mt-2 w-100"
-                (click)="toggleExpand(i)"
+
+              <!-- Riga inferiore compatta: cuore, prezzo e tasto "mostra veicoli" -->
+              <div
+                class="info-bottom-row d-flex justify-content-between align-items-center"
               >
-                {{ expanded[i] ? "Nascondi" : "Mostra" }} veicoli compatibili
-              </button>
+                <div
+                  class="price-fav-container d-flex align-items-center gap-2"
+                >
+                  <button
+                    class="btn btn-link p-1"
+                    (click)="toggleFavourite(autopart.id)"
+                  >
+                    <i
+                      [ngClass]="{
+                        'bi-heart-fill text-danger': favouriteIds.has(
+                          autopart.id
+                        ),
+                        'bi-heart text-muted': !favouriteIds.has(autopart.id)
+                      }"
+                      class="bi fs-5"
+                    ></i>
+                  </button>
+                  <span class="badge fs-5 bg-light text-success border">
+                    {{ autopart.prezzi[0].importo | currency : "EUR" }}
+                  </span>
+                </div>
+                <button
+                  class="btn btn-outline-dark btn-sm"
+                  (click)="toggleExpand(i)"
+                >
+                  {{ expanded[i] ? "Nascondi veicoli" : "Mostra veicoli" }}
+                </button>
+              </div>
+
               <div class="mt-2 vehicles-grid" *ngIf="expanded[i]">
                 <div class="row row-cols-2 row-cols-md-3 g-2">
                   <div
@@ -91,8 +102,13 @@
 
           <!-- Vista mobile: layout verticale -->
           <div class="d-flex d-md-none flex-column">
-            <div class="position-relative text-center">
+            <div class="img-container-standard position-relative text-center">
               <img
+                (click)="
+                  openLightbox(
+                    imgUrl + (autopart.immagine || 'assets/placeholder.png')
+                  )
+                "
                 [src]="imgUrl + autopart.immagine || 'assets/placeholder.png'"
                 class="img-fluid rounded"
                 alt="{{ autopart.nome }}"
@@ -126,7 +142,7 @@
             <h6 class="mt-2 fw-bold text-truncate text-center">
               {{ autopart.nome }}
             </h6>
-            <!-- Bottone per mostrare/nascondere info -->
+            <!-- Bottone per info -->
             <button
               class="btn btn-link btn-sm p-0 text-center"
               (click)="toggleInfo(i)"
@@ -152,10 +168,10 @@
             </div>
             <!-- Veicoli compatibili -->
             <button
-              class="btn btn-outline-dark btn-sm mt-2 w-100"
+              class="btn btn-outline-dark btn-sm mt-2"
               (click)="toggleExpand(i)"
             >
-              {{ expanded[i] ? "Nascondi" : "Mostra" }} veicoli compatibili
+              {{ expanded[i] ? "Nascondi veicoli" : "Mostra veicoli" }}
             </button>
             <div class="mt-2 vehicles-grid" *ngIf="expanded[i]">
               <div class="row row-cols-2 row-cols-md-3 g-2">
@@ -173,6 +189,53 @@
           <!-- Fine vista mobile -->
         </div>
       </div>
+    </div>
+  </div>
+
+  <!-- Controlli di paginazione -->
+  <div class="pagination-container text-center my-3">
+    <nav aria-label="Page navigation">
+      <ul class="pagination justify-content-center">
+        <li class="page-item" [class.disabled]="currentPage === 1">
+          <button
+            class="page-link"
+            (click)="onPageChange(currentPage - 1)"
+            [disabled]="currentPage === 1"
+          >
+            Previous
+          </button>
+        </li>
+        <li
+          *ngFor="let page of getPages()"
+          class="page-item"
+          [class.active]="page === currentPage"
+        >
+          <button class="page-link" (click)="onPageChange(page)">
+            {{ page }}
+          </button>
+        </li>
+        <li class="page-item" [class.disabled]="currentPage === totalPages">
+          <button
+            class="page-link"
+            (click)="onPageChange(currentPage + 1)"
+            [disabled]="currentPage === totalPages"
+          >
+            Next
+          </button>
+        </li>
+      </ul>
+    </nav>
+  </div>
+
+  <!-- Lightbox Overlay per ingrandire le immagini -->
+  <div
+    class="lightbox-overlay"
+    *ngIf="selectedImageUrl"
+    (click)="closeLightbox()"
+  >
+    <div class="lightbox-content" (click)="$event.stopPropagation()">
+      <img [src]="selectedImageUrl" alt="Enlarged image" />
+      <button class="btn-close" (click)="closeLightbox()">×</button>
     </div>
   </div>
 </div>

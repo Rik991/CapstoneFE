@@ -30,6 +30,7 @@ export class UserComponent implements OnInit {
   totalItems: number = 0;
   totalPages: number = 0;
   currentFilters: any = {};
+  selectedImageUrl: string | null = null;
   favouriteIds: Set<number> = new Set<number>(); // Per tenere traccia dei preferiti
   private subscriptions: Subscription = new Subscription();
 
@@ -51,6 +52,14 @@ export class UserComponent implements OnInit {
 
   ngOnDestroy() {
     this.subscriptions.unsubscribe();
+  }
+
+  openLightbox(url: string): void {
+    this.selectedImageUrl = url;
+  }
+
+  closeLightbox(): void {
+    this.selectedImageUrl = null;
   }
 
   loadFavourites(): void {

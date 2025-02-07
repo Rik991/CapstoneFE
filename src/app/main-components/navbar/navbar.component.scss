@@ -1,7 +1,52 @@
-.navbar-brand img {
-  width: 80px;
+/* Navbar personalizzata */
+.navbar-custom {
+  background: transparent;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 0.5rem;
+  padding: 0.25rem 1rem;
 }
 
-.navbar {
-  border-radius: 50px;
+/* Logo e icone all'interno di navbar-brand */
+.navbar-brand {
+  img {
+    width: 70px; // dimensione ridotta per un look più sottile
+  }
+  i {
+    font-size: 1.5rem;
+  }
+}
+
+/* Icone dei link della navbar */
+.nav-link {
+  i {
+    font-size: 1.5rem;
+  }
+}
+
+/* Dropdown: assicurarsi che il menu sia compatto */
+.dropdown-menu {
+  min-width: 150px;
+}
+
+/* Bottone Logout all'interno del dropdown */
+.btn-logout {
+  background: none;
+  border: none;
+  width: 100%;
+  text-align: left;
+  padding: 0.5rem 1rem;
+  color: inherit;
+}
+
+/* Responsive: per dispositivi più piccoli */
+@media (max-width: 576px) {
+  .navbar-custom {
+    padding: 0.25rem 0.5rem;
+  }
+  .navbar-brand img {
+    width: 60px;
+  }
+  .nav-link i {
+    font-size: 1.3rem;
+  }
 }
