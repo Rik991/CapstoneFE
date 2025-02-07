@@ -19,7 +19,8 @@ export class UserComponent implements OnInit {
   imgUrl: string = environment.imgUrl;
   user!: iUser | undefined;
   autoparts: iAutopartResponse[] = [];
-  expanded: { [key: number]: boolean } = {}; //per espandere la card
+  expanded: boolean[] = [];
+  infoExpanded: boolean[] = [];
   vehicles: iVehicle[] = [];
   brands: string[] = [];
   filteredModels: iVehicle[] = [];
@@ -104,8 +105,12 @@ export class UserComponent implements OnInit {
       .map((x, i) => i + 1);
   }
 
-  toggleExpand(index: number) {
+  toggleExpand(index: number): void {
     this.expanded[index] = !this.expanded[index];
+  }
+
+  toggleInfo(index: number): void {
+    this.infoExpanded[index] = !this.infoExpanded[index];
   }
 
   //toggle per fare add e remove del favourite
