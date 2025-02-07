@@ -27,6 +27,7 @@ export class RegisterComponent implements OnInit {
       name: ['', Validators.required],
       surname: ['', Validators.required],
       username: ['', Validators.required],
+      phoneNumber: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
       // Campi opzionali per il rivenditore
@@ -70,6 +71,7 @@ export class RegisterComponent implements OnInit {
       this.form.get('name')!.valid &&
       this.form.get('surname')!.valid &&
       this.form.get('username')!.valid &&
+      this.form.get('phoneNumber')!.valid &&
       this.form.get('email')!.valid &&
       this.form.get('password')!.valid
     );
@@ -78,7 +80,7 @@ export class RegisterComponent implements OnInit {
   register(event: Event) {
     event.preventDefault();
     if (this.form.valid) {
-      // Puoi utilizzare FormData se devi gestire il file dell'avatar
+      // Dichiarazione di formData
       const formData = new FormData();
       formData.append(
         'appUser',
@@ -86,6 +88,7 @@ export class RegisterComponent implements OnInit {
           username: this.form.value.username,
           name: this.form.value.name,
           surname: this.form.value.surname,
+          phoneNumber: this.form.value.phoneNumber,
           email: this.form.value.email,
           password: this.form.value.password,
         })
@@ -93,25 +96,40 @@ export class RegisterComponent implements OnInit {
       if (this.form.value.avatar) {
         formData.append('avatar', this.form.value.avatar);
       }
+
       if (this.form.value.userType === 'reseller') {
         formData.append('ragioneSociale', this.form.value.ragioneSociale);
         formData.append('partitaIva', this.form.value.partitaIva);
         formData.append('sitoWeb', this.form.value.sitoWeb);
-      }
 
-      // Esegui la registrazione (ad esempio, tramite AuthService)
-      this.authSvc
-        .registerUser(formData)
-        .pipe(take(1))
-        .subscribe({
-          next: () => {
-            this.router.navigate(['/']);
-            alert('Registrazione effettuata correttamente');
-          },
-          error: () => {
-            alert('Errore durante la registrazione');
-          },
-        });
+        // Esegui la registrazione del rivenditore
+        this.authSvc
+          .registerReseller(formData)
+          .pipe(take(1))
+          .subscribe({
+            next: () => {
+              this.router.navigate(['/']);
+              alert('Registrazione del rivenditore effettuata correttamente');
+            },
+            error: () => {
+              alert('Errore durante la registrazione del rivenditore');
+            },
+          });
+      } else {
+        // Esegui la registrazione dell'utente normale
+        this.authSvc
+          .registerUser(formData)
+          .pipe(take(1))
+          .subscribe({
+            next: () => {
+              this.router.navigate(['/']);
+              alert('Registrazione effettuata correttamente');
+            },
+            error: () => {
+              alert('Errore durante la registrazione');
+            },
+          });
+      }
     }
   }
 
