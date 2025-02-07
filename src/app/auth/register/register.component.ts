@@ -11,8 +11,8 @@ import { take } from 'rxjs';
 })
 export class RegisterComponent implements OnInit {
   form!: FormGroup;
-  avatarFile?: File;
-  userType: string = 'user';
+  currentStep: number = 1; // Gestisce lo step corrente
+
   @Output() close = new EventEmitter<void>();
 
   constructor(
@@ -24,19 +24,20 @@ export class RegisterComponent implements OnInit {
   ngOnInit() {
     this.form = this.fb.group({
       userType: ['user', Validators.required],
-      username: ['', Validators.required],
       name: ['', Validators.required],
       surname: ['', Validators.required],
+      username: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
-      avatar: [null],
+      // Campi opzionali per il rivenditore
       ragioneSociale: [''],
       partitaIva: [''],
       sitoWeb: [''],
+      avatar: [null],
     });
 
+    // Aggiusta le validazioni in base al tipo di utente
     this.form.get('userType')?.valueChanges.subscribe((value) => {
-      this.userType = value;
       const ragioneSocialeControl = this.form.get('ragioneSociale');
       const partitaIvaControl = this.form.get('partitaIva');
       const sitoWebControl = this.form.get('sitoWeb');
@@ -57,14 +58,27 @@ export class RegisterComponent implements OnInit {
     });
   }
 
-  onFileChange(event: any) {
-    if (event.target.files.length > 0) {
-      this.avatarFile = event.target.files[0];
-    }
+  // Passa da uno step all'altro
+  goToStep(step: number): void {
+    this.currentStep = step;
+  }
+
+  // Verifica se i campi dello step 1 sono validi
+  stepOneValid(): boolean {
+    return (
+      this.form.get('userType')!.valid &&
+      this.form.get('name')!.valid &&
+      this.form.get('surname')!.valid &&
+      this.form.get('username')!.valid &&
+      this.form.get('email')!.valid &&
+      this.form.get('password')!.valid
+    );
   }
 
   register(event: Event) {
+    event.preventDefault();
     if (this.form.valid) {
+      // Puoi utilizzare FormData se devi gestire il file dell'avatar
       const formData = new FormData();
       formData.append(
         'appUser',
@@ -76,41 +90,35 @@ export class RegisterComponent implements OnInit {
           password: this.form.value.password,
         })
       );
-      if (this.avatarFile) {
-        formData.append('avatar', this.avatarFile);
+      if (this.form.value.avatar) {
+        formData.append('avatar', this.form.value.avatar);
       }
-
-      if (this.userType === 'user') {
-        this.authSvc
-          .registerUser(formData)
-          .pipe(take(1))
-          .subscribe({
-            next: () => {
-              this.router.navigate(['/auth/login']);
-              alert('Registrazione utente effettuata correttamente');
-            },
-            error: () => {
-              alert('Errore durante la registrazione');
-            },
-          });
-      } else if (this.userType === 'reseller') {
+      if (this.form.value.userType === 'reseller') {
         formData.append('ragioneSociale', this.form.value.ragioneSociale);
         formData.append('partitaIva', this.form.value.partitaIva);
         formData.append('sitoWeb', this.form.value.sitoWeb);
-
-        this.authSvc
-          .registerReseller(formData)
-          .pipe(take(1))
-          .subscribe({
-            next: () => {
-              this.router.navigate(['/auth/login']);
-              alert('Registrazione rivenditore effettuata correttamente');
-            },
-            error: () => {
-              alert('Errore durante la registrazione');
-            },
-          });
       }
+
+      // Esegui la registrazione (ad esempio, tramite AuthService)
+      this.authSvc
+        .registerUser(formData)
+        .pipe(take(1))
+        .subscribe({
+          next: () => {
+            this.router.navigate(['/']);
+            alert('Registrazione effettuata correttamente');
+          },
+          error: () => {
+            alert('Errore durante la registrazione');
+          },
+        });
+    }
+  }
+
+  onFileChange(event: any) {
+    if (event.target.files.length > 0) {
+      const file = event.target.files[0];
+      this.form.patchValue({ avatar: file });
     }
   }
 

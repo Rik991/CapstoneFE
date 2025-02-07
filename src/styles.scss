@@ -1,4 +1,4 @@
-/* You can add global styles to this file, and also import other style files */
+@import "bootstrap/scss/bootstrap";
 
 body {
   background: linear-gradient(to bottom, #ffffff, #97fef2, #a3ffcf);
@@ -6,5 +6,9 @@ body {
   margin: 0;
   padding: 0;
 }
-/* Importing Bootstrap SCSS file. */
-@import "bootstrap/scss/bootstrap";
+
+h1,
+h2,
+h3 {
+  color: #033b3a;
+}

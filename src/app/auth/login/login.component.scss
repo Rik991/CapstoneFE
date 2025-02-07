@@ -1,0 +1,22 @@
+.btn {
+  background-color: #033b3a;
+  color: #5dfffb;
+  font-weight: 700;
+  padding-block: 0.5rem;
+  border-radius: 50px;
+  transition: all 0.3s ease-in-out;
+
+  &:hover {
+    background-color: #5dfffb;
+    color: #033b3a;
+    transform: translateY(-2px);
+  }
+}
+
+.form-control,
+.form-select {
+  background-color: transparent;
+  border: none;
+  border-bottom: 1px solid black;
+  box-shadow: none;
+}

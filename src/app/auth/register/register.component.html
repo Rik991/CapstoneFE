@@ -1,179 +1,207 @@
 <form [formGroup]="form" (ngSubmit)="register($event)">
-  <h2 class="mb-4">Registrati</h2>
-  <p class="mb-4">
-    Registrati ora e ottieni l'accesso completo alla nostra app.
-  </p>
+  <!-- Step 1: Campi di base -->
+  <ng-container *ngIf="currentStep === 1">
+    <h5 class="mb-4">
+      Registrati ora e ottieni l'accesso completo alla nostra app.
+    </h5>
 
-  <div class="mb-3">
-    <label for="userType" class="form-label">Tipo di utente</label>
-    <select id="userType" class="form-select" formControlName="userType">
-      <option value="user">Utente</option>
-      <option value="reseller">Rivenditore</option>
-    </select>
-  </div>
-
-  <div class="mb-3">
-    <label for="name" class="form-label">Nome</label>
-    <input
-      id="name"
-      type="text"
-      class="form-control"
-      formControlName="name"
-      required
-    />
-    <div
-      *ngIf="form.get('name')?.invalid && form.get('name')?.touched"
-      class="text-danger"
-    >
-      Il nome è richiesto
-    </div>
-  </div>
-
-  <div class="mb-3">
-    <label for="surname" class="form-label">Cognome</label>
-    <input
-      id="surname"
-      type="text"
-      class="form-control"
-      formControlName="surname"
-      required
-    />
-    <div
-      *ngIf="form.get('surname')?.invalid && form.get('surname')?.touched"
-      class="text-danger"
-    >
-      Il cognome è richiesto
-    </div>
-  </div>
-
-  <div class="mb-3">
-    <label for="username" class="form-label">Username</label>
-    <input
-      id="username"
-      type="text"
-      class="form-control"
-      formControlName="username"
-      required
-    />
-    <div
-      *ngIf="form.get('username')?.invalid && form.get('username')?.touched"
-      class="text-danger"
-    >
-      Lo username è richiesto
-    </div>
-  </div>
-
-  <div class="mb-3">
-    <label for="email" class="form-label">Email</label>
-    <input
-      id="email"
-      type="email"
-      class="form-control"
-      formControlName="email"
-      required
-    />
-    <div
-      *ngIf="form.get('email')?.invalid && form.get('email')?.touched"
-      class="text-danger"
-    >
-      Inserisci un'email valida
-    </div>
-  </div>
-
-  <div class="mb-3">
-    <label for="password" class="form-label">Password</label>
-    <input
-      id="password"
-      type="password"
-      class="form-control"
-      formControlName="password"
-      required
-    />
-    <div
-      *ngIf="form.get('password')?.invalid && form.get('password')?.touched"
-      class="text-danger"
-    >
-      Inserisci una password di almeno 6 caratteri
-    </div>
-  </div>
-
-  <!-- Campi aggiuntivi per il rivenditore -->
-  <div *ngIf="form.get('userType')?.value === 'reseller'">
     <div class="mb-3">
-      <label for="ragioneSociale" class="form-label">Ragione Sociale</label>
+      <label for="userType" class="form-label">Tipo di utente</label>
+      <select
+        id="userType"
+        class="form-select text-center"
+        formControlName="userType"
+      >
+        <option value="user">Utente</option>
+        <option value="reseller">Rivenditore</option>
+      </select>
+    </div>
+
+    <div class="mb-3">
+      <label for="name" class="form-label">Nome</label>
       <input
-        id="ragioneSociale"
+        id="name"
         type="text"
         class="form-control"
-        formControlName="ragioneSociale"
+        formControlName="name"
         required
       />
       <div
-        *ngIf="
-          form.get('ragioneSociale')?.invalid &&
-          form.get('ragioneSociale')?.touched
-        "
+        *ngIf="form.get('name')?.invalid && form.get('name')?.touched"
         class="text-danger"
       >
-        La ragione sociale è richiesta
+        Il nome è richiesto
       </div>
     </div>
 
     <div class="mb-3">
-      <label for="partitaIva" class="form-label">Partita IVA</label>
+      <label for="surname" class="form-label">Cognome</label>
       <input
-        id="partitaIva"
+        id="surname"
         type="text"
         class="form-control"
-        formControlName="partitaIva"
+        formControlName="surname"
         required
       />
       <div
-        *ngIf="
-          form.get('partitaIva')?.invalid && form.get('partitaIva')?.touched
-        "
+        *ngIf="form.get('surname')?.invalid && form.get('surname')?.touched"
         class="text-danger"
       >
-        La partita IVA è richiesta
+        Il cognome è richiesto
       </div>
     </div>
 
     <div class="mb-3">
-      <label for="sitoWeb" class="form-label">Sito web</label>
+      <label for="username" class="form-label">Username</label>
       <input
-        id="sitoWeb"
+        id="username"
         type="text"
         class="form-control"
-        formControlName="sitoWeb"
+        formControlName="username"
+        required
       />
       <div
-        *ngIf="form.get('sitoWeb')?.invalid && form.get('sitoWeb')?.touched"
+        *ngIf="form.get('username')?.invalid && form.get('username')?.touched"
         class="text-danger"
       >
-        Inserisci un sito web valido
+        Lo username è richiesto
       </div>
     </div>
-  </div>
 
-  <div class="mb-3">
-    <label for="avatar" class="form-label">Avatar</label>
-    <input
-      id="avatar"
-      type="file"
-      class="form-control"
-      (change)="onFileChange($event)"
-      accept="image/*"
-    />
-  </div>
+    <div class="mb-3">
+      <label for="email" class="form-label">Email</label>
+      <input
+        id="email"
+        type="email"
+        class="form-control"
+        formControlName="email"
+        required
+      />
+      <div
+        *ngIf="form.get('email')?.invalid && form.get('email')?.touched"
+        class="text-danger"
+      >
+        Inserisci un'email valida
+      </div>
+    </div>
 
-  <button
-    type="submit"
-    class="btn btn-primary w-100 mb-2"
-    [disabled]="form.invalid"
-  >
-    Conferma
-  </button>
-  <button type="button" class="btn btn-secondary w-100" (click)="onClose()">
-    Chiudi
-  </button>
+    <div class="mb-3">
+      <label for="password" class="form-label">Password</label>
+      <input
+        id="password"
+        type="password"
+        class="form-control"
+        formControlName="password"
+        required
+      />
+      <div
+        *ngIf="form.get('password')?.invalid && form.get('password')?.touched"
+        class="text-danger"
+      >
+        Inserisci una password di almeno 6 caratteri
+      </div>
+    </div>
+
+    <!-- Pulsante per passare allo step 2 -->
+    <div class="d-flex gap-2">
+      <button
+        type="button"
+        class="btn btn-primary flex-grow-1"
+        (click)="goToStep(2)"
+        [disabled]="!stepOneValid()"
+      >
+        Avanti
+      </button>
+      <button type="button" class="btn btn-secondary" (click)="onClose()">
+        Chiudi
+      </button>
+    </div>
+  </ng-container>
+
+  <!-- Step 2: Campi aggiuntivi (per esempio, per il rivenditore) e Avatar -->
+  <ng-container *ngIf="currentStep === 2">
+    <!-- Se il tipo di utente è "reseller", mostriamo i campi aggiuntivi -->
+    <div *ngIf="form.get('userType')?.value === 'reseller'">
+      <div class="mb-3">
+        <label for="ragioneSociale" class="form-label">Ragione Sociale</label>
+        <input
+          id="ragioneSociale"
+          type="text"
+          class="form-control"
+          formControlName="ragioneSociale"
+          required
+        />
+        <div
+          *ngIf="
+            form.get('ragioneSociale')?.invalid &&
+            form.get('ragioneSociale')?.touched
+          "
+          class="text-danger"
+        >
+          La ragione sociale è richiesta
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label for="partitaIva" class="form-label">Partita IVA</label>
+        <input
+          id="partitaIva"
+          type="text"
+          class="form-control"
+          formControlName="partitaIva"
+          required
+        />
+        <div
+          *ngIf="
+            form.get('partitaIva')?.invalid && form.get('partitaIva')?.touched
+          "
+          class="text-danger"
+        >
+          La partita IVA è richiesta
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label for="sitoWeb" class="form-label">Sito web</label>
+        <input
+          id="sitoWeb"
+          type="text"
+          class="form-control"
+          formControlName="sitoWeb"
+        />
+        <div
+          *ngIf="form.get('sitoWeb')?.invalid && form.get('sitoWeb')?.touched"
+          class="text-danger"
+        >
+          Inserisci un sito web valido
+        </div>
+      </div>
+    </div>
+
+    <!-- Campo Avatar (presente in entrambi i casi) -->
+    <div class="mb-3">
+      <label for="avatar" class="form-label">Avatar</label>
+      <input
+        id="avatar"
+        type="file"
+        class="form-control"
+        (change)="onFileChange($event)"
+        accept="image/*"
+      />
+    </div>
+
+    <div class="d-flex justify-content-between">
+      <button type="button" class="btn btn-secondary" (click)="goToStep(1)">
+        Indietro
+      </button>
+      <button type="submit" class="btn btn-primary" [disabled]="form.invalid">
+        Conferma
+      </button>
+    </div>
+    <div class="mt-2">
+      <button type="button" class="btn btn-secondary w-100" (click)="onClose()">
+        Chiudi
+      </button>
+    </div>
+  </ng-container>
 </form>
