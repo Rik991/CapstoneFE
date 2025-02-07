@@ -29,7 +29,7 @@ export class NavbarComponent {
 
   logout(): void {
     this.authSvc.logout();
-    this.router.navigate(['/auth/login']);
+    this.router.navigate(['/']);
     alert('logout effettuato correttamente');
   }
 }

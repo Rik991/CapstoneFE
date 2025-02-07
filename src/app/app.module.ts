@@ -15,6 +15,9 @@ import { FooterComponent } from './main-components/footer/footer.component';
 import { LandingPageComponent } from './main-components/landing-page/landing-page.component';
 import { FavouriteComponent } from './favourite/favourite.component';
 import { SharedModule } from './shared/shared.module';
+import { LoginComponent } from './auth/login/login.component';
+import { RegisterComponent } from './auth/register/register.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -23,8 +26,17 @@ import { SharedModule } from './shared/shared.module';
     FooterComponent,
     LandingPageComponent,
     FavouriteComponent,
+    LoginComponent,
+    RegisterComponent,
   ],
-  imports: [BrowserModule, AppRoutingModule, NgbModule, SharedModule],
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
+    NgbModule,
+    SharedModule,
+    FormsModule,
+    ReactiveFormsModule,
+  ],
   providers: [
     provideHttpClient(withInterceptorsFromDi()),
     {

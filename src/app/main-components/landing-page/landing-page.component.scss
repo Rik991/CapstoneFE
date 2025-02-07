@@ -1,0 +1,116 @@
+h1 {
+  color: #033b3a;
+}
+
+.landing-img {
+  max-height: 200px;
+  width: 100%;
+  object-fit: cover;
+  /* Manteniamo la forma impostata con clip-path */
+  clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 50% 100%);
+}
+
+.landing-badge {
+  background-color: #033b3a;
+  color: #5dfffb;
+  font-weight: 500;
+  padding-inline: 1.5rem;
+}
+
+h2,
+h3 {
+  color: #033b3a;
+}
+
+.logo {
+  max-width: 500px;
+}
+
+/* Card del form */
+.cardForm {
+  max-width: 500px;
+}
+
+.card {
+  border-radius: 8px;
+  border: none;
+  background-color: transparent;
+  margin-bottom: 1rem;
+}
+
+.card-body {
+  padding: 2rem;
+}
+
+.img-container {
+  width: 100%;
+  flex-shrink: 0;
+}
+
+/* Animazioni di ingresso */
+.animate-left {
+  animation: slideInLeft 1s ease-out forwards;
+}
+
+.animate-right {
+  animation: fadeInRight 1s ease-out forwards;
+}
+
+@keyframes slideInLeft {
+  from {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.btn {
+  background-color: #033b3a;
+  color: #5dfffb;
+  padding-inline: 2rem;
+  padding-block: 1rem;
+  border-radius: 50px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  /* Le colonne si dispongono verticalmente */
+  .col-md-6,
+  .col-md-4 {
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+
+  /* Larghezza contenitore immagine in mobile: usa una dimensione maggiore (ad es. 80% del contenitore) */
+  .img-container {
+    width: 80%;
+    max-width: 300px;
+    margin: 0 auto;
+  }
+
+  /* Riduci il margine del titolo se necessario */
+  .image-block h2 {
+    margin-top: 1rem;
+    font-size: 1.2rem;
+  }
+
+  /* Disattiva o modifica le animazioni per un caricamento più fluido su mobile */
+  .animate-left,
+  .animate-right {
+    animation: none;
+  }
+}

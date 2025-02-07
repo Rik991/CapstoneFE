@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../auth.service';
 import { Router } from '@angular/router';
@@ -7,12 +7,13 @@ import { take } from 'rxjs';
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
-  styleUrl: './register.component.scss',
+  styleUrls: ['./register.component.scss'],
 })
 export class RegisterComponent implements OnInit {
   form!: FormGroup;
   avatarFile?: File;
   userType: string = 'user';
+  @Output() close = new EventEmitter<void>();
 
   constructor(
     private authSvc: AuthService,
@@ -84,11 +85,11 @@ export class RegisterComponent implements OnInit {
           .registerUser(formData)
           .pipe(take(1))
           .subscribe({
-            next: (res) => {
+            next: () => {
               this.router.navigate(['/auth/login']);
               alert('Registrazione utente effettuata correttamente');
             },
-            error: (err) => {
+            error: () => {
               alert('Errore durante la registrazione');
             },
           });
@@ -99,17 +100,21 @@ export class RegisterComponent implements OnInit {
 
         this.authSvc
           .registerReseller(formData)
-          .pipe(take(1)) // Assicurati che la sottoscrizione venga completata
+          .pipe(take(1))
           .subscribe({
-            next: (res) => {
+            next: () => {
               this.router.navigate(['/auth/login']);
               alert('Registrazione rivenditore effettuata correttamente');
             },
-            error: (err) => {
+            error: () => {
               alert('Errore durante la registrazione');
             },
           });
       }
     }
+  }
+
+  onClose(): void {
+    this.close.emit();
   }
 }

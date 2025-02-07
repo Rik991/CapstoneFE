@@ -1,24 +1,34 @@
-<div class="container">
-  <h1>Login</h1>
-  <form (ngSubmit)="login()" #loginForm="ngForm">
+<form (ngSubmit)="login()">
+  <h2 class="mb-3">Accedi</h2>
+
+  <div class="mb-3">
     <input
       type="text"
-      class="form-control mb-3"
-      placeholder="username"
-      name="username"
+      class="form-control"
+      placeholder="Username"
       [(ngModel)]="formData.username"
+      name="username"
       required
     />
+  </div>
+
+  <div class="mb-3">
     <input
       type="password"
-      class="form-control mb-3"
+      class="form-control"
       placeholder="Password"
-      name="password"
       [(ngModel)]="formData.password"
+      name="password"
       required
     />
-    <button class="btn btn-success" type="submit" [disabled]="!loginForm.valid">
-      Accedi
-    </button>
-  </form>
-</div>
+  </div>
+
+  <button type="submit" class="btn btn-success w-100 mb-2">Accedi</button>
+  <button
+    type="button"
+    class="btn btn-outline-secondary w-100"
+    (click)="onClose()"
+  >
+    Chiudi
+  </button>
+</form>

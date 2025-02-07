@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { iLoginRequest } from '../../interfaces/i-login-request';
 import { AuthService } from '../auth.service';
 import { Router } from '@angular/router';
@@ -7,13 +7,15 @@ import { take } from 'rxjs';
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrl: './login.component.scss',
+  styleUrls: ['./login.component.scss'],
 })
 export class LoginComponent {
   formData: iLoginRequest = {
     username: '',
     password: '',
   };
+
+  @Output() close = new EventEmitter<void>();
 
   constructor(private authSvc: AuthService, private router: Router) {}
 
@@ -43,5 +45,9 @@ export class LoginComponent {
           alert('Errore durante il login');
         },
       });
+  }
+
+  onClose(): void {
+    this.close.emit();
   }
 }

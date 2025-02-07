@@ -1,7 +1,94 @@
-<div class="container">
-  <div class="row">
-    <div class="col">
-      <h1>Landing</h1>
+<div class="container-fluid">
+  <div class="row justify-content-center">
+    <h1 class="text-center">Benvenuto in RaikoParts</h1>
+    <h3 class="text-center mb-5">
+      Cliente, professionista e venditore
+      <h2 class="fs-1">In un unico spazio</h2>
+    </h3>
+
+    <!-- Sezione immagini -->
+    <div class="col-6 d-flex flex-column gap-3 animate-left">
+      <div class="d-flex flex-row align-items-center gap-3">
+        <div class="position-relative border-bottom border-black pb-1">
+          <img
+            src="assets/landing3.jpg"
+            alt="landingImg"
+            class="img-fluid landing-img"
+          />
+          <p class="position-absolute bottom-0 start-0 m-1 landing-badge">
+            Acquista
+          </p>
+        </div>
+        <div>
+          <h2>Rivoluziona i tuoi acquisti</h2>
+        </div>
+      </div>
+
+      <div class="d-flex flex-row align-items-center gap-3">
+        <div class="position-relative border-bottom border-black pb-1">
+          <img
+            src="assets/landing1.jpg"
+            alt="landingImg"
+            class="img-fluid landing-img"
+          />
+          <p class="position-absolute bottom-0 start-0 m-1 landing-badge">
+            Vendi
+          </p>
+        </div>
+        <div>
+          <h2>Rivoluziona la tua attività</h2>
+        </div>
+      </div>
+
+      <div class="d-flex flex-row align-items-center gap-3">
+        <div class="position-relative border-bottom border-black pb-1">
+          <img
+            src="assets/landing2.jpg"
+            alt="landingImg"
+            class="img-fluid landing-img no-clip"
+          />
+          <p class="position-absolute bottom-0 start-0 m-1 landing-badge">
+            Risparmia
+          </p>
+        </div>
+        <div>
+          <h2>Rivoluziona il concetto di Shop Online</h2>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sezione login -->
+    <div class="col-4 text-center animate-right my-auto">
+      <!-- Mostra i bottoni solo se l'utente non è loggato e non è selezionato alcun form -->
+      <div *ngIf="!isLoggedIn && !currentForm" class="mb-4">
+        <div class="btn-group">
+          <button type="button" class="btn" (click)="showForm('login')">
+            Accedi
+          </button>
+          <span>|</span>
+          <button type="button" class="btn" (click)="showForm('register')">
+            Registrati
+          </button>
+        </div>
+      </div>
+      <!-- Se è stato selezionato un form, lo mostriamo all'interno di una card centrata -->
+      <div *ngIf="currentForm" class="mt-4">
+        <div class="card mx-auto shadow-sm cardForm">
+          <div class="card-body">
+            <ng-container [ngSwitch]="currentForm">
+              <app-login
+                *ngSwitchCase="'login'"
+                (close)="hideForm()"
+              ></app-login>
+              <app-register
+                *ngSwitchCase="'register'"
+                (close)="hideForm()"
+              ></app-register>
+            </ng-container>
+          </div>
+        </div>
+      </div>
+      <img src="assets/logo2.png" alt="Logo" class="img-fluid mb-4 logo" />
     </div>
   </div>
 </div>
