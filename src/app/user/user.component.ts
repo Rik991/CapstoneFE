@@ -9,6 +9,9 @@ import { environment } from '../../environments/environment.development';
 import { Subscription } from 'rxjs';
 import { FavouriteService } from '../services/favourite.service';
 import { IFavourite } from '../interfaces/i-favourite';
+import { iReseller } from '../interfaces/i-reseller';
+import { ResellerService } from '../services/reseller.service';
+import { iResellerInfo } from '../interfaces/i-reseller-info';
 
 @Component({
   selector: 'app-user',
@@ -37,7 +40,8 @@ export class UserComponent implements OnInit {
   constructor(
     private authSvc: AuthService,
     private autopartsSvc: AutopartsService,
-    private favouriteSvc: FavouriteService
+    private favouriteSvc: FavouriteService,
+    private resellerSvc: ResellerService
   ) {}
 
   ngOnInit(): void {
@@ -89,6 +93,15 @@ export class UserComponent implements OnInit {
         this.totalPages = Math.ceil(this.totalItems / this.pageSize);
       },
       error: (err) => console.error('Error loading autoparts:', err),
+    });
+  }
+
+  loadResellerInfo(autopart: iAutopartResponse): void {
+    this.resellerSvc.getResellerInfoById(autopart.reseller.id).subscribe({
+      next: (reseller: iResellerInfo) => {
+        autopart.reseller = reseller;
+      },
+      error: (err) => console.error('Error loading reseller info:', err),
     });
   }
 

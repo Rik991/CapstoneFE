@@ -2,10 +2,9 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment.development';
 import { Observable } from 'rxjs';
-import { iAutopart } from '../interfaces/i-autopart';
+
 import { iAutopartResponse } from '../interfaces/i-autopart-response';
 import { IPage } from '../interfaces/i-page';
-import { iSearchFilters } from '../interfaces/i-search-filters';
 
 @Injectable({
   providedIn: 'root',
@@ -36,10 +35,7 @@ export class AutopartsService {
 
   getByReseller(resellerId: number): Observable<IPage<iAutopartResponse>> {
     return this.http.get<IPage<iAutopartResponse>>(
-      `${this.autopartsUrl}/reseller`,
-      {
-        params: { resellerId: resellerId.toString() },
-      }
+      `${this.autopartsUrl}/public/reseller/${resellerId}`
     );
   }
 

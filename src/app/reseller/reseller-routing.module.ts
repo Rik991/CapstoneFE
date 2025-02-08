@@ -9,6 +9,7 @@ const routes: Routes = [
   { path: '', component: ResellerComponent },
   { path: 'new-autopart', component: NewAutopartComponent },
   { path: 'edit-autopart/:id', component: EditAutopartComponent },
+  { path: ':id', component: ResellerComponent },
 ];
 
 @NgModule({

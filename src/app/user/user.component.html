@@ -42,8 +42,7 @@
                 <small class="text-muted seller-info ms-2">
                   Venduto da:
                   <a
-                    [href]="autopart.reseller.sitoWeb"
-                    target="_blank"
+                    [routerLink]="['/reseller', autopart.reseller.id]"
                     class="text-decoration-none"
                   >
                     {{ autopart.reseller.ragioneSociale }}
@@ -158,8 +157,7 @@
               <small class="text-muted seller-info d-block">
                 Venduto da:
                 <a
-                  [href]="autopart.reseller.sitoWeb"
-                  target="_blank"
+                  [routerLink]="['/reseller', autopart.reseller.id]"
                   class="text-decoration-none"
                 >
                   {{ autopart.reseller.ragioneSociale }}

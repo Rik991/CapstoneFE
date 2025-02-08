@@ -11,8 +11,7 @@ import { take } from 'rxjs';
 })
 export class RegisterComponent implements OnInit {
   form!: FormGroup;
-  currentStep: number = 1; // Gestisce lo step corrente
-
+  currentStep: number = 1; // Gestione degli step del form (se necessario)
   @Output() close = new EventEmitter<void>();
 
   constructor(
@@ -21,7 +20,7 @@ export class RegisterComponent implements OnInit {
     private fb: FormBuilder
   ) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.form = this.fb.group({
       userType: ['user', Validators.required],
       name: ['', Validators.required],
@@ -30,14 +29,14 @@ export class RegisterComponent implements OnInit {
       phoneNumber: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
-      // Campi opzionali per il rivenditore
+      // Campi opzionali per il reseller
       ragioneSociale: [''],
       partitaIva: [''],
       sitoWeb: [''],
       avatar: [null],
     });
 
-    // Aggiusta le validazioni in base al tipo di utente
+    // Quando cambia il tipo di utente, aggiusta le validazioni
     this.form.get('userType')?.valueChanges.subscribe((value) => {
       const ragioneSocialeControl = this.form.get('ragioneSociale');
       const partitaIvaControl = this.form.get('partitaIva');
@@ -52,89 +51,69 @@ export class RegisterComponent implements OnInit {
         partitaIvaControl?.clearValidators();
         sitoWebControl?.clearValidators();
       }
-
       ragioneSocialeControl?.updateValueAndValidity();
       partitaIvaControl?.updateValueAndValidity();
       sitoWebControl?.updateValueAndValidity();
     });
   }
 
-  // Passa da uno step all'altro
+  // Passa da uno step all'altro (se il form è a step)
   goToStep(step: number): void {
     this.currentStep = step;
   }
 
-  // Verifica se i campi dello step 1 sono validi
-  stepOneValid(): boolean {
-    return (
-      this.form.get('userType')!.valid &&
-      this.form.get('name')!.valid &&
-      this.form.get('surname')!.valid &&
-      this.form.get('username')!.valid &&
-      this.form.get('phoneNumber')!.valid &&
-      this.form.get('email')!.valid &&
-      this.form.get('password')!.valid
-    );
-  }
-
-  register(event: Event) {
+  // Invia il form per la registrazione
+  register(event: Event): void {
     event.preventDefault();
-    if (this.form.valid) {
-      // Dichiarazione di formData
-      const formData = new FormData();
-      formData.append(
-        'appUser',
-        JSON.stringify({
-          username: this.form.value.username,
-          name: this.form.value.name,
-          surname: this.form.value.surname,
-          phoneNumber: this.form.value.phoneNumber,
-          email: this.form.value.email,
-          password: this.form.value.password,
-        })
-      );
-      if (this.form.value.avatar) {
-        formData.append('avatar', this.form.value.avatar);
-      }
+    if (this.form.invalid) return;
 
-      if (this.form.value.userType === 'reseller') {
-        formData.append('ragioneSociale', this.form.value.ragioneSociale);
-        formData.append('partitaIva', this.form.value.partitaIva);
-        formData.append('sitoWeb', this.form.value.sitoWeb);
+    const formData = new FormData();
+    const userData = {
+      username: this.form.value.username,
+      name: this.form.value.name,
+      surname: this.form.value.surname,
+      phoneNumber: this.form.value.phoneNumber,
+      email: this.form.value.email,
+      password: this.form.value.password,
+    };
+    formData.append('appUser', JSON.stringify(userData));
 
-        // Esegui la registrazione del rivenditore
-        this.authSvc
-          .registerReseller(formData)
-          .pipe(take(1))
-          .subscribe({
-            next: () => {
-              this.router.navigate(['/']);
-              alert('Registrazione del rivenditore effettuata correttamente');
-            },
-            error: () => {
-              alert('Errore durante la registrazione del rivenditore');
-            },
-          });
-      } else {
-        // Esegui la registrazione dell'utente normale
-        this.authSvc
-          .registerUser(formData)
-          .pipe(take(1))
-          .subscribe({
-            next: () => {
-              this.router.navigate(['/']);
-              alert('Registrazione effettuata correttamente');
-            },
-            error: () => {
-              alert('Errore durante la registrazione');
-            },
-          });
-      }
+    if (this.form.value.avatar) {
+      formData.append('avatar', this.form.value.avatar);
+    }
+
+    if (this.form.value.userType === 'reseller') {
+      formData.append('ragioneSociale', this.form.value.ragioneSociale);
+      formData.append('partitaIva', this.form.value.partitaIva);
+      formData.append('sitoWeb', this.form.value.sitoWeb);
+
+      this.authSvc
+        .registerReseller(formData)
+        .pipe(take(1))
+        .subscribe({
+          next: () => {
+            this.router.navigate(['/']);
+            alert('Reseller registration successful');
+          },
+          error: () => alert('Error during reseller registration'),
+        });
+    } else {
+      this.authSvc
+        .registerUser(formData)
+        .pipe(take(1))
+        .subscribe({
+          next: () => {
+            this.router.navigate(['/']);
+            alert('User registration successful');
+          },
+          error: () => alert('Error during registration'),
+        });
     }
   }
 
-  onFileChange(event: any) {
-    if (event.target.files.length > 0) {
+  // Gestisce il cambio del file (avatar)
+  onFileChange(event: any): void {
+    if (event.target.files?.length > 0) {
       const file = event.target.files[0];
       this.form.patchValue({ avatar: file });
     }

@@ -10,40 +10,30 @@ import { take } from 'rxjs';
   styleUrls: ['./login.component.scss'],
 })
 export class LoginComponent {
-  formData: iLoginRequest = {
-    username: '',
-    password: '',
-  };
-
+  formData: iLoginRequest = { username: '', password: '' };
   @Output() close = new EventEmitter<void>();
 
   constructor(private authSvc: AuthService, private router: Router) {}
 
-  login() {
+  login(): void {
     this.authSvc
       .login(this.formData)
       .pipe(take(1))
       .subscribe({
         next: () => {
           const role = this.authSvc.getUserRole();
-          switch (role) {
-            case 'ROLE_ADMIN':
-              this.router.navigate(['/admin']);
-              break;
-            case 'ROLE_USER':
-              this.router.navigate(['/user']);
-              break;
-            case 'ROLE_RESELLER':
-              this.router.navigate(['/reseller']);
-              break;
-            default:
-              this.router.navigate(['/auth/login']);
+          if (role === 'ROLE_ADMIN') {
+            this.router.navigate(['/admin']);
+          } else if (role === 'ROLE_USER') {
+            this.router.navigate(['/user']);
+          } else if (role === 'ROLE_RESELLER') {
+            this.router.navigate(['/reseller']);
+          } else {
+            this.router.navigate(['/auth/login']);
           }
-          alert('Login effettuato correttamente');
+          alert('Login successful');
         },
-        error: (err) => {
-          alert('Errore durante il login');
-        },
+        error: () => alert('Error during login'),
       });
   }
 
