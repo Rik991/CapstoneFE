@@ -3,7 +3,6 @@ import { AuthService } from '../auth/auth.service';
 import { iReseller } from '../interfaces/i-reseller';
 import { iAutopartResponse } from '../interfaces/i-autopart-response';
 import { AutopartsService } from '../services/autopart.service';
-import { IPage } from '../interfaces/i-page';
 import { environment } from '../../environments/environment.development';
 import { Subscription } from 'rxjs';
 import { ResellerService } from '../services/reseller.service';

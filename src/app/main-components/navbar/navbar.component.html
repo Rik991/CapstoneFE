@@ -41,7 +41,10 @@
             <i class="bi bi-person-circle"></i>
           </a>
           <ul class="dropdown-menu dropdown-menu-end">
-            <li>
+            <li *ngIf="userRole === 'ROLE_RESELLER'">
+              <a class="dropdown-item" routerLink="/reseller">Account</a>
+            </li>
+            <li *ngIf="userRole === 'ROLE_USER'">
               <a class="dropdown-item" routerLink="/user/user-page">Account</a>
             </li>
             <li>

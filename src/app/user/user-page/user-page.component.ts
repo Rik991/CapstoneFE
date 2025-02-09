@@ -17,6 +17,7 @@ export class UserPageComponent {
   favouriteIds: Set<number> = new Set<number>();
   favouriteAutoparts: iAutopartResponse[] = [];
   imgUrl: string = environment.imgUrl;
+  userRole: string | null = null;
 
   constructor(
     private authSvc: AuthService,
@@ -27,6 +28,7 @@ export class UserPageComponent {
   ngOnInit() {
     this.authSvc.user$.subscribe((user) => {
       this.user = user as iUser;
+      this.userRole = this.authSvc.getUserRole();
     });
     this.loadFavourites();
   }

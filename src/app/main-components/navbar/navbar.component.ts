@@ -11,14 +11,17 @@ import { Router } from '@angular/router';
 export class NavbarComponent {
   isLoggedIn: boolean = false;
   private subscriptions: Subscription = new Subscription();
+  userRole: string | null = null;
 
   constructor(private authSvc: AuthService, private router: Router) {}
 
   ngOnInit(): void {
     // salvo nel contenitore sub (subscription) lo user loggato così da distruggerlo alla fine
-    const sub = this.authSvc.isLoggedIn$.subscribe(
-      (isLogged) => (this.isLoggedIn = isLogged)
-    );
+    const sub = this.authSvc.isLoggedIn$.subscribe((isLogged) => {
+      this.isLoggedIn = isLogged;
+      this.userRole = this.authSvc.getUserRole();
+    });
+
     this.subscriptions.add(sub);
   }
 
