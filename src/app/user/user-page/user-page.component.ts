@@ -47,6 +47,31 @@ export class UserPageComponent {
     });
   }
 
+  toggleFavourite(autopartId: number) {
+    if (this.favouriteIds.has(autopartId)) {
+      this.favouriteSvc.removeFavourite(autopartId).subscribe({
+        next: () => {
+          this.favouriteIds.delete(autopartId);
+          this.favouriteAutoparts = this.favouriteAutoparts.filter(
+            (autopart) => autopart.id !== autopartId
+          );
+          alert('Ricambio rimosso ai preferiti');
+        },
+        error: (err) =>
+          console.error('Errore nella rimozione del preferito', err),
+      });
+    } else {
+      this.favouriteSvc.addFavourite(autopartId).subscribe({
+        next: () => {
+          this.favouriteIds.add(autopartId);
+          this.loadAutopartDetails(autopartId);
+          alert('Ricambio aggiunto ai preferiti');
+        },
+        error: (err) => console.error('Impossibile aggiungere preferito', err),
+      });
+    }
+  }
+
   loadAutopartDetails(autopartId: number): void {
     this.autopartSvc.getAutopartById(autopartId).subscribe({
       next: (autopart: iAutopartResponse) => {

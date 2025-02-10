@@ -4,7 +4,7 @@ import { iReseller } from '../interfaces/i-reseller';
 import { iAutopartResponse } from '../interfaces/i-autopart-response';
 import { AutopartsService } from '../services/autopart.service';
 import { environment } from '../../environments/environment.development';
-import { Subscription } from 'rxjs';
+import { Subscription, take } from 'rxjs';
 import { ResellerService } from '../services/reseller.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
@@ -21,6 +21,9 @@ export class ResellerComponent implements OnInit, OnDestroy {
   autoparts: iAutopartResponse[] = [];
   imgUrl: string = environment.imgUrl;
   userRole: string | null = null;
+
+  // Aggiungiamo la proprietà per verificare se l'utente è proprietario
+  isOwner: boolean = false;
 
   // Reactive form per la modifica dei dati
   resellerForm!: FormGroup;
@@ -47,7 +50,7 @@ export class ResellerComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    // 1. Subscribe all'utente autenticato per impostare userId e userRole sempre
+    // Sottoscrizione per ottenere l'utente autenticato e impostare userRole e newRating.userId
     this.subscriptions.add(
       this.authSvc.user$.subscribe((user) => {
         if (user) {
@@ -57,45 +60,49 @@ export class ResellerComponent implements OnInit, OnDestroy {
       })
     );
 
-    // 2. Ora controlla il parametro "id" nella route per caricare i dati del reseller
-    this.subscriptions.add(
-      this.route.paramMap.subscribe((params) => {
-        const idParam = params.get('id');
-        if (idParam) {
-          // Se è presente l'id nella route, lo usiamo per caricare il reseller corrispondente
-          const resellerId = Number(idParam);
-          this.loadResellerData(resellerId);
-        } else {
-          // Nessun parametro id: usiamo i dati dell'utente loggato
-          this.subscriptions.add(
-            this.authSvc.user$.subscribe((user) => {
-              if (user) {
-                this.reseller = user as iReseller;
-                if (this.reseller.id) {
-                  this.loadResellerData(this.reseller.id);
-                }
-              }
-            })
-          );
+    // Inizializza il form
+    this.resellerForm = this.fb.group({
+      username: [{ value: '', disabled: true }], // sempre readonly
+      email: ['', [Validators.required, Validators.email]],
+      name: ['', Validators.required],
+      surname: ['', Validators.required],
+      phoneNumber: ['', Validators.required],
+      ragioneSociale: ['', Validators.required],
+      partitaIva: ['', Validators.required],
+      sitoWeb: [''],
+    });
+
+    // Carica i dati del reseller: se nella route c'è un id, usalo, altrimenti usa l'utente loggato
+    this.route.paramMap.pipe(take(1)).subscribe((params) => {
+      const idParam = params.get('id');
+      if (idParam) {
+        const resellerId = Number(idParam);
+        this.loadResellerData(resellerId);
+      } else {
+        const user = this.authSvc.getCurrentUser();
+        if (user) {
+          this.loadResellerData(user.id!);
         }
-      })
-    );
+      }
+    });
   }
+
   ngOnDestroy(): void {
     this.subscriptions.unsubscribe();
   }
 
-  // Recupera i dati aggiornati del reseller dal backend e inizializza il form
+  // Carica i dati del reseller dal back-end
   private loadResellerData(resellerId: number): void {
     this.resellerSvc.getResellerById(resellerId).subscribe({
       next: (reseller) => {
         this.reseller = reseller;
         this.newRating.resellerId = reseller.id!;
-        // Chiamata per aggiornare il rating medio
+        // Imposta isOwner confrontando l'id dell'utente loggato con quello del reseller
+        const currentUser = this.authSvc.getCurrentUser();
+        this.isOwner = currentUser ? currentUser.id === reseller.id : false;
+        // Aggiorna il rating medio
         this.ratingSvc.getAverageRating(reseller.id!).subscribe({
-          next: (avg) => {
-            this.reseller.ratingMedio = avg;
-          },
+          next: (avg) => (this.reseller.ratingMedio = avg),
           error: (err) =>
             console.error('Errore nel caricamento del rating medio:', err),
         });
@@ -106,53 +113,47 @@ export class ResellerComponent implements OnInit, OnDestroy {
     });
   }
 
-  // Inizializza il reactive form con i dati attuali del reseller
+  // Inizializza il form con i dati del reseller
   private initForm(): void {
-    this.resellerForm = this.fb.group({
-      username: [{ value: this.reseller.username, disabled: true }],
-      email: [this.reseller.email, [Validators.required, Validators.email]],
-      name: [this.reseller.name, Validators.required],
-      surname: [this.reseller.surname, Validators.required],
-      phoneNumber: [this.reseller.phoneNumber, Validators.required],
-      ragioneSociale: [this.reseller.ragioneSociale, Validators.required],
-      partitaIva: [this.reseller.partitaIva, Validators.required],
-      sitoWeb: [this.reseller.sitoWeb],
+    this.resellerForm.patchValue({
+      username: this.reseller.username,
+      email: this.reseller.email,
+      name: this.reseller.name,
+      surname: this.reseller.surname,
+      phoneNumber: this.reseller.phoneNumber,
+      ragioneSociale: this.reseller.ragioneSociale,
+      partitaIva: this.reseller.partitaIva,
+      sitoWeb: this.reseller.sitoWeb,
     });
-    // Il form parte in modalità sola lettura
-    this.resellerForm.disable();
   }
 
-  // Carica gli articoli (autoparts) associati al reseller
+  // Carica gli articoli (autoparts) associati
   private loadAutoparts(): void {
     if (!this.reseller?.id) {
       console.error('Reseller ID not available');
       return;
     }
     this.autopartSvc.getByReseller(this.reseller.id).subscribe({
-      next: (page) => {
-        this.autoparts = page.content;
-      },
+      next: (page) => (this.autoparts = page.content),
       error: (err) => console.error('Error loading autoparts:', err),
     });
   }
 
-  // Attiva/disattiva la modalità modifica (solo se il ruolo è reseller)
+  // Toggle della modalità edit: solo se l'utente è proprietario
   toggleEdit(): void {
-    if (this.userRole === 'ROLE_RESELLER') {
+    if (this.userRole === 'ROLE_RESELLER' && this.isOwner) {
       this.editMode = !this.editMode;
-      if (this.editMode) {
-        this.resellerForm.enable();
-        // Manteniamo il campo username sempre in sola lettura
-        this.resellerForm.get('username')?.disable();
-      } else {
-        this.resellerForm.disable();
+      if (!this.editMode) {
+        // Se si annulla l'editing, reimposta i dati
+        this.initForm();
+        this.selectedAvatar = undefined;
       }
     }
   }
 
-  // Gestisce l'invio del form per aggiornare i dati
+  // Invia il form per aggiornare i dati (solo se è il proprietario)
   onSubmit(): void {
-    if (this.resellerForm.valid && this.reseller.id) {
+    if (this.resellerForm.valid && this.reseller.id && this.isOwner) {
       const updatedData = this.resellerForm.getRawValue();
       this.resellerSvc
         .updateReseller(this.reseller.id, updatedData, this.selectedAvatar)
@@ -160,14 +161,15 @@ export class ResellerComponent implements OnInit, OnDestroy {
           next: (updatedReseller) => {
             this.reseller = updatedReseller;
             this.editMode = false;
-            this.resellerForm.disable();
+            this.initForm();
+            this.selectedAvatar = undefined;
           },
           error: (err) => console.error('Error updating reseller:', err),
         });
     }
   }
 
-  // Se l'utente seleziona un nuovo avatar, lo salva in una proprietà
+  // Gestisce la selezione di un nuovo avatar
   onAvatarSelected(event: any): void {
     if (event.target.files?.length) {
       this.selectedAvatar = event.target.files[0];

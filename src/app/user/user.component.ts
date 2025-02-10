@@ -9,7 +9,6 @@ import { environment } from '../../environments/environment.development';
 import { Subscription } from 'rxjs';
 import { FavouriteService } from '../services/favourite.service';
 import { IFavourite } from '../interfaces/i-favourite';
-import { iReseller } from '../interfaces/i-reseller';
 import { ResellerService } from '../services/reseller.service';
 import { iResellerInfo } from '../interfaces/i-reseller-info';
 
