@@ -8,4 +8,5 @@ export const environment = {
   imgUrl: 'https://capstoneautomotive.s3.eu-north-1.amazonaws.com/',
   favouriteUrl: 'http://localhost:8080/api/favourites',
   resellerUpdateUrl: 'http://localhost:8080/api/auth/update-reseller',
+  ratingUrl: 'http://localhost:8080/api/ratings',
 };

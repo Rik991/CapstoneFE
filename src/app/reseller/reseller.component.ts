@@ -8,6 +8,8 @@ import { Subscription } from 'rxjs';
 import { ResellerService } from '../services/reseller.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
+import { iRating } from '../interfaces/i-rating';
+import { RatingService } from '../services/rating.service';
 
 @Component({
   selector: 'app-reseller',
@@ -25,6 +27,14 @@ export class ResellerComponent implements OnInit, OnDestroy {
   editMode: boolean = false;
   selectedAvatar?: File;
 
+  // Proprietà per gestire il nuovo rating da inviare
+  newRating: iRating = {
+    rating: 5,
+    comment: '',
+    resellerId: 0,
+    userId: 0,
+  };
+
   private subscriptions: Subscription = new Subscription();
 
   constructor(
@@ -32,31 +42,44 @@ export class ResellerComponent implements OnInit, OnDestroy {
     private autopartSvc: AutopartsService,
     private resellerSvc: ResellerService,
     private fb: FormBuilder,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private ratingSvc: RatingService
   ) {}
 
   ngOnInit(): void {
-    // Controlla se esiste il parametro "id" nella route
-    this.route.paramMap.subscribe((params) => {
-      const idParam = params.get('id');
-      if (idParam) {
-        // Se è presente l'id nella route, lo usiamo per caricare il reseller corrispondente
-        const resellerId = Number(idParam);
-        this.loadResellerData(resellerId);
-      } else {
-        // Nessun parametro id nella route: usiamo i dati dell'utente loggato
-        const userSub = this.authSvc.user$.subscribe((user) => {
-          if (user) {
-            this.reseller = user as iReseller;
-            this.userRole = this.authSvc.getUserRole();
-            if (this.reseller.id) {
-              this.loadResellerData(this.reseller.id);
-            }
-          }
-        });
-        this.subscriptions.add(userSub);
-      }
-    });
+    // 1. Subscribe all'utente autenticato per impostare userId e userRole sempre
+    this.subscriptions.add(
+      this.authSvc.user$.subscribe((user) => {
+        if (user) {
+          this.newRating.userId = user.id;
+          this.userRole = this.authSvc.getUserRole();
+        }
+      })
+    );
+
+    // 2. Ora controlla il parametro "id" nella route per caricare i dati del reseller
+    this.subscriptions.add(
+      this.route.paramMap.subscribe((params) => {
+        const idParam = params.get('id');
+        if (idParam) {
+          // Se è presente l'id nella route, lo usiamo per caricare il reseller corrispondente
+          const resellerId = Number(idParam);
+          this.loadResellerData(resellerId);
+        } else {
+          // Nessun parametro id: usiamo i dati dell'utente loggato
+          this.subscriptions.add(
+            this.authSvc.user$.subscribe((user) => {
+              if (user) {
+                this.reseller = user as iReseller;
+                if (this.reseller.id) {
+                  this.loadResellerData(this.reseller.id);
+                }
+              }
+            })
+          );
+        }
+      })
+    );
   }
   ngOnDestroy(): void {
     this.subscriptions.unsubscribe();
@@ -67,6 +90,15 @@ export class ResellerComponent implements OnInit, OnDestroy {
     this.resellerSvc.getResellerById(resellerId).subscribe({
       next: (reseller) => {
         this.reseller = reseller;
+        this.newRating.resellerId = reseller.id!;
+        // Chiamata per aggiornare il rating medio
+        this.ratingSvc.getAverageRating(reseller.id!).subscribe({
+          next: (avg) => {
+            this.reseller.ratingMedio = avg;
+          },
+          error: (err) =>
+            console.error('Errore nel caricamento del rating medio:', err),
+        });
         this.initForm();
         this.loadAutoparts();
       },
@@ -153,5 +185,27 @@ export class ResellerComponent implements OnInit, OnDestroy {
         error: (err) => console.error('Error deleting autopart:', err),
       });
     }
+  }
+
+  submitRating(): void {
+    if (this.newRating.rating < 1 || this.newRating.rating > 5) {
+      alert('Il voto deve essere compreso tra 1 e 5');
+      return;
+    }
+    this.ratingSvc.submitRating(this.newRating).subscribe({
+      next: (response) => {
+        alert('Valutazione inviata con successo!');
+        // Dopo l'invio, aggiorniamo il rating medio
+        this.ratingSvc.getAverageRating(this.newRating.resellerId).subscribe({
+          next: (avg) => (this.reseller.ratingMedio = avg),
+          error: (err) =>
+            console.error('Errore nel caricamento del rating medio:', err),
+        });
+      },
+      error: (err) => {
+        console.error("Errore durante l'invio della valutazione:", err);
+        alert("Errore durante l'invio della valutazione");
+      },
+    });
   }
 }

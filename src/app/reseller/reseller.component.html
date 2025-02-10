@@ -16,6 +16,10 @@
       <p><strong>Ragione Sociale:</strong> {{ reseller.ragioneSociale }}</p>
       <p><strong>Partita IVA:</strong> {{ reseller.partitaIva }}</p>
       <p><strong>Sito Web:</strong> {{ reseller.sitoWeb }}</p>
+      <p>
+        <strong>Rating medio:</strong>
+        {{ reseller.ratingMedio | number : "1.1-1" }} / 5
+      </p>
     </div>
   </div>
   <!-- Pulsante di modifica visibile solo se l'utente loggato ha il ruolo reseller -->
@@ -156,4 +160,36 @@
       </div>
     </div>
   </div>
+</div>
+
+<!-- Sezione per lasciare una valutazione (visibile solo a utenti con ruolo USER) -->
+<div class="m-5" *ngIf="userRole !== 'ROLE_RESELLER'">
+  <h3>Lascia la tua valutazione</h3>
+  <form (ngSubmit)="submitRating()">
+    <div class="form-group">
+      <label for="ratingSelect">Voto (1-5):</label>
+      <select
+        id="ratingSelect"
+        [(ngModel)]="newRating.rating"
+        name="rating"
+        required
+        class="form-control"
+      >
+        <option *ngFor="let r of [1, 2, 3, 4, 5]" [value]="r">{{ r }}</option>
+      </select>
+    </div>
+    <div class="form-group mt-2">
+      <label for="ratingComment">Commento (opzionale):</label>
+      <textarea
+        id="ratingComment"
+        [(ngModel)]="newRating.comment"
+        name="comment"
+        class="form-control"
+        rows="3"
+      ></textarea>
+    </div>
+    <button type="submit" class="btn btn-primary mt-3">
+      Invia valutazione
+    </button>
+  </form>
 </div>

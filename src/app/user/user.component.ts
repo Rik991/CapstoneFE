@@ -58,6 +58,17 @@ export class UserComponent implements OnInit {
     this.subscriptions.unsubscribe();
   }
 
+  getFullStars(rating: number): number[] {
+    const fullStars = Math.floor(rating);
+    return Array(fullStars).fill(0);
+  }
+
+  getEmptyStars(rating: number): number[] {
+    const fullStars = Math.floor(rating);
+    const emptyStars = 5 - fullStars;
+    return Array(emptyStars).fill(0);
+  }
+
   openLightbox(url: string): void {
     this.selectedImageUrl = url;
   }
