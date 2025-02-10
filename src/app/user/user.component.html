@@ -189,6 +189,32 @@
                 >
                   {{ autopart.reseller.ragioneSociale }}
                 </a>
+                <span
+                  *ngIf="
+                    autopart.reseller.ratingMedio &&
+                      autopart.reseller.ratingMedio > 0;
+                    else noRating
+                  "
+                >
+                  <ng-container
+                    *ngFor="
+                      let star of getFullStars(autopart.reseller.ratingMedio)
+                    "
+                  >
+                    <i class="bi bi-star-fill text-warning"></i>
+                  </ng-container>
+                  <ng-container
+                    *ngFor="
+                      let star of getEmptyStars(autopart.reseller.ratingMedio)
+                    "
+                  >
+                    <i class="bi bi-star text-warning"></i>
+                  </ng-container>
+                  ({{ autopart.reseller.ratingMedio | number : "1.1-1" }})
+                </span>
+                <ng-template #noRating>
+                  <span>Nessun voto</span>
+                </ng-template>
               </small>
             </div>
             <!-- Veicoli compatibili -->

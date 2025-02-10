@@ -29,7 +29,7 @@ export class UserComponent implements OnInit {
   filteredModels: iVehicle[] = [];
   filters: any = {};
   currentPage: number = 1;
-  pageSize: number = 12;
+  pageSize: number = 20;
   totalItems: number = 0;
   totalPages: number = 0;
   currentFilters: any = {};
