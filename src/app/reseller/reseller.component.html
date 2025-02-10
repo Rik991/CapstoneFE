@@ -23,6 +23,12 @@
           (change)="onAvatarSelected($event)"
         />
       </div>
+      <div class="mt-3">
+        <p>
+          <strong>Rating medio:</strong>
+          {{ reseller.ratingMedio | number : "1.1-1" }} / 5
+        </p>
+      </div>
     </div>
 
     <!-- Colonna destra: Form unificato (i campi hanno [readonly]="!editMode") -->
@@ -137,14 +143,6 @@
         </div>
       </form>
     </div>
-  </div>
-
-  <!-- Visualizzazione di altri dati in modalità lettura (ad es. Rating medio) -->
-  <div class="mt-3">
-    <p>
-      <strong>Rating medio:</strong>
-      {{ reseller.ratingMedio | number : "1.1-1" }} / 5
-    </p>
   </div>
 </div>
 

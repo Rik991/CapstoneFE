@@ -85,6 +85,7 @@
                   class="price-fav-container d-flex align-items-center gap-2"
                 >
                   <button
+                    *ngIf="userRole === 'ROLE_USER'"
                     class="btn btn-link p-1"
                     (click)="toggleFavourite(autopart.id)"
                   >

@@ -6,6 +6,10 @@ import { IFavourite } from '../../interfaces/i-favourite';
 import { iAutopartResponse } from '../../interfaces/i-autopart-response';
 import { AutopartsService } from '../../services/autopart.service';
 import { environment } from '../../../environments/environment.development';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
+import { take } from 'rxjs';
+import { UserService } from '../../services/user.service';
 
 @Component({
   selector: 'app-user-page',
@@ -19,10 +23,20 @@ export class UserPageComponent {
   imgUrl: string = environment.imgUrl;
   userRole: string | null = null;
 
+  isOwner: boolean = false;
+
+  //reactiveform per l'edit dello user
+  userForm!: FormGroup;
+  editMode: boolean = false;
+  selectedAvatar?: File;
+
   constructor(
     private authSvc: AuthService,
     private favouriteSvc: FavouriteService,
-    private autopartSvc: AutopartsService
+    private autopartSvc: AutopartsService,
+    private userSvc: UserService,
+    private fb: FormBuilder,
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit() {
@@ -30,7 +44,87 @@ export class UserPageComponent {
       this.user = user as iUser;
       this.userRole = this.authSvc.getUserRole();
     });
+
+    this.userForm = this.fb.group({
+      username: [{ value: '', disabled: true }],
+      email: ['', [Validators.required, Validators.email]],
+      name: ['', Validators.required],
+      surname: ['', Validators.required],
+      phoneNumber: ['', Validators.required],
+    });
+    //inizializzato il form carico i dati dello user o con la route o con il metodo nell'authSvc
+    this.route.paramMap.pipe(take(1)).subscribe((params) => {
+      const idParam = params.get('id');
+      if (idParam) {
+        const userId = Number(idParam);
+        this.loadUserData(userId);
+      } else {
+        const user = this.authSvc.getCurrentUser();
+        if (user) {
+          this.loadUserData(user.id!);
+          console.log(user.id);
+        }
+      }
+    });
+
     this.loadFavourites();
+  }
+
+  private loadUserData(userId: number): void {
+    this.userSvc.getUserById(userId).subscribe({
+      next: (user) => {
+        this.user = user;
+        const currentUser = this.authSvc.getCurrentUser();
+        this.isOwner = currentUser ? currentUser.id === user.id : false;
+        this.initForm();
+      },
+      error: (err) => console.error('Errore nel caricamento dello user', err),
+    });
+  }
+
+  //metodo per precaricare il form
+  initForm(): void {
+    this.userForm.patchValue({
+      email: this.user.email,
+      username: this.user.username,
+      name: this.user.name,
+      surname: this.user.surname,
+      phoneNumber: this.user.phoneNumber,
+    });
+  }
+
+  //toggle per editare solo se si è autorizzati
+  toggleEdit(): void {
+    if (this.userRole === 'ROLE_USER' && this.isOwner) {
+      this.editMode = !this.editMode;
+      if (!this.editMode) {
+        this.initForm(), (this.selectedAvatar = undefined);
+      }
+    }
+  }
+  // Gestisce la selezione di un nuovo avatar
+  onAvatarSelected(event: any): void {
+    if (event.target.files?.length) {
+      this.selectedAvatar = event.target.files[0];
+    }
+  }
+
+  //all'invio del form se sono autorizzato aggiorno i campi
+  onSubmit(): void {
+    if (this.userForm.valid && this.user.id && this.isOwner) {
+      const updatedData = this.userForm.getRawValue();
+      this.userSvc
+        .updateUser(this.user.id, updatedData, this.selectedAvatar)
+        .subscribe({
+          next: (updatedUser) => {
+            this.user = updatedUser;
+            this.editMode = false;
+            this.initForm();
+            this.selectedAvatar = undefined;
+          },
+          error: (err) => console.error('Errore durante la modifica', err),
+        });
+    }
   }
 
   loadFavourites(): void {

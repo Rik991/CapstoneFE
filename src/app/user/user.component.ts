@@ -33,7 +33,8 @@ export class UserComponent implements OnInit {
   totalPages: number = 0;
   currentFilters: any = {};
   selectedImageUrl: string | null = null;
-  favouriteIds: Set<number> = new Set<number>(); // Per tenere traccia dei preferiti
+  favouriteIds: Set<number> = new Set<number>();
+  userRole: string | null = null;
   private subscriptions: Subscription = new Subscription();
 
   constructor(
@@ -47,6 +48,7 @@ export class UserComponent implements OnInit {
     // Gestione della subscription per ottenere l'utente corrente
     const userSub = this.authSvc.user$.subscribe((user) => {
       this.user = user;
+      this.userRole = this.authSvc.getUserRole();
     });
     this.subscriptions.add(userSub);
     this.loadFavourites();
