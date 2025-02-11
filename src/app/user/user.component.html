@@ -1,9 +1,8 @@
 <div class="container">
-  <app-autopart-search
-    (searchChange)="onSearchChange($event)"
-  ></app-autopart-search>
-
   <div class="row mt-4">
+    <app-autopart-search
+      (searchChange)="onSearchChange($event)"
+    ></app-autopart-search>
     <div *ngFor="let autopart of autoparts; let i = index" class="col-12 mb-3">
       <div class="card h-100">
         <div class="card-body">
