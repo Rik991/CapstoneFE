@@ -6,6 +6,7 @@ import { EditAutopartComponent } from './shared/autopart/edit-autopart/edit-auto
 import { NewAutopartComponent } from './shared/autopart/new-autopart/new-autopart.component';
 import { GuestGuard } from './auth/guards/guest.guard';
 import { AuthGuard } from './auth/guards/auth.guard';
+import { SettingsComponent } from './pages/settings/settings.component';
 
 const routes: Routes = [
   {
@@ -42,6 +43,11 @@ const routes: Routes = [
   {
     path: 'edit-autopart',
     component: EditAutopartComponent,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'settings',
+    component: SettingsComponent,
     canActivate: [AuthGuard],
   },
 ];

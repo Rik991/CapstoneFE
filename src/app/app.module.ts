@@ -18,6 +18,7 @@ import { SharedModule } from './shared/shared.module';
 import { LoginComponent } from './auth/login/login.component';
 import { RegisterComponent } from './auth/register/register.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { SettingsComponent } from './pages/settings/settings.component';
 
 @NgModule({
   declarations: [
@@ -28,6 +29,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     FavouriteComponent,
     LoginComponent,
     RegisterComponent,
+    SettingsComponent,
   ],
   imports: [
     BrowserModule,
