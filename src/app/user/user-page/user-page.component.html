@@ -1,20 +1,22 @@
 <div class="container my-4" *ngIf="user">
-  <!-- Sezione Informazioni Utente -->
-  <div class="row align-items-center mb-5">
-    <div class="col-md-4 text-center">
-      <img
-        [src]="imgUrl + user.avatar"
-        alt="Foto Utente"
-        class="img-fluid rounded-circle"
-        style="max-width: 200px"
-      />
-    </div>
-    <div class="col-md-8">
-      <h2>{{ user.username }}</h2>
-      <p><strong>Email:</strong> {{ user.email }}</p>
-      <p><strong>Nome:</strong> {{ user.name }}</p>
-      <p><strong>Cognome:</strong> {{ user.surname }}</p>
-      <p><strong>Telefono:</strong> {{ user.phoneNumber }}</p>
+  <!-- Sezione Informazioni Utente con effetto satinato -->
+  <div class="user-info-satin mb-5 p-4">
+    <div class="row align-items-center">
+      <div class="col-md-4 text-center">
+        <img
+          [src]="imgUrl + user.avatar"
+          alt="Foto Utente"
+          class="img-fluid rounded-circle"
+          style="max-width: 200px"
+        />
+      </div>
+      <div class="col-md-8">
+        <h2>{{ user.username }}</h2>
+        <p><strong>Email:</strong> {{ user.email }}</p>
+        <p><strong>Nome:</strong> {{ user.name }}</p>
+        <p><strong>Cognome:</strong> {{ user.surname }}</p>
+        <p><strong>Telefono:</strong> {{ user.phoneNumber }}</p>
+      </div>
     </div>
   </div>
 

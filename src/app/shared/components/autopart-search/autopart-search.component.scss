@@ -1,26 +1,73 @@
+/* ------------------------------------------------------------------------- */
+/*                     STILI PER IL COMPONENTE DI RICERCA                    */
+/* ------------------------------------------------------------------------- */
+
 .search-container {
-  background: white;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
 }
 
-.input-group-text {
-  background: #f8f9fa;
-  border: 1px solid #ced4da;
-  border-radius: 0.375rem 0 0 0.375rem;
+/* Layout interno del form: uso di flex per mantenere gli elementi allineati */
+.search-container form.row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  width: 100%;
 }
 
+/* Le colonne (per input e filtri) devono avere una larghezza minima e allinearsi */
+.search-container .col-12.col-md-6 {
+  flex: 1 1 300px;
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+/* Stili per input group, select e form-control */
+.input-group,
 .form-select,
 .form-control {
-  border-radius: 0.375rem;
+  border-radius: 8px;
 }
 
+/* Stile per il bottone outline */
 .btn-outline-primary {
   border-color: #007bff;
   color: #007bff;
+  border-radius: 8px;
+  transition: background-color 0.3s ease;
 }
 
 .btn-outline-primary:hover {
   background-color: #007bff;
-  color: white;
+  color: #fff;
+}
+
+/* ------------------------------------------------------------------------- */
+/*                  ADATTAMENTO PER DISPLAY MOBILE                         */
+/* ------------------------------------------------------------------------- */
+
+/* Su dispositivi molto piccoli (max-width: 576px), semplifichiamo il layout: */
+/* - Nascondiamo gli elementi non essenziali (filtri avanzati) e facciamo in modo */
+/*   che l’input principale occupi l’intera larghezza. */
+
+@media (max-width: 576px) {
+  /* Supponendo che nel markup gli elementi avanzati abbiano una classe "advanced-filters" */
+  .search-container .advanced-filters,
+  .search-container .col-md-6.col-lg-3 {
+    display: none !important;
+  }
+  .search-container .col-12.col-md-6 {
+    flex: 1 1 100%;
+  }
+  /* Mostriamo un pulsante toggle (se presente nel markup) per espandere i filtri */
+  .search-container .toggle-advanced {
+    display: block;
+    width: 100%;
+    text-align: right;
+    margin-top: 0.5rem;
+  }
 }
