@@ -60,18 +60,6 @@ export class ResellerComponent implements OnInit, OnDestroy {
       })
     );
 
-    // Inizializza il form
-    this.resellerForm = this.fb.group({
-      username: [{ value: '', disabled: true }], // sempre readonly
-      email: ['', [Validators.required, Validators.email]],
-      name: ['', Validators.required],
-      surname: ['', Validators.required],
-      phoneNumber: ['', Validators.required],
-      ragioneSociale: ['', Validators.required],
-      partitaIva: ['', Validators.required],
-      sitoWeb: [''],
-    });
-
     // Carica i dati del reseller: se nella route c'è un id, usalo, altrimenti usa l'utente loggato
     this.route.paramMap.pipe(take(1)).subscribe((params) => {
       const idParam = params.get('id');
@@ -106,24 +94,9 @@ export class ResellerComponent implements OnInit, OnDestroy {
           error: (err) =>
             console.error('Errore nel caricamento del rating medio:', err),
         });
-        this.initForm();
         this.loadAutoparts();
       },
       error: (err) => console.error('Error loading reseller:', err),
-    });
-  }
-
-  // Inizializza il form con i dati del reseller
-  private initForm(): void {
-    this.resellerForm.patchValue({
-      username: this.reseller.username,
-      email: this.reseller.email,
-      name: this.reseller.name,
-      surname: this.reseller.surname,
-      phoneNumber: this.reseller.phoneNumber,
-      ragioneSociale: this.reseller.ragioneSociale,
-      partitaIva: this.reseller.partitaIva,
-      sitoWeb: this.reseller.sitoWeb,
     });
   }
 
@@ -137,43 +110,6 @@ export class ResellerComponent implements OnInit, OnDestroy {
       next: (page) => (this.autoparts = page.content),
       error: (err) => console.error('Error loading autoparts:', err),
     });
-  }
-
-  // Toggle della modalità edit: solo se l'utente è proprietario
-  toggleEdit(): void {
-    if (this.userRole === 'ROLE_RESELLER' && this.isOwner) {
-      this.editMode = !this.editMode;
-      if (!this.editMode) {
-        // Se si annulla l'editing, reimposta i dati
-        this.initForm();
-        this.selectedAvatar = undefined;
-      }
-    }
-  }
-
-  // Invia il form per aggiornare i dati (solo se è il proprietario)
-  onSubmit(): void {
-    if (this.resellerForm.valid && this.reseller.id && this.isOwner) {
-      const updatedData = this.resellerForm.getRawValue();
-      this.resellerSvc
-        .updateReseller(this.reseller.id, updatedData, this.selectedAvatar)
-        .subscribe({
-          next: (updatedReseller) => {
-            this.reseller = updatedReseller;
-            this.editMode = false;
-            this.initForm();
-            this.selectedAvatar = undefined;
-          },
-          error: (err) => console.error('Error updating reseller:', err),
-        });
-    }
-  }
-
-  // Gestisce la selezione di un nuovo avatar
-  onAvatarSelected(event: any): void {
-    if (event.target.files?.length) {
-      this.selectedAvatar = event.target.files[0];
-    }
   }
 
   // Permette di eliminare un articolo (autopart)
