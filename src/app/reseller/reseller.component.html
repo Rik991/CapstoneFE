@@ -46,7 +46,7 @@
         </div>
       </div>
       <!-- Colonna Form Recensione -->
-      <div class="col-md-4">
+      <div *ngIf="!isOwner && userRole === 'ROLE_USER'" class="col-md-4">
         <div class="review-form p-3">
           <h3 class="mb-3">Lascia la tua valutazione</h3>
           <form (ngSubmit)="submitRating()">
