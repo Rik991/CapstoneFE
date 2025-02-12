@@ -53,11 +53,17 @@ export class UserComponent implements OnInit, OnDestroy {
   }
 
   getFullStars(rating: number): number[] {
-    return Array(Math.floor(rating)).fill(0);
+    return Array(Math.round(rating)).fill(0); // Arrotonda direttamente per riempire correttamente
+  }
+
+  hasHalfStar(rating: number): boolean {
+    return rating % 1 >= 0.1 && rating % 1 <= 0.4; // Mostra mezza stella solo se fra 0.1 e 0.4
   }
 
   getEmptyStars(rating: number): number[] {
-    return Array(5 - Math.floor(rating)).fill(0);
+    const fullStars = Math.round(rating); // Arrotonda per eccesso quando >= 0.5
+    const halfStar = this.hasHalfStar(rating) ? 1 : 0;
+    return Array(5 - fullStars - halfStar).fill(0); // Completa con stelle vuote
   }
 
   openLightbox(url: string): void {

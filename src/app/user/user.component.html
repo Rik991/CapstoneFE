@@ -114,6 +114,7 @@
                     else noRating
                   "
                 >
+                  <!-- Stelle piene -->
                   <ng-container
                     *ngFor="
                       let star of getFullStars(autopart.reseller.ratingMedio)
@@ -121,6 +122,13 @@
                   >
                     <i class="bi bi-star-fill text-warning"></i>
                   </ng-container>
+                  <!-- Mezza stella, se presente -->
+                  <ng-container
+                    *ngIf="hasHalfStar(autopart.reseller.ratingMedio)"
+                  >
+                    <i class="bi bi-star-half text-warning"></i>
+                  </ng-container>
+                  <!-- Stelle vuote -->
                   <ng-container
                     *ngFor="
                       let star of getEmptyStars(autopart.reseller.ratingMedio)
