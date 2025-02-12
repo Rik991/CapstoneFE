@@ -72,6 +72,7 @@ export class AutopartsService {
   searchAutoparts(filters: any): Observable<IPage<iAutopartResponse>> {
     const validFilters = this.removeEmptyParams(filters);
     const params = new HttpParams({ fromObject: validFilters });
+    // Cambiamo l'endpoint da /search a /merged
     return this.http.get<IPage<iAutopartResponse>>(
       `${environment.autopartsUrl}/search`,
       { params }

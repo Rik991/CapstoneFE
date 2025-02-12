@@ -1,65 +1,26 @@
-/* search-component.scss */
 .search-container {
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-.form-floating {
-  > label {
-    opacity: 0.8;
-  }
-
-  > .form-control,
-  > .form-select {
-    height: calc(3.5rem + 2px);
-    line-height: 1.25;
-
-    &:focus {
-      box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.15);
-    }
-
-    &:disabled {
-      background-color: #f8f9fa;
-      cursor: not-allowed;
-    }
-  }
+.input-group-text {
+  background: #f8f9fa;
+  border: 1px solid #ced4da;
+  border-radius: 0.375rem 0 0 0.375rem;
 }
 
-.form-select {
-  background-position: right 0.75rem center;
-
-  &:not([size]):not([multiple]) {
-    padding-right: 2.25rem;
-  }
+.form-select,
+.form-control {
+  border-radius: 0.375rem;
 }
 
-.btn {
-  transition: all 0.2s ease-in-out;
-
-  &:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  }
-
-  &:active {
-    transform: translateY(0);
-  }
+.btn-outline-primary {
+  border-color: #007bff;
+  color: #007bff;
 }
 
-/* Media Queries */
-@media (max-width: 768px) {
-  .search-container {
-    padding: 1rem !important;
-  }
-
-  .form-floating {
-    > .form-control,
-    > .form-select {
-      height: calc(3rem + 2px);
-    }
-  }
-
-  .btn {
-    padding: 0.5rem 1rem;
-  }
+.btn-outline-primary:hover {
+  background-color: #007bff;
+  color: white;
 }

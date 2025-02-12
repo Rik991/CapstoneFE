@@ -1,170 +1,74 @@
-/* Card generale e padding interno ridotto */
-.card {
-  border: 1px solid rgba(0, 0, 0, 0.125);
-  border-radius: 0.75rem;
-  transition: transform 0.2s, box-shadow 0.2s;
-  margin-top: 0.5rem;
-  margin-bottom: 0.5rem;
-}
-.card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
-}
-.card-body {
-  padding: 0.5rem 1rem;
+.carousel-item img {
+  max-height: 400px;
+  object-fit: cover;
 }
 
-/* Container standard per le immagini */
-.img-container-standard {
-  width: 100%;
-  height: 150px; /* Altezza standard */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-  position: relative;
-}
-.img-container-standard img {
-  max-width: 100%;
-  max-height: 100%;
-  object-fit: contain;
-}
-
-/* Immagini (es. già definiti per .img-fluid) */
-.img-fluid {
-  width: 100%;
-  object-fit: contain;
-  background-color: #f8f9fa;
-  padding: 0.5rem;
+.carousel-caption {
+  background: rgba(0, 0, 0, 0.5);
+  padding: 1rem;
   border-radius: 0.5rem;
 }
 
-/* Badge generici e testi */
-.badge {
-  font-weight: 500;
-  letter-spacing: 0.05em;
-}
-h1,
-h2,
-h3,
-h6 {
-  color: #033b3a;
-}
-.seller-info {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+.card {
+  transition: transform 0.2s;
+
+  &:hover {
+    transform: translateY(-5px);
+  }
 }
 
-/* Pulsanti personalizzati */
-.btn {
-  background-color: transparent;
-  color: black;
-  font-weight: 700;
-  padding-block: 0.3rem;
-  border-radius: 50px;
-  margin-right: 0.2rem;
-  transition: all 0.3s ease-in-out;
-}
-.btn:hover {
-  transform: translateY(-2px);
+.img-container-standard {
+  position: relative;
+
+  img {
+    cursor: pointer;
+    max-width: 100%;
+    height: auto;
+  }
 }
 
-/* Container per il cuore e il prezzo (info-bottom-row) */
-.price-fav-container {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-.info-bottom-row {
-  margin-top: 0.5rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-/* Pagina di paginazione */
-.pagination-container {
-  margin-top: 1rem;
-}
-.pagination {
-  margin: 0;
-}
-
-/* Lightbox Overlay */
 .lightbox-overlay {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.7);
+  background: rgba(0, 0, 0, 0.8);
   display: flex;
-  align-items: center;
   justify-content: center;
-  z-index: 1050;
-}
-.lightbox-content {
-  position: relative;
-  max-width: 90%;
-  max-height: 90%;
-}
-.lightbox-content img {
-  width: 100%;
-  height: auto;
-  border-radius: 0.5rem;
-}
-.btn-close {
-  position: absolute;
-  top: 0px;
-  right: 0px;
-  background: transparent;
-  border: none;
-  border-radius: 50%;
-  font-size: 2rem;
-  line-height: 1;
-  width: 30px;
-  height: 30px;
-  cursor: pointer;
-}
+  align-items: center;
 
-/* Animazioni di ingresso */
-.animate-left {
-  animation: slideInLeft 1s ease-out forwards;
-}
-.animate-right {
-  animation: fadeInRight 1s ease-out forwards;
-}
-@keyframes slideInLeft {
-  from {
-    transform: translateX(-100%);
-    opacity: 0;
-  }
-  to {
-    transform: translateX(0);
-    opacity: 1;
-  }
-}
-@keyframes fadeInRight {
-  from {
-    transform: translateX(100%);
-    opacity: 0;
-  }
-  to {
-    transform: translateX(0);
-    opacity: 1;
+  .lightbox-content {
+    position: relative;
+
+    img {
+      max-width: 90%;
+      max-height: 90%;
+    }
+
+    .btn-close {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: white;
+      border-radius: 50%;
+      padding: 5px;
+      cursor: pointer;
+    }
   }
 }
 
-/* Responsive: ottimizzazione per mobile */
 @media (max-width: 768px) {
+  .col-md-12 {
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+
   .card-body {
-    padding: 0.5rem;
+    flex-direction: column;
   }
-  .btn-link {
-    font-size: 0.9rem;
-  }
-  .d-flex.d-md-none {
-    text-align: center;
+
+  .img-container-standard {
+    margin-bottom: 1rem;
   }
 }

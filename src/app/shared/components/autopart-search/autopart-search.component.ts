@@ -1,4 +1,10 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  OnDestroy,
+  Output,
+  EventEmitter,
+} from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { VehicleService } from '../../../services/vehicle.service';
 import { iVehicle } from '../../../interfaces/i-vehicle';
@@ -9,12 +15,11 @@ import { Subscription } from 'rxjs';
   templateUrl: './autopart-search.component.html',
   styleUrls: ['./autopart-search.component.scss'],
 })
-export class AutopartSearchComponent implements OnInit {
+export class AutopartSearchComponent implements OnInit, OnDestroy {
   searchForm: FormGroup;
   brands: string[] = [];
   filteredModels: iVehicle[] = [];
   private subscriptions: Subscription = new Subscription();
-  isExpanded: boolean = false;
   isFiltersExpanded: boolean = false;
 
   @Output() searchChange = new EventEmitter<any>();
@@ -33,11 +38,8 @@ export class AutopartSearchComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // Carica le marche all'inizializzazione
     this.loadBrands();
-    // Gestisce i cambiamenti del form e li emette al componente padre
     const formSub = this.searchForm.valueChanges.subscribe((filters) => {
-      // Converti la stringa di ricerca in minuscolo, se presente
       if (filters.search) {
         filters.search = filters.search.toLowerCase();
       }
@@ -47,7 +49,6 @@ export class AutopartSearchComponent implements OnInit {
   }
 
   ngOnDestroy(): void {
-    // Annulla tutte le subscription per evitare memory leak
     this.subscriptions.unsubscribe();
   }
 
@@ -80,10 +81,7 @@ export class AutopartSearchComponent implements OnInit {
     this.searchChange.emit(this.searchForm.value);
   }
 
-  toggleFilters(): void {
-    this.isExpanded = !this.isExpanded; // Cambia lo stato di espansione
-  }
   toggleAdvancedFilters(): void {
-    this.isFiltersExpanded = !this.isFiltersExpanded; // Cambia lo stato di espansione dei filtri avanzati
+    this.isFiltersExpanded = !this.isFiltersExpanded;
   }
 }

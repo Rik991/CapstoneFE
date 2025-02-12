@@ -1,32 +1,26 @@
-import { Component, OnInit } from '@angular/core';
-import { iUser } from '../interfaces/i-user';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Subscription } from 'rxjs';
 import { AuthService } from '../auth/auth.service';
 import { AutopartsService } from '../services/autopart.service';
-import { iAutopartResponse } from '../interfaces/i-autopart-response';
-import { iVehicle } from '../interfaces/i-vehicle';
-import { VehicleService } from '../services/vehicle.service';
-import { environment } from '../../environments/environment.development';
-import { Subscription } from 'rxjs';
 import { FavouriteService } from '../services/favourite.service';
-import { IFavourite } from '../interfaces/i-favourite';
 import { ResellerService } from '../services/reseller.service';
+import { iAutopartResponse } from '../interfaces/i-autopart-response';
+import { iUser } from '../interfaces/i-user';
+import { IFavourite } from '../interfaces/i-favourite';
 import { iResellerInfo } from '../interfaces/i-reseller-info';
+import { environment } from '../../environments/environment.development';
 
 @Component({
   selector: 'app-user',
   templateUrl: './user.component.html',
   styleUrls: ['./user.component.scss'],
 })
-export class UserComponent implements OnInit {
+export class UserComponent implements OnInit, OnDestroy {
   imgUrl: string = environment.imgUrl;
-  user!: iUser | undefined;
+  user: iUser | undefined;
   autoparts: iAutopartResponse[] = [];
   expanded: boolean[] = [];
   infoExpanded: boolean[] = [];
-  vehicles: iVehicle[] = [];
-  brands: string[] = [];
-  filteredModels: iVehicle[] = [];
-  filters: any = {};
   currentPage: number = 1;
   pageSize: number = 20;
   totalItems: number = 0;
@@ -45,7 +39,6 @@ export class UserComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // Gestione della subscription per ottenere l'utente corrente
     const userSub = this.authSvc.user$.subscribe((user) => {
       this.user = user;
       this.userRole = this.authSvc.getUserRole();
@@ -55,19 +48,16 @@ export class UserComponent implements OnInit {
     this.loadAutoparts();
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     this.subscriptions.unsubscribe();
   }
 
   getFullStars(rating: number): number[] {
-    const fullStars = Math.floor(rating);
-    return Array(fullStars).fill(0);
+    return Array(Math.floor(rating)).fill(0);
   }
 
   getEmptyStars(rating: number): number[] {
-    const fullStars = Math.floor(rating);
-    const emptyStars = 5 - fullStars;
-    return Array(emptyStars).fill(0);
+    return Array(5 - Math.floor(rating)).fill(0);
   }
 
   openLightbox(url: string): void {
@@ -81,7 +71,6 @@ export class UserComponent implements OnInit {
   loadFavourites(): void {
     this.favouriteSvc.getFavouriteByUser().subscribe({
       next: (favourites: IFavourite[]) => {
-        // Popola il set favouriteIds con gli autopartId ricevuti
         favourites.forEach((fav) => {
           this.favouriteIds.add(fav.autopartId);
         });
@@ -122,7 +111,7 @@ export class UserComponent implements OnInit {
       filters.search = filters.search.toLowerCase();
     }
     this.currentFilters = filters;
-    this.currentPage = 1; // resetta la pagina al cambio dei filtri
+    this.currentPage = 1;
     this.loadAutoparts();
   }
 
@@ -136,7 +125,7 @@ export class UserComponent implements OnInit {
   getPages(): number[] {
     return Array(this.totalPages)
       .fill(0)
-      .map((x, i) => i + 1);
+      .map((_, i) => i + 1);
   }
 
   toggleExpand(index: number): void {
@@ -147,9 +136,7 @@ export class UserComponent implements OnInit {
     this.infoExpanded[index] = !this.infoExpanded[index];
   }
 
-  //toggle per fare add e remove del favourite
-
-  toggleFavourite(autoparId: number) {
+  toggleFavourite(autoparId: number): void {
     if (this.favouriteIds.has(autoparId)) {
       this.favouriteSvc.removeFavourite(autoparId).subscribe({
         next: () => {

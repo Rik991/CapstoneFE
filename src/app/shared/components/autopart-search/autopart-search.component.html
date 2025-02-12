@@ -1,57 +1,46 @@
-<div class="search-icon text-center" (click)="toggleFilters()">
-  <i class="bi bi-search fs-2"></i>
-</div>
-
-<div
-  class="search-container p-2 bg-transparent rounded-3 mb-4"
-  [ngClass]="{ 'd-none': !isExpanded }"
->
-  <form [formGroup]="searchForm" class="row g-3 d-flex justify-content-between">
-    <div class="col-12 col-md-6">
-      <div class="form-floating">
+<div class="search-container p-3 bg-light rounded-3 mb-4 shadow">
+  <form [formGroup]="searchForm" class="row g-3">
+    <!-- Search Bar -->
+    <div class="col-12 col-md-6 mb-3 mb-md-0">
+      <div class="input-group">
+        <span class="input-group-text" id="search-icon">
+          <i class="bi bi-search"></i>
+        </span>
         <input
           type="text"
           formControlName="search"
           class="form-control"
           id="search"
-          placeholder="Cerca..."
+          placeholder="Cerca per nome, codice o descrizione"
+          aria-describedby="search-icon"
         />
-        <label for="search">Cerca per nome, codice o descrizione</label>
       </div>
     </div>
 
-    <div class="col-12 col-md-6 col-lg-3">
-      <div class="form-floating">
-        <select
-          formControlName="condizione"
-          class="form-select"
-          id="condizione"
-        >
-          <option value="">Qualsiasi</option>
-          <option value="NUOVO">Nuovo</option>
-          <option value="USATO">Usato</option>
-          <option value="RICONDIZIONATO">Ricondizionato</option>
-        </select>
-        <label for="condizione">Condizione</label>
-      </div>
+    <!-- Condition Filter -->
+    <div class="col-12 col-md-6 col-lg-3 mb-3 mb-lg-0">
+      <select formControlName="condizione" class="form-select" id="condizione">
+        <option value="">Qualsiasi</option>
+        <option value="NUOVO">Nuovo</option>
+        <option value="USATO">Usato</option>
+        <option value="RICONDIZIONATO">Ricondizionato</option>
+      </select>
     </div>
 
-    <div class="col-12 col-md-6 col-lg-3 d-flex align-items-center">
+    <!-- Reset and Advanced Filters Button -->
+    <div
+      class="col-12 col-md-6 col-lg-3 d-flex align-items-center justify-content-end"
+    >
       <button
         type="button"
-        class="btn btn-secondary w-100 py-3"
+        class="btn btn-secondary me-2"
         (click)="resetForm()"
       >
-        <i class="bi bi-arrow-counterclockwise me-2"></i>
-        Reset filtri
+        <i class="bi bi-arrow-counterclockwise"></i>
       </button>
-    </div>
-
-    <!-- Icona per espandere i filtri avanzati -->
-    <div class="col-12 text-center mt-3">
       <button
         type="button"
-        class="btn btn-link"
+        class="btn btn-outline-primary"
         (click)="toggleAdvancedFilters()"
       >
         <i
@@ -59,71 +48,55 @@
             'bi bi-chevron-down': !isFiltersExpanded,
             'bi bi-chevron-up': isFiltersExpanded
           }"
-          style="font-size: 1.5rem"
         ></i>
         Filtri avanzati
       </button>
     </div>
 
-    <!-- Filtri avanzati nascosti ed espandibili -->
-    <div class="col-12" [ngClass]="{ 'd-none': !isFiltersExpanded }">
+    <!-- Advanced Filters -->
+    <div class="col-12 mt-3" [ngClass]="{ 'd-none': !isFiltersExpanded }">
       <div class="row g-3">
         <div class="col-12 col-md-6 col-lg-3">
-          <div class="form-floating">
-            <input
-              type="text"
-              formControlName="codiceOe"
-              class="form-control"
-              id="codiceOe"
-              placeholder="Codice OE"
-            />
-            <label for="codiceOe">Codice OE</label>
-          </div>
+          <input
+            type="text"
+            formControlName="codiceOe"
+            class="form-control"
+            id="codiceOe"
+            placeholder="Codice OE"
+          />
         </div>
-
         <div class="col-12 col-md-6 col-lg-3">
-          <div class="form-floating">
-            <select
-              formControlName="marca"
-              class="form-select"
-              id="marca"
-              (change)="onBrandSelected($event)"
-            >
-              <option value="">Seleziona...</option>
-              <option *ngFor="let brand of brands" [value]="brand">
-                {{ brand }}
-              </option>
-            </select>
-            <label for="marca">Marca</label>
-          </div>
+          <select
+            formControlName="marca"
+            class="form-select"
+            id="marca"
+            (change)="onBrandSelected($event)"
+          >
+            <option value="">Seleziona marca...</option>
+            <option *ngFor="let brand of brands" [value]="brand">
+              {{ brand }}
+            </option>
+          </select>
         </div>
-
         <div class="col-12 col-md-6 col-lg-3">
-          <div class="form-floating">
-            <input
-              type="number"
-              formControlName="minPrezzo"
-              class="form-control"
-              id="minPrezzo"
-              placeholder="Prezzo minimo"
-              min="0"
-            />
-            <label for="minPrezzo">Prezzo minimo</label>
-          </div>
+          <input
+            type="number"
+            formControlName="minPrezzo"
+            class="form-control"
+            id="minPrezzo"
+            placeholder="Prezzo minimo"
+            min="0"
+          />
         </div>
-
         <div class="col-12 col-md-6 col-lg-3">
-          <div class="form-floating">
-            <input
-              type="number"
-              formControlName="maxPrezzo"
-              class="form-control"
-              id="maxPrezzo"
-              placeholder="Prezzo massimo"
-              min="0"
-            />
-            <label for="maxPrezzo">Prezzo massimo</label>
-          </div>
+          <input
+            type="number"
+            formControlName="maxPrezzo"
+            class="form-control"
+            id="maxPrezzo"
+            placeholder="Prezzo massimo"
+            min="0"
+          />
         </div>
       </div>
     </div>
