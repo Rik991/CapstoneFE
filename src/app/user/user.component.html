@@ -55,7 +55,6 @@
 
   <!-- Lista Prodotti -->
   <div class="row mt-4">
-    <!-- Aggiungiamo "d-flex" al container di ciascuna card per uniformare l'altezza -->
     <div
       *ngFor="let autopart of autoparts; let i = index"
       class="col-12 col-lg-6 mb-3 d-flex"
@@ -85,7 +84,7 @@
                 loading="lazy"
               />
               <span
-                class="badge bg-primary position-absolute top-0 start-0 m-1"
+                class="badge btn-primary position-absolute top-0 start-0 m-1"
               >
                 {{ autopart.condizione }}
               </span>

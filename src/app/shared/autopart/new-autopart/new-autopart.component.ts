@@ -81,12 +81,43 @@ export class NewAutopartComponent implements OnInit {
 
   onFileChange(event: any): void {
     const file = event.target.files[0];
-    this.form.patchValue({
-      immagine: file,
-    });
+    if (!file) {
+      return;
+    }
+
+    // Array dei MIME type consentiti per immagini
+    const allowedTypes = [
+      'image/jpeg',
+      'image/png',
+      'image/webp',
+      'image/heic',
+      'image/heif',
+      'image/gif',
+      'image/tiff',
+    ];
+
+    // Dimensione massima consentita: 2MB
+    const maxSizeInBytes = 2 * 1024 * 1024;
+
+    // Controllo del tipo di file (mime-type)
+    if (!allowedTypes.includes(file.type)) {
+      alert(
+        'Formato non supportato. I formati ammessi sono: JPEG, PNG, WEBP, HEIC/HEIF, GIF, TIFF.'
+      );
+      return;
+    }
+
+    // Controllo della dimensione del file
+    if (file.size > maxSizeInBytes) {
+      alert('Il file è troppo grande. La dimensione massima consentita è 2MB.');
+      return;
+    }
+
+    // Non impongo alcun limite sulle dimensioni in pixel, procedo a leggere il file
     const reader = new FileReader();
-    reader.onload = () => {
-      this.imagePreview = reader.result;
+    reader.onload = (e: any) => {
+      this.imagePreview = e.target.result;
+      this.form.patchValue({ immagine: file });
     };
     reader.readAsDataURL(file);
   }

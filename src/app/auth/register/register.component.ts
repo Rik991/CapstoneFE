@@ -115,6 +115,38 @@ export class RegisterComponent implements OnInit {
   onFileChange(event: any): void {
     if (event.target.files?.length > 0) {
       const file = event.target.files[0];
+
+      // Formati immagine consentiti
+      const allowedTypes = [
+        'image/jpeg',
+        'image/png',
+        'image/webp',
+        'image/heic',
+        'image/heif',
+        'image/gif',
+        'image/tiff',
+      ];
+
+      // Dimensione massima consentita: 2MB
+      const maxSizeInBytes = 2 * 1024 * 1024;
+
+      // Controllo del tipo di file
+      if (!allowedTypes.includes(file.type)) {
+        alert(
+          'Formato non supportato. I formati ammessi sono: JPEG, PNG, WEBP, HEIC/HEIF, GIF, TIFF.'
+        );
+        return;
+      }
+
+      // Controllo della dimensione del file
+      if (file.size > maxSizeInBytes) {
+        alert(
+          'Il file è troppo grande. La dimensione massima consentita è 2MB.'
+        );
+        return;
+      }
+
+      // Assegno il file (avatar) al form
       this.form.patchValue({ avatar: file });
     }
   }
