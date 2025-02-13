@@ -26,8 +26,8 @@
 }
 
 .landing-badge {
-  background-color: #033b3a;
-  color: #5dfffb;
+  background: linear-gradient(135deg, #3182ce, #2c5282);
+  color: #edf2f7;
   font-weight: 500;
   padding: 0.25rem 1.5rem;
   border-radius: 4px;
@@ -43,18 +43,18 @@ h3 {
 /* Button styles */
 .btn {
   background-color: #033b3a;
-  color: #5dfffb;
+  color: #edf2f7;
   font-weight: 700;
-  padding: 1rem 2rem;
+  padding: 0.5rem 2rem;
   border-radius: 50px;
   margin: 0.5rem;
   transition: all 0.3s ease-in-out;
   border: 2px solid #033b3a;
+  min-width: 150px;
 }
 
 .btn:hover {
-  background-color: #5dfffb;
-  color: #033b3a;
+  color: #5dfffb;
   transform: translateY(-2px);
 }
 

@@ -141,4 +141,7 @@ export class EditAutopartComponent implements OnInit {
       });
     }
   }
+  goBack() {
+    this.router.navigate(['/reseller']);
+  }
 }

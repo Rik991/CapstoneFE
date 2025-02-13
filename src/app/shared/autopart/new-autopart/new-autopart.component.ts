@@ -31,7 +31,8 @@ export class NewAutopartComponent implements OnInit {
       condizione: ['', Validators.required],
       immagine: [null], // Assicurati che 'immagine' sia il campo File
       prezzo: ['', [Validators.required, Validators.min(0)]],
-      veicoliIds: [[], Validators.required],
+      veicoliIds: [[1]], // Default: id 1 (modello "Generico")
+      brand: ['Universale', Validators.required], // Default brand "Universale"
     });
   }
 
@@ -48,10 +49,24 @@ export class NewAutopartComponent implements OnInit {
 
   onBrandSelected(event: any): void {
     const brand = event.target.value;
-    this.vehicleSvc.getVehicleModelsByBrand(brand).subscribe({
-      next: (models) => (this.filteredModels = models),
-      error: (err) => console.error('Error loading models:', err),
-    });
+    this.form.get('brand')?.setValue(brand);
+    if (brand === 'Universale') {
+      // Se la marca è "Universale", non vengono richiesti modelli:
+      // Imposta il modello di default (id 1)
+      this.filteredModels = [];
+      this.selectedVehicles = [1];
+      this.form.get('veicoliIds')?.setValue([1]);
+    } else {
+      // Se viene scelta una marca specifica, carica i modelli e resetta la selezione
+      this.vehicleSvc.getVehicleModelsByBrand(brand).subscribe({
+        next: (models) => {
+          this.filteredModels = models;
+          this.selectedVehicles = [];
+          this.form.get('veicoliIds')?.setValue([]);
+        },
+        error: (err) => console.error('Error loading models:', err),
+      });
+    }
   }
 
   toggleVehicleSelection(vehicleId: number): void {
@@ -76,7 +91,7 @@ export class NewAutopartComponent implements OnInit {
     reader.readAsDataURL(file);
   }
 
-  onSubmit(): void {
+  onSubmit(resetOnly: boolean = false): void {
     if (this.form.valid) {
       const formData = new FormData();
       formData.append('nome', this.form.get('nome')?.value);
@@ -92,7 +107,6 @@ export class NewAutopartComponent implements OnInit {
 
       formData.append('prezzo', this.form.get('prezzo')?.value);
 
-      // Aggiungi ogni veicolo id come parametro separato
       const veicoliIds: number[] = this.form.get('veicoliIds')?.value;
       veicoliIds.forEach((id) => {
         formData.append('veicoliIds', id.toString());
@@ -101,10 +115,31 @@ export class NewAutopartComponent implements OnInit {
       this.autopartSvc.createAutopart(formData).subscribe({
         next: () => {
           alert('Ricambio pubblicato con successo!');
-          this.router.navigate(['/reseller']);
+          if (resetOnly) {
+            // Reset del form per inserimenti consecutivi
+            this.form.reset({
+              nome: '',
+              codiceOe: '',
+              descrizione: '',
+              categoria: '',
+              condizione: '',
+              immagine: null,
+              prezzo: '',
+              veicoliIds: [1],
+              brand: 'Universale',
+            });
+            this.selectedVehicles = [1];
+            this.imagePreview = null;
+          } else {
+            this.router.navigate(['/reseller']);
+          }
         },
         error: (err) => console.error('Errore nella creazione:', err),
       });
     }
+  }
+
+  goBack() {
+    this.router.navigate(['/reseller']);
   }
 }

@@ -1,87 +1,222 @@
-<form [formGroup]="form" (ngSubmit)="onSubmit()">
-  <div class="form-group">
-    <label>Nome</label>
-    <input type="text" formControlName="nome" class="form-control" />
-  </div>
-
-  <div class="form-group">
-    <label>Codice OE</label>
-    <input type="text" formControlName="codiceOe" class="form-control" />
-  </div>
-
-  <div class="form-group">
-    <label>Descrizione</label>
-    <textarea formControlName="descrizione" class="form-control"></textarea>
-  </div>
-
-  <div class="form-group">
-    <label>Categoria</label>
-    <input type="text" formControlName="categoria" class="form-control" />
-  </div>
-
-  <div class="form-group">
-    <label>Condizione</label>
-    <select formControlName="condizione" class="form-control">
-      <option value="NUOVO">Nuovo</option>
-      <option value="USATO">Usato</option>
-      <option value="RICONDIZIONATO">Ricondizionato</option>
-    </select>
-  </div>
-
-  <div class="form-group">
-    <label>Immagine</label>
-    <input type="file" (change)="onFileChange($event)" class="form-control" />
-    <div *ngIf="imagePreview" class="mt-2">
-      <img [src]="imagePreview" style="max-width: 200px" />
+<div class="container new-autopart-container">
+  <div class="row">
+    <!-- Sezione Form (sinistra) -->
+    <div class="col-md-6">
+      <div class="form-section">
+        <h2>Inserisci Nuovo Ricambio</h2>
+        <p class="required-note">* Campi obbligatori</p>
+        <form [formGroup]="form" (ngSubmit)="onSubmit()">
+          <!-- Nome -->
+          <div class="form-group">
+            <label>Nome *</label>
+            <input type="text" formControlName="nome" class="form-control" />
+            <div
+              class="error"
+              *ngIf="form.get('nome')?.touched && form.get('nome')?.invalid"
+            >
+              Il nome è obbligatorio
+            </div>
+          </div>
+          <!-- Codice OE -->
+          <div class="form-group">
+            <label>Codice OE *</label>
+            <input
+              type="text"
+              formControlName="codiceOe"
+              class="form-control"
+            />
+            <div
+              class="error"
+              *ngIf="
+                form.get('codiceOe')?.touched && form.get('codiceOe')?.invalid
+              "
+            >
+              Il codice OE è obbligatorio
+            </div>
+          </div>
+          <!-- Descrizione -->
+          <div class="form-group">
+            <label>Descrizione</label>
+            <textarea
+              formControlName="descrizione"
+              class="form-control"
+            ></textarea>
+          </div>
+          <!-- Categoria (Opzionale) -->
+          <div class="form-group">
+            <label>Categoria (Opzionale)</label>
+            <input
+              type="text"
+              formControlName="categoria"
+              class="form-control"
+              placeholder="Lascia vuoto se non applicabile"
+            />
+          </div>
+          <!-- Condizione -->
+          <div class="form-group">
+            <label>Condizione *</label>
+            <select formControlName="condizione" class="form-control">
+              <option value="">Seleziona la condizione</option>
+              <option value="NUOVO">Nuovo</option>
+              <option value="USATO">Usato</option>
+              <option value="RICONDIZIONATO">Ricondizionato</option>
+            </select>
+            <div
+              class="error"
+              *ngIf="
+                form.get('condizione')?.touched &&
+                form.get('condizione')?.invalid
+              "
+            >
+              La condizione è obbligatoria
+            </div>
+          </div>
+          <!-- Immagine -->
+          <div class="form-group">
+            <label>Immagine</label>
+            <input
+              type="file"
+              (change)="onFileChange($event)"
+              class="form-control"
+            />
+          </div>
+          <!-- Prezzo -->
+          <div class="form-group">
+            <label>Prezzo *</label>
+            <input
+              type="number"
+              formControlName="prezzo"
+              step="0.01"
+              class="form-control"
+            />
+            <div
+              class="error"
+              *ngIf="form.get('prezzo')?.touched && form.get('prezzo')?.invalid"
+            >
+              Il prezzo è obbligatorio e deve essere positivo
+            </div>
+          </div>
+          <!-- Marca -->
+          <div class="form-group">
+            <label>Marca *</label>
+            <select
+              formControlName="brand"
+              (change)="onBrandSelected($event)"
+              class="form-control"
+            >
+              <option value="Universale">Universale</option>
+              <option *ngFor="let brand of brands" [value]="brand">
+                {{ brand }}
+              </option>
+            </select>
+          </div>
+          <!-- Modelli (Opzionale) -->
+          <div class="form-group">
+            <label>Modelli (Opzionale)</label>
+            <div *ngIf="filteredModels.length === 0" class="text-muted">
+              <span *ngIf="form.get('brand')?.value === 'Universale'">
+                Modello generico (Universale) verrà impostato automaticamente.
+              </span>
+              <span *ngIf="form.get('brand')?.value !== 'Universale'">
+                Seleziona una marca per visualizzare i modelli
+              </span>
+            </div>
+            <div *ngIf="filteredModels.length > 0" class="model-grid">
+              <div *ngFor="let model of filteredModels" class="form-check">
+                <input
+                  type="checkbox"
+                  [value]="model.id"
+                  (change)="toggleVehicleSelection(model.id)"
+                  class="form-check-input"
+                />
+                <label class="form-check-label">
+                  {{ model.marca }} {{ model.modello }} ({{
+                    model.inizioProduzione
+                  }}
+                  – {{ model.fineProduzione }})
+                </label>
+              </div>
+            </div>
+          </div>
+          <!-- Pulsanti -->
+          <div class="button-group">
+            <button
+              type="submit"
+              class="btn btn-primary"
+              [disabled]="!form.valid"
+            >
+              Inserisci
+            </button>
+            <button
+              type="button"
+              class="btn btn-primary"
+              (click)="onSubmit(true)"
+            >
+              Inserisci +
+            </button>
+            <button type="button" class="btn btn-secondary" (click)="goBack()">
+              Torna alla Dashboard
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <!-- Sezione Anteprima (destra) -->
+    <div class="col-md-4">
+      <div class="preview-card">
+        <h2>Anteprima Ricambio</h2>
+        <div class="card">
+          <img
+            *ngIf="imagePreview; else noImage"
+            [src]="imagePreview"
+            class="card-img-top"
+            alt="Immagine Ricambio"
+          />
+          <ng-template #noImage>
+            <img
+              src="assets/placeholder.jpg"
+              class="card-img-top"
+              alt="Placeholder"
+            />
+          </ng-template>
+          <div class="card-body">
+            <h5 class="card-title">
+              {{ form.get("nome")?.value || "Nome Ricambio" }}
+            </h5>
+            <p class="card-text">
+              <strong>Codice OE:</strong>
+              {{ form.get("codiceOe")?.value || "---" }}
+            </p>
+            <p class="card-text">
+              <strong>Descrizione:</strong>
+              {{ form.get("descrizione")?.value || "---" }}
+            </p>
+            <p class="card-text">
+              <strong>Categoria:</strong>
+              {{ form.get("categoria")?.value || "Generico" }}
+            </p>
+            <p class="card-text">
+              <strong>Condizione:</strong>
+              {{ form.get("condizione")?.value || "---" }}
+            </p>
+            <p class="card-text">
+              <strong>Prezzo:</strong>
+              {{
+                form.get("prezzo")?.value
+                  ? (form.get("prezzo")?.value | currency : "EUR")
+                  : "---"
+              }}
+            </p>
+            <p class="card-text">
+              <strong>Veicoli Compatibili:</strong>
+              <span *ngIf="selectedVehicles.length; else universal">
+                {{ selectedVehicles.length }} selezionati
+              </span>
+              <ng-template #universal>Universale</ng-template>
+            </p>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
-
-  <div class="form-group">
-    <label>Prezzo</label>
-    <input
-      type="number"
-      formControlName="prezzo"
-      step="0.01"
-      class="form-control"
-    />
-  </div>
-
-  <div class="form-group">
-    <label>Marca</label>
-    <select (change)="onBrandSelected($event)" class="form-control">
-      <option *ngFor="let brand of brands" [value]="brand">{{ brand }}</option>
-    </select>
-  </div>
-
-  <div class="form-group">
-    <label>Modelli</label>
-    <div *ngIf="filteredModels.length === 0" class="text-muted">
-      Seleziona prima una marca
-    </div>
-    <div *ngFor="let model of filteredModels" class="form-check">
-      <input
-        type="checkbox"
-        [value]="model.id"
-        (change)="toggleVehicleSelection(model.id)"
-        class="form-check-input"
-      />
-      <label class="form-check-label">
-        {{ model.marca }} {{ model.modello }} ({{ model.inizioProduzione }} -
-        {{ model.fineProduzione }})
-      </label>
-    </div>
-    <small
-      *ngIf="form.get('veicoliIds')?.errors?.['required'] && form.get('veicoliIds')?.touched"
-      class="text-danger"
-    >
-      Seleziona almeno un veicolo compatibile
-    </small>
-  </div>
-
-  <button type="submit" class="btn btn-primary" [disabled]="!form.valid">
-    Inserisci
-  </button>
-  <button type="button" class="btn btn-secondary" routerLink="/reseller">
-    Torna alla Home
-  </button>
-</form>
+</div>
