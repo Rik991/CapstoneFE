@@ -4,13 +4,13 @@
     <div class="col-12">
       <h1 class="text-center">Benvenuto in RaikoParts</h1>
       <div class="text-center mb-5 d-flex justify-content-center gap-2">
-        <h2 class="">Il portale per Cliente e Venditore</h2>
+        <h2>Il portale per Cliente e Venditore</h2>
       </div>
     </div>
 
     <!-- Sezione immagini a sinistra -->
     <div class="col-md-6 col-12 d-flex flex-column gap-3 animate-left">
-      <!-- Blocco 1 -->
+      <!-- Blocchi immagine (stesso codice) -->
       <div class="image-block">
         <div
           class="img-container position-relative border-bottom border-black pb-1"
@@ -24,7 +24,6 @@
           <h2>Cerca tra centinaia di articoli nuovi e usati</h2>
         </div>
       </div>
-      <!-- Blocco 2 -->
       <div class="image-block">
         <div
           class="img-container position-relative border-bottom border-black pb-1"
@@ -38,7 +37,6 @@
           <h2>Il tuo catalogo ricambi in prima linea</h2>
         </div>
       </div>
-      <!-- Blocco 3 -->
       <div class="image-block">
         <div
           class="img-container position-relative border-bottom border-black pb-1"
@@ -54,11 +52,10 @@
       </div>
     </div>
 
-    <!-- Sezione login a destra -->
+    <!-- Sezione login a destra con background (rimuoviamo il logo inline) -->
     <div
       class="col-md-4 col-12 text-center animate-right my-auto login-section"
     >
-      <img src="assets/logo2.png" alt="Logo" class="img-fluid mb-4 logo" />
       <div *ngIf="!isLoggedIn && !currentForm" class="mb-4">
         <div class="btn-group">
           <button
@@ -77,21 +74,22 @@
           </button>
         </div>
       </div>
-      <div *ngIf="currentForm" class="mt-4">
-        <div class="card mx-auto shadow-sm cardForm">
-          <div class="card-body">
-            <ng-container [ngSwitch]="currentForm">
-              <app-login
-                *ngSwitchCase="'login'"
-                (close)="hideForm()"
-              ></app-login>
-              <app-register
-                *ngSwitchCase="'register'"
-                (close)="hideForm()"
-              ></app-register>
-            </ng-container>
-          </div>
-        </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Overlay per il form (appare in sovrimpressione al centro) -->
+<div *ngIf="currentForm" class="modal-overlay" (click)="hideForm()">
+  <div class="modal-container" (click)="$event.stopPropagation()">
+    <div class="card shadow-sm cardForm">
+      <div class="card-body">
+        <ng-container [ngSwitch]="currentForm">
+          <app-login *ngSwitchCase="'login'" (close)="hideForm()"></app-login>
+          <app-register
+            *ngSwitchCase="'register'"
+            (close)="hideForm()"
+          ></app-register>
+        </ng-container>
       </div>
     </div>
   </div>

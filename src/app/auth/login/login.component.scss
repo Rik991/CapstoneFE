@@ -1,11 +1,74 @@
-.btn {
-  border-radius: 50px;
+.login-form {
+  background: rgba(
+    255,
+    255,
+    255,
+    0.8
+  ); /* Maggiore opacità per un effetto satinato visibile */
+  backdrop-filter: blur(
+    25px
+  ); /* Blur forte per nascondere completamente ciò che c'è dietro */
+  border-radius: 16px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25); /* Ombra per un aspetto più morbido */
+  padding: 2rem;
+  max-width: 400px;
+  margin: 0 auto;
 }
 
-.form-control,
-.form-select {
-  background-color: transparent;
+.login-form .form-group {
+  margin-bottom: 1.5rem;
+}
+
+.login-form input,
+.login-form select {
+  background-color: rgba(
+    255,
+    255,
+    255,
+    0.5
+  ); /* Più satinato per migliorare il contrasto */
+  color: #333;
   border: none;
-  border-bottom: 1px solid black;
-  box-shadow: none;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-top: 0.5rem;
+  font-size: 1rem;
+}
+
+.login-form input:focus,
+.login-form select:focus {
+  border: 1px solid #3182ce;
+  outline: none;
+  box-shadow: 0 0 5px rgba(49, 130, 206, 0.4);
+}
+
+.login-form .btn-primary {
+  background: linear-gradient(135deg, #3182ce, #2c5282);
+  border: none;
+  box-shadow: 0 4px 12px rgba(49, 130, 206, 0.2);
+}
+
+.login-form .btn-primary:hover {
+  background: linear-gradient(135deg, #2c5282, #3182ce);
+  transform: translateY(-2px);
+  transition: all 0.3s ease;
+}
+
+.login-form .btn-primary:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(49, 130, 206, 0.5);
+}
+
+/* Miglioriamo il contrasto dei testi */
+.login-form label {
+  font-weight: 700;
+  color: #033b3a; /* Colore del testo più scuro per contrastare meglio con lo sfondo satinato */
+  font-size: 1.1rem;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4); /* Aggiunta ombra per migliorare la leggibilità */
+}
+
+.login-form input,
+.login-form select {
+  font-size: 1rem;
+  color: #333; /* Colore del testo contrastante */
 }

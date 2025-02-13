@@ -10,8 +10,12 @@
 /*                           STILI GLOBALI                                   */
 /* ------------------------------------------------------------------------- */
 
-body {
+body,
+body * {
   font-family: "Inter", sans-serif;
+}
+
+body {
   background: linear-gradient(145deg, #f6f9fc, #edf2f7);
   margin: 0;
   padding: 0;

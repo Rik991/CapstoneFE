@@ -75,13 +75,13 @@ export class EditAutopartComponent implements OnInit {
 
   //metodi per gestire il form
 
+  //gestisco il caricamento delle foto, il formato e la dimensione massima
   onFileChange(event: any): void {
     const file = event.target.files[0];
     if (!file) {
       return;
     }
 
-    // Array dei MIME type consentiti per immagini
     const allowedTypes = [
       'image/jpeg',
       'image/png',
@@ -91,11 +91,7 @@ export class EditAutopartComponent implements OnInit {
       'image/gif',
       'image/tiff',
     ];
-
-    // Dimensione massima consentita: 2MB
     const maxSizeInBytes = 2 * 1024 * 1024;
-
-    // Controllo del tipo di file (mime-type)
     if (!allowedTypes.includes(file.type)) {
       alert(
         'Formato non supportato. I formati ammessi sono: JPEG, PNG, WEBP, HEIC/HEIF, GIF, TIFF.'
@@ -103,13 +99,10 @@ export class EditAutopartComponent implements OnInit {
       return;
     }
 
-    // Controllo della dimensione del file
     if (file.size > maxSizeInBytes) {
       alert('Il file è troppo grande. La dimensione massima consentita è 2MB.');
       return;
     }
-
-    // Non impongo alcun limite sulle dimensioni in pixel, procedo a leggere il file
     const reader = new FileReader();
     reader.onload = (e: any) => {
       this.imagePreview = e.target.result;

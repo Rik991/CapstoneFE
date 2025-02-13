@@ -1,26 +1,64 @@
-/* Stili per i bottoni */
-.btn {
-  border-radius: 50px;
+.register-form {
+  background: rgba(255, 255, 255, 0.8); /* Maggiore opacità per il satinato */
+  backdrop-filter: blur(
+    30px
+  ); /* Blur più forte per nascondere completamente ciò che c'è dietro */
+  border-radius: 16px;
+  padding: 2.5rem; /* Aumentato padding per renderlo più spazioso */
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+  max-width: 650px; /* Più largo per il form di registrazione */
+  margin: 0 auto;
 }
 
-/* Stili per i campi del form */
-.form-control,
-.form-select {
-  background-color: transparent;
+.register-form .form-group {
+  margin-bottom: 1.8rem;
+}
+
+.register-form input,
+.register-form select {
+  background-color: rgba(255, 255, 255, 0.5); /* Più satinato */
+  color: #333;
   border: none;
-  border-bottom: 1px solid black;
-  box-shadow: none;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-top: 0.5rem;
+  font-size: 1.1rem; /* Font più grande per migliorare la leggibilità */
 }
 
-/* Stili per il contenitore del form */
-
-/* Stili per le etichette */
-label {
-  font-weight: 600;
-  color: #033b3a;
+.register-form input:focus,
+.register-form select:focus {
+  border: 1px solid #3182ce;
+  outline: none;
+  box-shadow: 0 0 5px rgba(49, 130, 206, 0.4);
 }
 
-/* Stili per i gruppi di form */
-.form-group {
-  margin-bottom: 1.5rem;
+.register-form .btn-primary {
+  background: linear-gradient(135deg, #3182ce, #2c5282);
+  border: none;
+  box-shadow: 0 4px 12px rgba(49, 130, 206, 0.2);
+}
+
+.register-form .btn-primary:hover {
+  background: linear-gradient(135deg, #2c5282, #3182ce);
+  transform: translateY(-2px);
+  transition: all 0.3s ease;
+}
+
+.register-form .btn-primary:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(49, 130, 206, 0.5);
+}
+
+/* Miglioriamo il contrasto dei testi */
+.register-form label {
+  font-weight: 700;
+  color: #033b3a; /* Colore del testo più scuro per contrastare meglio con lo sfondo satinato */
+  font-size: 1.2rem;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4); /* Aggiunta ombra per migliorare la leggibilità */
+}
+
+.register-form input,
+.register-form select {
+  font-size: 1.1rem;
+  color: #333; /* Colore del testo contrastante */
 }
