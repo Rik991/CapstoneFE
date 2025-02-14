@@ -5,6 +5,11 @@
   padding: 2rem 1rem;
 }
 
+.logo {
+  max-width: 300px;
+  margin-block: 1rem;
+}
+
 /* =======================
    Image Block Styles
 ========================== */
@@ -100,35 +105,34 @@ h3 {
 /* =======================
    Modal Overlay & Container
 ========================== */
-/* Modal overlay che copre l'intero viewport */
+
+/* Modal overlay per mobile */
 .modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.5); /* Sfondo semitrasparente */
+  background: rgba(0, 0, 0, 0.5);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 1050;
 }
 
-/* Container del modal centrato */
+/* Container del modal per mobile */
 .modal-container {
   width: 100%;
   max-width: 500px;
   margin: 0 auto;
   animation: slideDown 0.3s ease-out forwards;
 }
-
 /* =======================
    Login Section Background
 ========================== */
 /* Sezione di destra: usa il logo come background */
 .login-section {
   position: relative;
-  background-image: url("/assets/logo2.png");
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;

@@ -1,10 +1,27 @@
 <div class="container-fluid">
   <div class="row justify-content-center">
-    <!-- Titoli centrati -->
-    <div class="col-12">
-      <h1 class="text-center">Benvenuto in RaikoParts</h1>
-      <div class="text-center mb-5 d-flex justify-content-center gap-2">
-        <h2>Il portale per Cliente e Venditore</h2>
+    <div class="col-12 text-center">
+      <img src="/assets/logo2.png" alt="logo" class="logo" />
+      <!-- bottoni mobile  -->
+      <div>
+        <div *ngIf="!isLoggedIn && !currentForm" class="mb-4 col-12 d-lg-none">
+          <div class="btn-group">
+            <button
+              type="button"
+              class="btn btn-primary"
+              (click)="showForm('login')"
+            >
+              Accedi
+            </button>
+            <button
+              type="button"
+              class="btn btn-primary"
+              (click)="showForm('register')"
+            >
+              Registrati
+            </button>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -52,10 +69,11 @@
       </div>
     </div>
 
-    <!-- Sezione login a destra con background (rimuoviamo il logo inline) -->
+    <!-- Sezione login a destra con background per desktop -->
     <div
-      class="col-md-4 col-12 text-center animate-right my-auto login-section"
+      class="d-none d-lg-block col-md-4 col-12 text-center animate-right my-auto login-section"
     >
+      <!-- Bottoni di login/registrazione -->
       <div *ngIf="!isLoggedIn && !currentForm" class="mb-4">
         <div class="btn-group">
           <button
@@ -74,22 +92,46 @@
           </button>
         </div>
       </div>
+      <!-- Form per desktop, posizionato sotto i bottoni -->
+      <div *ngIf="currentForm" class="desktop-modal mt-3">
+        <div class="card shadow-sm cardForm">
+          <div class="card-body">
+            <ng-container [ngSwitch]="currentForm">
+              <app-login
+                *ngSwitchCase="'login'"
+                (close)="hideForm()"
+              ></app-login>
+              <app-register
+                *ngSwitchCase="'register'"
+                (close)="hideForm()"
+              ></app-register>
+            </ng-container>
+          </div>
+        </div>
+      </div>
     </div>
-  </div>
-</div>
 
-<!-- Modal Overlay per il form (appare in sovrimpressione al centro) -->
-<div *ngIf="currentForm" class="modal-overlay" (click)="hideForm()">
-  <div class="modal-container" (click)="$event.stopPropagation()">
-    <div class="card shadow-sm cardForm">
-      <div class="card-body">
-        <ng-container [ngSwitch]="currentForm">
-          <app-login *ngSwitchCase="'login'" (close)="hideForm()"></app-login>
-          <app-register
-            *ngSwitchCase="'register'"
-            (close)="hideForm()"
-          ></app-register>
-        </ng-container>
+    <!-- Modal overlay per dispositivi mobile -->
+    <div
+      *ngIf="currentForm"
+      class="modal-overlay d-lg-none"
+      (click)="hideForm()"
+    >
+      <div class="modal-container" (click)="$event.stopPropagation()">
+        <div class="card shadow-sm cardForm">
+          <div class="card-body">
+            <ng-container [ngSwitch]="currentForm">
+              <app-login
+                *ngSwitchCase="'login'"
+                (close)="hideForm()"
+              ></app-login>
+              <app-register
+                *ngSwitchCase="'register'"
+                (close)="hideForm()"
+              ></app-register>
+            </ng-container>
+          </div>
+        </div>
       </div>
     </div>
   </div>
