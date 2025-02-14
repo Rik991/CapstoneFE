@@ -1,100 +1,99 @@
-<div class="search-container p-3 bg-light rounded-3 mb-4 shadow">
-  <form [formGroup]="searchForm" class="row g-3">
-    <!-- Search Bar -->
-    <div class="col-12 col-md-6 mb-3 mb-md-0">
-      <div class="input-group">
-        <span class="input-group-text" id="search-icon">
-          <i class="bi bi-search"></i>
-        </span>
-        <input
-          type="text"
-          formControlName="search"
-          class="form-control"
-          id="search"
-          placeholder="Cerca per nome, codice o descrizione"
-          aria-describedby="search-icon"
-        />
+<div class="search-container">
+  <form [formGroup]="searchForm" class="search-form">
+    <!-- Main Search Row -->
+    <div class="main-search-row">
+      <!-- Search Input -->
+      <div class="search-input-wrapper">
+        <div class="input-group">
+          <span class="input-group-text"> </span>
+          <input
+            type="text"
+            formControlName="search"
+            class="form-control"
+            placeholder="Cerca per nome, codice o descrizione "
+          />
+        </div>
+      </div>
+
+      <!-- Condition Select (visible on desktop) -->
+      <div class="condition-select d-none d-md-block">
+        <select formControlName="condizione" class="form-select">
+          <option value="">Qualsiasi</option>
+          <option value="NUOVO">Nuovo</option>
+          <option value="USATO">Usato</option>
+          <option value="RICONDIZIONATO">Ricondizionato</option>
+        </select>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="action-buttons">
+        <button
+          type="button"
+          class="btn btn-icon"
+          (click)="resetForm()"
+          title="Reset"
+        >
+          <i class="bi bi-arrow-counterclockwise"></i>
+        </button>
+        <button
+          type="button"
+          class="btn btn-icon"
+          (click)="toggleAdvancedFilters()"
+          title="Filtri avanzati"
+        >
+          <i
+            [class]="
+              isFiltersExpanded ? 'bi bi-chevron-up' : 'bi bi-chevron-down'
+            "
+          ></i>
+        </button>
       </div>
     </div>
 
-    <!-- Condition Filter -->
-    <div class="col-12 col-md-6 col-lg-3 mb-3 mb-lg-0">
-      <select formControlName="condizione" class="form-select" id="condizione">
-        <option value="">Qualsiasi</option>
-        <option value="NUOVO">Nuovo</option>
-        <option value="USATO">Usato</option>
-        <option value="RICONDIZIONATO">Ricondizionato</option>
-      </select>
-    </div>
+    <!-- Advanced Filters (collapsible) -->
+    <div class="advanced-filters" [ngClass]="{ show: isFiltersExpanded }">
+      <!-- Condition Select (visible on mobile) -->
+      <div class="d-md-none mb-3">
+        <select formControlName="condizione" class="form-select">
+          <option value="">Qualsiasi condizione</option>
+          <option value="NUOVO">Nuovo</option>
+          <option value="USATO">Usato</option>
+          <option value="RICONDIZIONATO">Ricondizionato</option>
+        </select>
+      </div>
 
-    <!-- Reset and Advanced Filters Button -->
-    <div
-      class="col-12 col-md-6 col-lg-3 d-flex align-items-center justify-content-end"
-    >
-      <button
-        type="button"
-        class="btn btn-secondary me-2"
-        (click)="resetForm()"
-      >
-        <i class="bi bi-arrow-counterclockwise"></i>
-      </button>
-      <button
-        type="button"
-        class="btn btn-outline-primary"
-        (click)="toggleAdvancedFilters()"
-      >
-        <i
-          [ngClass]="{
-            'bi bi-chevron-down': !isFiltersExpanded,
-            'bi bi-chevron-up': isFiltersExpanded
-          }"
-        ></i>
-        Filtri avanzati
-      </button>
-    </div>
+      <div class="filters-grid">
+        <input
+          type="text"
+          formControlName="codiceOe"
+          class="form-control"
+          placeholder="Codice OE"
+        />
 
-    <!-- Advanced Filters -->
-    <div class="col-12 mt-3" [ngClass]="{ 'd-none': !isFiltersExpanded }">
-      <div class="row g-3">
-        <div class="col-12 col-md-6 col-lg-3">
-          <input
-            type="text"
-            formControlName="codiceOe"
-            class="form-control"
-            id="codiceOe"
-            placeholder="Codice OE"
-          />
-        </div>
-        <div class="col-12 col-md-6 col-lg-3">
-          <select
-            formControlName="marca"
-            class="form-select"
-            id="marca"
-            (change)="onBrandSelected($event)"
-          >
-            <option value="">Seleziona marca...</option>
-            <option *ngFor="let brand of brands" [value]="brand">
-              {{ brand }}
-            </option>
-          </select>
-        </div>
-        <div class="col-12 col-md-6 col-lg-3">
+        <select
+          formControlName="marca"
+          class="form-select"
+          (change)="onBrandSelected($event)"
+        >
+          <option value="">Seleziona marca...</option>
+          <option *ngFor="let brand of brands" [value]="brand">
+            {{ brand }}
+          </option>
+        </select>
+
+        <div class="price-inputs">
           <input
             type="number"
             formControlName="minPrezzo"
             class="form-control"
-            id="minPrezzo"
-            placeholder="Prezzo minimo"
+            placeholder="Min €"
             min="0"
           />
-        </div>
-        <div class="col-12 col-md-6 col-lg-3">
           <input
             type="number"
             formControlName="maxPrezzo"
             class="form-control"
-            id="maxPrezzo"
-            placeholder="Prezzo massimo"
+            placeholder="Max €"
             min="0"
           />
         </div>

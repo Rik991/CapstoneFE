@@ -1,52 +1,141 @@
-/* Navbar personalizzata */
-.navbar-custom {
-  background: transparent;
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  border-radius: 0.5rem;
-  padding: 0.25rem 1rem;
-}
+.navbar {
+  transition: transform 0.3s ease;
 
-/* Logo e icone all'interno di navbar-brand */
-.navbar-brand {
-  img {
-    width: 70px; // dimensione ridotta per un look più sottile
-  }
-  i {
-    font-size: 1.5rem;
+  &.navbar-hidden {
+    transform: translateY(-100%);
+    @media (max-width: 991px) {
+      transform: translateY(100%);
+    }
   }
 }
 
-/* Icone dei link della navbar */
-.nav-link {
-  i {
-    font-size: 1.5rem;
-  }
-}
-
-/* Dropdown: assicurarsi che il menu sia compatto */
-.dropdown-menu {
-  min-width: 150px;
-}
-
-/* Bottone Logout all'interno del dropdown */
-.btn-logout {
-  background: none;
-  border: none;
-  width: 100%;
-  text-align: left;
+/* Desktop Navbar Styles */
+.navbar-desktop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   padding: 0.5rem 1rem;
-  color: inherit;
+  z-index: 1000;
+
+  .container-fluid {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  .navbar-section {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .navbar-brand {
+    img {
+      height: 40px;
+      width: auto;
+    }
+  }
+
+  .nav-link {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    color: #4a5568;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+
+    i {
+      font-size: 1.2rem;
+    }
+
+    &:hover,
+    &.active {
+      background: #f7fafc;
+      color: #2d3748;
+    }
+  }
 }
 
-/* Responsive: per dispositivi più piccoli */
-@media (max-width: 576px) {
-  .navbar-custom {
-    padding: 0.25rem 0.5rem;
+/* Mobile Bottom Navbar Styles */
+.navbar-mobile {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 -1px 3px rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: space-around;
+  padding: 0.5rem;
+  z-index: 1000;
+
+  .nav-link {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.5rem;
+    color: #4a5568;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+
+    i {
+      font-size: 1.4rem;
+    }
+
+    span {
+      font-size: 0.75rem;
+    }
+
+    &:hover,
+    &.active {
+      color: #2d3748;
+      background: #f7fafc;
+    }
   }
-  .navbar-brand img {
-    width: 60px;
+}
+
+/* Dropdown Styles */
+.dropdown-menu {
+  border: none;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  border-radius: 8px;
+  padding: 0.5rem;
+  min-width: 200px;
+
+  .dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    color: #4a5568;
+
+    i {
+      font-size: 1.1rem;
+    }
+
+    &:hover {
+      background: #f7fafc;
+      color: #2d3748;
+    }
   }
-  .nav-link i {
-    font-size: 1.3rem;
+}
+
+/* Add padding to main content to account for fixed navbars */
+:host + * {
+  padding-top: 73px;
+  @media (max-width: 991px) {
+    padding-top: 0;
+    padding-bottom: 73px;
   }
 }

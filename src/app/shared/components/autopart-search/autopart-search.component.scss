@@ -1,73 +1,122 @@
-/* ------------------------------------------------------------------------- */
-/*                     STILI PER IL COMPONENTE DI RICERCA                    */
-/* ------------------------------------------------------------------------- */
-
 .search-container {
   background: #fff;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  padding: 1.5rem;
-  margin-bottom: 1.5rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 0.75rem;
+  margin-bottom: 1rem;
+  transition: all 0.3s ease;
 }
 
-/* Layout interno del form: uso di flex per mantenere gli elementi allineati */
-.search-container form.row {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
+.search-form {
   width: 100%;
 }
 
-/* Le colonne (per input e filtri) devono avere una larghezza minima e allinearsi */
-.search-container .col-12.col-md-6 {
-  flex: 1 1 300px;
+/* Main Search Row */
+.main-search-row {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.search-input-wrapper {
+  flex: 1;
+  min-width: 0; /* Prevents flex item from overflowing */
+}
+
+.condition-select {
+  width: 180px;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 0.25rem;
+}
+
+/* Input Styles */
+.input-group {
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.input-group-text {
+  background-color: white;
+  border-right: none;
+  padding: 0.5rem 0.75rem;
+}
+
+.form-control,
+.form-select {
+  border-radius: 6px;
+  height: 38px;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #e2e8f0;
+
+  &:focus {
+    box-shadow: none;
+    border-color: #3182ce;
+  }
+}
+
+.form-control {
+  border-left: none;
+}
+
+/* Button Styles */
+.btn-icon {
+  padding: 0.5rem;
+  border: 1px solid #e2e8f0;
+  background: white;
+  border-radius: 6px;
+  line-height: 1;
+  height: 38px;
+  width: 38px;
   display: flex;
   align-items: center;
-  margin-bottom: 0.5rem;
-}
+  justify-content: center;
+  transition: all 0.2s ease;
 
-/* Stili per input group, select e form-control */
-.input-group,
-.form-select,
-.form-control {
-  border-radius: 8px;
-}
-
-/* Stile per il bottone outline */
-.btn-outline-primary {
-  border-color: #007bff;
-  color: #007bff;
-  border-radius: 8px;
-  transition: background-color 0.3s ease;
-}
-
-.btn-outline-primary:hover {
-  background-color: #007bff;
-  color: #fff;
-}
-
-/* ------------------------------------------------------------------------- */
-/*                  ADATTAMENTO PER DISPLAY MOBILE                         */
-/* ------------------------------------------------------------------------- */
-
-/* Su dispositivi molto piccoli (max-width: 576px), semplifichiamo il layout: */
-/* - Nascondiamo gli elementi non essenziali (filtri avanzati) e facciamo in modo */
-/*   che l’input principale occupi l’intera larghezza. */
-
-@media (max-width: 576px) {
-  /* Supponendo che nel markup gli elementi avanzati abbiano una classe "advanced-filters" */
-  .search-container .advanced-filters,
-  .search-container .col-md-6.col-lg-3 {
-    display: none !important;
+  &:hover {
+    background: #f7fafc;
+    border-color: #cbd5e0;
   }
-  .search-container .col-12.col-md-6 {
-    flex: 1 1 100%;
+}
+
+/* Advanced Filters */
+.advanced-filters {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease-out;
+  margin-top: 0;
+
+  &.show {
+    max-height: 500px;
+    margin-top: 1rem;
   }
-  /* Mostriamo un pulsante toggle (se presente nel markup) per espandere i filtri */
-  .search-container .toggle-advanced {
-    display: block;
-    width: 100%;
-    text-align: right;
-    margin-top: 0.5rem;
+}
+
+.filters-grid {
+  display: grid;
+  gap: 0.75rem;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+}
+
+.price-inputs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .search-container {
+    padding: 0.5rem;
+  }
+
+  .main-search-row {
+    gap: 0.25rem;
+  }
+
+  .filters-grid {
+    grid-template-columns: 1fr;
   }
 }

@@ -1,67 +1,115 @@
-<nav class="navbar navbar-expand-lg navbar-custom" *ngIf="isLoggedIn">
-  <div
-    class="container-fluid d-flex justify-content-between align-items-center"
-  >
-    <!-- Tasto Home -->
-    <a class="navbar-brand" routerLink="/user">
-      <i class="bi bi-house-door-fill"></i>
-    </a>
+<nav class="navbar" [class.navbar-hidden]="isScrollingDown" *ngIf="isLoggedIn">
+  <!-- Desktop Navbar -->
+  <div class="navbar-desktop d-none d-lg-flex">
+    <div class="container-fluid">
+      <!-- Left Section -->
+      <div class="navbar-section">
+        <a class="nav-link" routerLink="/user" routerLinkActive="active">
+          <i class="bi bi-house-door"></i>
+          <span>Home</span>
+        </a>
+        <a class="nav-link" routerLink="/user/search" routerLinkActive="active">
+          <i class="bi bi-search"></i>
+          <span>Cerca</span>
+        </a>
+      </div>
 
-    <!-- Logo centrato -->
-    <a class="navbar-brand mx-auto" routerLink="/user/home">
-      <img src="/assets/logo2.png" alt="RaikoParts Logo" />
-    </a>
+      <!-- Center Logo -->
+      <a class="navbar-brand" routerLink="/user/home">
+        <img src="/assets/logo2.png" alt="RaikoParts Logo" />
+      </a>
 
-    <!-- Icone a destra -->
-    <div class="d-flex align-items-center">
-      <ul class="navbar-nav flex-row mb-0">
-        <!-- Notifiche -->
-        <li class="nav-item me-3">
-          <a class="nav-link" routerLink="/user/notifications">
-            <i class="bi bi-bell-fill"></i>
-          </a>
-        </li>
-
-        <!-- Preferiti -->
-        <li class="nav-item me-3">
-          <a class="nav-link" routerLink="/user/favourites">
-            <i class="bi bi-bookmark-heart"></i>
-          </a>
-        </li>
-
-        <!-- Dropdown Utente -->
-        <li class="nav-item dropdown">
+      <!-- Right Section -->
+      <div class="navbar-section">
+        <a
+          class="nav-link"
+          routerLink="/user/favorites"
+          routerLinkActive="active"
+        >
+          <i class="bi bi-heart"></i>
+          <span>Preferiti</span>
+        </a>
+        <div class="nav-item dropdown">
           <a
             class="nav-link dropdown-toggle"
-            href="#"
             role="button"
             data-bs-toggle="dropdown"
-            aria-expanded="false"
           >
             <i class="bi bi-person-circle"></i>
+            <span>Account</span>
           </a>
           <ul class="dropdown-menu dropdown-menu-end">
             <li *ngIf="userRole === 'ROLE_RESELLER'">
-              <a class="dropdown-item" routerLink="/reseller">Account</a>
+              <a class="dropdown-item" routerLink="/reseller">
+                <i class="bi bi-person"></i> Account
+              </a>
             </li>
             <li *ngIf="userRole === 'ROLE_USER'">
-              <a class="dropdown-item" routerLink="/user/user-page">Account</a>
+              <a class="dropdown-item" routerLink="/user/user-page">
+                <i class="bi bi-person"></i> Account
+              </a>
             </li>
             <li>
-              <a class="dropdown-item" routerLink="/settings">Settings</a>
+              <a class="dropdown-item" routerLink="/settings">
+                <i class="bi bi-gear"></i> Impostazioni
+              </a>
             </li>
             <li><hr class="dropdown-divider" /></li>
             <li>
-              <a class="dropdown-item" routerLink="/user/favourites"
-                >Preferiti</a
-              >
-            </li>
-            <li>
-              <button class="dropdown-item btn-logout" (click)="logout()">
+              <button class="dropdown-item" (click)="logout()">
                 <i class="bi bi-box-arrow-right"></i> Logout
               </button>
             </li>
           </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile Bottom Navbar -->
+  <div class="navbar-mobile d-lg-none">
+    <a class="nav-link" routerLink="/user" routerLinkActive="active">
+      <i class="bi bi-house-door"></i>
+      <span>Home</span>
+    </a>
+    <a class="nav-link" routerLink="/user/search" routerLinkActive="active">
+      <i class="bi bi-search"></i>
+      <span>Cerca</span>
+    </a>
+    <a class="nav-link" routerLink="/user/favorites" routerLinkActive="active">
+      <i class="bi bi-heart"></i>
+      <span>Preferiti</span>
+    </a>
+    <div class="nav-item dropdown dropup">
+      <a
+        class="nav-link dropdown-toggle"
+        role="button"
+        data-bs-toggle="dropdown"
+      >
+        <i class="bi bi-person-circle"></i>
+        <span>Account</span>
+      </a>
+      <ul class="dropdown-menu dropdown-menu-end">
+        <li *ngIf="userRole === 'ROLE_RESELLER'">
+          <a class="dropdown-item" routerLink="/reseller">
+            <i class="bi bi-person"></i> Account
+          </a>
+        </li>
+        <li *ngIf="userRole === 'ROLE_USER'">
+          <a class="dropdown-item" routerLink="/user/user-page">
+            <i class="bi bi-person"></i> Account
+          </a>
+        </li>
+        <li>
+          <a class="dropdown-item" routerLink="/settings">
+            <i class="bi bi-gear"></i> Impostazioni
+          </a>
+        </li>
+        <li><hr class="dropdown-divider" /></li>
+        <li>
+          <button class="dropdown-item" (click)="logout()">
+            <i class="bi bi-box-arrow-right"></i> Logout
+          </button>
         </li>
       </ul>
     </div>
