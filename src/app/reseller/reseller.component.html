@@ -4,7 +4,7 @@
     <div class="row">
       <!-- Colonna Info Principali -->
       <div class="col-md-8">
-        <div class="d-flex align-items-center mb-3">
+        <div class="d-flex flex-wrap align-items-center mb-3">
           <div class="info-img text-center me-3">
             <img
               [src]="imgUrl + reseller.avatar"
@@ -22,7 +22,7 @@
               </button>
             </div>
           </div>
-          <div class="info-text">
+          <div class="info-text mt-3">
             <h2>{{ reseller.username }}</h2>
             <p><strong>Email:</strong> {{ reseller.email }}</p>
             <p><strong>Nome:</strong> {{ reseller.name }}</p>

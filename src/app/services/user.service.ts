@@ -13,6 +13,10 @@ export class UserService {
   userUrl: string = environment.userUrl;
   updateUserUrl: string = environment.userUpdateUrl;
 
+  getAllUser(): Observable<iUser[]> {
+    return this.http.get<iUser[]>(this.userUrl);
+  }
+
   getUserById(userId: number): Observable<iUser> {
     return this.http.get<iUser>(`${this.userUrl}/${userId}`);
   }
@@ -26,5 +30,9 @@ export class UserService {
       formData.append('avatar', avatar);
     }
     return this.http.put<iUser>(`${this.updateUserUrl}/${id}`, formData);
+  }
+
+  deleteUser(userId: number): Observable<void> {
+    return this.http.delete<void>(`${this.userUrl}/${userId}`);
   }
 }
