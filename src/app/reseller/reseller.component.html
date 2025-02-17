@@ -1,5 +1,5 @@
 <div class="container my-4" *ngIf="reseller">
-  <!-- Sezione Informazioni Rivenditore con effetto satinato -->
+  <!-- Sezione Informazioni Rivenditore -->
   <div class="reseller-info-satin mb-5 p-4">
     <div class="row">
       <!-- Colonna Info Principali -->
@@ -12,7 +12,6 @@
               class="img-fluid rounded-circle"
               style="max-width: 200px"
             />
-            <!-- Pulsante per caricare nuovo prodotto (solo per il proprietario) -->
             <div *ngIf="isOwner" class="mt-3">
               <button
                 class="btn btn-primary"
@@ -45,9 +44,11 @@
           </div>
         </div>
       </div>
-      <!-- Colonna Form Recensione -->
-      <div *ngIf="!isOwner && userRole === 'ROLE_USER'" class="col-md-4">
-        <div class="review-form p-3">
+
+      <!-- Colonna per Recensioni o Form di Valutazione -->
+      <div class="col-md-4">
+        <!-- Se l'utente loggato è USER, mostra il form per inviare una valutazione -->
+        <div *ngIf="userRole === 'ROLE_USER'" class="review-form p-3">
           <h3 class="mb-3">Lascia la tua valutazione</h3>
           <form (ngSubmit)="submitRating()">
             <div class="form-group mb-2">
@@ -79,8 +80,33 @@
             </button>
           </form>
         </div>
+        <!-- Se invece l'utente loggato è il proprietario (reseller) -->
+        <div *ngIf="isOwner" class="p-3">
+          <button class="btn btn-info w-100" (click)="toggleReviews()">
+            {{ showReviews ? "Nascondi recensioni" : "Vedi le recensioni" }}
+          </button>
+        </div>
       </div>
     </div>
+  </div>
+
+  <!-- Sezione per mostrare le recensioni (visibile se showReviews è true) -->
+  <div *ngIf="showReviews" class="mb-4">
+    <h4>Recensioni</h4>
+    <div *ngIf="reviews.length > 0; else noReviews">
+      <div *ngFor="let review of reviews" class="card mb-2">
+        <div class="card-body">
+          <h5 class="card-title">Voto: {{ review.rating }}</h5>
+          <p class="card-text" *ngIf="review.comment">{{ review.comment }}</p>
+          <p class="card-text">
+            <small class="text-muted">Recensito da: {{ review.userId }}</small>
+          </p>
+        </div>
+      </div>
+    </div>
+    <ng-template #noReviews>
+      <p>Nessuna recensione disponibile.</p>
+    </ng-template>
   </div>
 
   <!-- Sezione Prodotti del Rivenditore -->

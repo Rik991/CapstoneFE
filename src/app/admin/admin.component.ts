@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { UserService } from '../services/user.service';
 import { iUser } from '../interfaces/i-user';
 import { environment } from '../../environments/environment.development';
+import { AuthService } from '../auth/auth.service';
 
 @Component({
   selector: 'app-admin',
@@ -11,10 +12,12 @@ import { environment } from '../../environments/environment.development';
 export class AdminComponent {
   users: iUser[] = [];
   imgUrl: string = environment.imgUrl;
+  userRole: string | null = null;
 
-  constructor(private userSvc: UserService) {}
+  constructor(private userSvc: UserService, private authSvc: AuthService) {}
 
   ngOnInit() {
+    this.userRole = this.authSvc.getUserRole();
     this.getAllUsers();
   }
 

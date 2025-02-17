@@ -38,6 +38,10 @@ export class ResellerComponent implements OnInit, OnDestroy {
     userId: 0,
   };
 
+  //proprietà per gestire le recensioni lato reseller
+  reviews: iRating[] = [];
+  showReviews: boolean = false;
+
   private subscriptions: Subscription = new Subscription();
 
   constructor(
@@ -145,5 +149,21 @@ export class ResellerComponent implements OnInit, OnDestroy {
         alert("Errore durante l'invio della valutazione");
       },
     });
+  }
+
+  //toogle per vedere i commenti lato reseller
+  toggleReviews(): void {
+    if (!this.showReviews) {
+      this.ratingSvc.getRatingsForReseller(this.reseller.id!).subscribe({
+        next: (reviews) => {
+          this.reviews = reviews;
+          this.showReviews = true;
+        },
+        error: (err) =>
+          console.error('Impossibile visualizzare recensioni', err),
+      });
+    } else {
+      this.showReviews = false;
+    }
   }
 }

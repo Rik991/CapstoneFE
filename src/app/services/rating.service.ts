@@ -21,4 +21,8 @@ export class RatingService {
       `${this.ratingUrl}/reseller/${resellerId}/average`
     );
   }
+
+  getRatingsForReseller(resellerId: number): Observable<iRating[]> {
+    return this.http.get<iRating[]>(`${this.ratingUrl}/reseller/${resellerId}`);
+  }
 }

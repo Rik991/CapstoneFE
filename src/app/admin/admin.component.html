@@ -1,37 +1,50 @@
 <div class="container mt-5">
   <div class="row">
     <div class="col">
-      <table>
-        <thead>
-          <tr></tr>
-          <tr>
-            USERNAME
-          </tr>
-          <tr>
-            EMAIL
-          </tr>
-          <tr>
-            RUOLO
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let user of users">
-            <td>{{ user.avatar }}</td>
-            <td>{{ user.username }}</td>
-            <td>{{ user.email }}</td>
-            <td>{{ user.phoneNumber }}</td>
-            <td>{{ user.roles }}</td>
-            <td>
-              <button>
-                <i
-                  class="bi bi-trash btn-danger"
+      <h2 class="mb-4">Gestione Utenti</h2>
+      <div class="table-responsive">
+        <table class="table table-striped">
+          <thead class="table-dark">
+            <tr>
+              <th>Avatar</th>
+              <th>Username</th>
+              <th>Email</th>
+              <th>Telefono</th>
+              <th>Ruolo</th>
+              <th>Azioni</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let user of users">
+              <td>
+                <img
+                  [src]="imgUrl + user.avatar"
+                  alt="Avatar"
+                  class="rounded-circle"
+                  style="max-width: 50px"
+                />
+              </td>
+              <td>{{ user.username }}</td>
+              <td>{{ user.email }}</td>
+              <td>{{ user.phoneNumber }}</td>
+              <td>
+                <ng-container *ngFor="let role of user.roles">
+                  <span class="badge bg-info me-1">{{ role }}</span>
+                </ng-container>
+              </td>
+              <td>
+                <!-- Pulsante di delete, visibile se l'utente corrente è admin (controllo opzionale) -->
+                <button
+                  class="btn btn-danger btn-sm"
                   (click)="deleteUser(user.id)"
-                ></i>
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+                >
+                  <i class="bi bi-trash"></i> Elimina
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
 </div>
