@@ -1,14 +1,18 @@
 export const environment = {
-  registerUserUrl: 'http://localhost:8080/api/auth/register-user',
-  registerResellerUrl: 'http://localhost:8080/api/auth/register-reseller',
-  userUrl: 'http://localhost:8080/api/auth',
-  userUpdateUrl: 'http://localhost:8080/api/auth/update-user',
-  loginUrl: 'http://localhost:8080/api/auth/login',
-  autopartsUrl: 'http://localhost:8080/api/autoparts',
-  resellerUrl: 'http://localhost:8080/api/reseller',
-  vehicleUrl: 'http://localhost:8080/api/vehicle',
+  registerUserUrl:
+    'https://tame-aurel-rik991-3ce4f269.koyeb.app/api/auth/register-user',
+  registerResellerUrl:
+    'https://tame-aurel-rik991-3ce4f269.koyeb.app/api/auth/register-reseller',
+  userUrl: 'https://tame-aurel-rik991-3ce4f269.koyeb.app/api/auth',
+  userUpdateUrl:
+    'https://tame-aurel-rik991-3ce4f269.koyeb.app/api/auth/update-user',
+  loginUrl: 'https://tame-aurel-rik991-3ce4f269.koyeb.app/api/auth/login',
+  autopartsUrl: 'https://tame-aurel-rik991-3ce4f269.koyeb.app/api/autoparts',
+  resellerUrl: 'https://tame-aurel-rik991-3ce4f269.koyeb.app/api/reseller',
+  vehicleUrl: 'https://tame-aurel-rik991-3ce4f269.koyeb.app/api/vehicle',
   imgUrl: 'https://capstoneautomotive.s3.eu-north-1.amazonaws.com/',
-  favouriteUrl: 'http://localhost:8080/api/favourites',
-  resellerUpdateUrl: 'http://localhost:8080/api/auth/update-reseller',
-  ratingUrl: 'http://localhost:8080/api/ratings',
+  favouriteUrl: 'https://tame-aurel-rik991-3ce4f269.koyeb.app/api/favourites',
+  resellerUpdateUrl:
+    'https://tame-aurel-rik991-3ce4f269.koyeb.app/api/auth/update-reseller',
+  ratingUrl: 'https://tame-aurel-rik991-3ce4f269.koyeb.app/api/ratings',
 };

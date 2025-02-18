@@ -30,6 +30,7 @@ export class UserComponent implements OnInit, OnDestroy {
   favouriteIds: Set<number> = new Set<number>();
   userRole: string | null = null;
   private subscriptions: Subscription = new Subscription();
+  isLoading = false;
 
   constructor(
     private authSvc: AuthService,
@@ -87,6 +88,7 @@ export class UserComponent implements OnInit, OnDestroy {
   }
 
   loadAutoparts(): void {
+    this.isLoading = true;
     const filters = {
       ...this.currentFilters,
       page: this.currentPage - 1,
@@ -98,6 +100,7 @@ export class UserComponent implements OnInit, OnDestroy {
         this.autoparts = response.content;
         this.totalItems = response.totalElements;
         this.totalPages = Math.ceil(this.totalItems / this.pageSize);
+        this.isLoading = false;
       },
       error: (err) => console.error('Error loading autoparts:', err),
     });
