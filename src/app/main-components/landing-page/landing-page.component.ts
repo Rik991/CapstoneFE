@@ -35,4 +35,10 @@ export class LandingPageComponent {
   hideForm(): void {
     this.currentForm = null;
   }
+  onRegistrationComplete(): void {
+    // Nascondiamo il form di registrazione e mostriamo quello di login
+    setTimeout(() => {
+      this.showForm('login');
+    }, 500); // Piccolo delay per permettere all'alert di essere visualizzato
+  }
 }

@@ -112,6 +112,7 @@
               <app-register
                 *ngSwitchCase="'register'"
                 (close)="hideForm()"
+                (registrationComplete)="onRegistrationComplete()"
               ></app-register>
             </ng-container>
           </div>
@@ -136,6 +137,7 @@
               <app-register
                 *ngSwitchCase="'register'"
                 (close)="hideForm()"
+                (registrationComplete)="onRegistrationComplete()"
               ></app-register>
             </ng-container>
           </div>

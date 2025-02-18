@@ -12,6 +12,7 @@ import { take } from 'rxjs';
 export class RegisterComponent implements OnInit {
   form!: FormGroup;
   currentStep: number = 1; // Gestione degli step del form (se necessario)
+  @Output() registrationComplete = new EventEmitter<void>();
   @Output() close = new EventEmitter<void>();
 
   constructor(
@@ -92,7 +93,8 @@ export class RegisterComponent implements OnInit {
         .pipe(take(1))
         .subscribe({
           next: () => {
-            this.router.navigate(['/']);
+            this.registrationComplete.emit();
+            this.router.navigate(['']);
             alert('Reseller registration successful');
           },
           error: () => alert('Error during reseller registration'),
@@ -103,7 +105,8 @@ export class RegisterComponent implements OnInit {
         .pipe(take(1))
         .subscribe({
           next: () => {
-            this.router.navigate(['/']);
+            this.registrationComplete.emit();
+            this.router.navigate(['']);
             alert('User registration successful');
           },
           error: () => alert('Error during registration'),
