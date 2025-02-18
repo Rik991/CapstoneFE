@@ -10,6 +10,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { iRating } from '../interfaces/i-rating';
 import { RatingService } from '../services/rating.service';
+import { UserService } from '../services/user.service';
 
 @Component({
   selector: 'app-reseller',
@@ -21,6 +22,7 @@ export class ResellerComponent implements OnInit, OnDestroy {
   autoparts: iAutopartResponse[] = [];
   imgUrl: string = environment.imgUrl;
   userRole: string | null = null;
+  username: string | null = null;
 
   // Aggiungiamo la proprietà per verificare se l'utente è proprietario
   isOwner: boolean = false;
@@ -48,7 +50,6 @@ export class ResellerComponent implements OnInit, OnDestroy {
     private authSvc: AuthService,
     private autopartSvc: AutopartsService,
     private resellerSvc: ResellerService,
-    private fb: FormBuilder,
     private route: ActivatedRoute,
     private ratingSvc: RatingService
   ) {}
@@ -156,6 +157,13 @@ export class ResellerComponent implements OnInit, OnDestroy {
     if (!this.showReviews) {
       this.ratingSvc.getRatingsForReseller(this.reseller.id!).subscribe({
         next: (reviews) => {
+          // Mappa ogni review per assicurarti che userId sia valorizzato
+          reviews.forEach((review: iRating & { user?: any }) => {
+            if (!review.userId && review.user && review.user.id) {
+              review.userId = review.user.id;
+              this.username = review.user.username;
+            }
+          });
           this.reviews = reviews;
           this.showReviews = true;
         },
