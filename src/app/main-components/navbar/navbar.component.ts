@@ -50,4 +50,8 @@ export class NavbarComponent implements OnInit, OnDestroy {
     this.router.navigate(['/']);
     alert('logout effettuato correttamente');
   }
+
+  scrollToTop(): void {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
 }
