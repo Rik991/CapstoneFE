@@ -1,4 +1,4 @@
-<div class="container mt-5">
+<div class="container mt-5" *ngIf="userRole === 'ROLE_ADMIN'">
   <div class="row">
     <div class="col">
       <h2 class="mb-4">Gestione Utenti</h2>
@@ -47,4 +47,12 @@
       </div>
     </div>
   </div>
+</div>
+<div
+  class="mt-5"
+  *ngIf="userRole === 'ROLE_USER' || userRole === 'ROLE_RESELLER'"
+>
+  <h5 class="p-5">
+    Non sei autorizzato a vedere il contenuto di questa pagina!
+  </h5>
 </div>
