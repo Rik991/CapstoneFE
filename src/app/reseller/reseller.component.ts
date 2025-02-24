@@ -23,6 +23,11 @@ export class ResellerComponent implements OnInit, OnDestroy {
   imgUrl: string = environment.imgUrl;
   userRole: string | null = null;
   username: string | null = null;
+  currentPage: number = 1;
+  pageSize: number = 10;
+  totalItems: number = 0;
+  totalPages: number = 0;
+  isLoading: boolean = false;
 
   // Aggiungiamo la proprietà per verificare se l'utente è proprietario
   isOwner: boolean = false;

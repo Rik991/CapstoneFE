@@ -1,84 +1,121 @@
-<div class="container" *ngIf="account">
-  <h1>Impostazioni Account</h1>
-  <!-- Se l'utente è un reseller, mostra anche la possibilità di modificare la foto -->
-  <div class="row mb-4">
-    <div class="col-md-4 text-center">
-      <img
-        [src]="
-          account.avatar ? imgUrl + account.avatar : 'assets/placeholder.jpg'
-        "
-        alt="Avatar"
-        class="img-fluid rounded-circle m-2 w-75"
-      />
-      <!-- Pulsante per cambiare la foto, visibile se l'utente è proprietario (o loggato) -->
-      <div>
-        <button class="btn btn-outline-primary" (click)="fileInput.click()">
-          Modifica foto
-        </button>
-        <input
-          type="file"
-          #fileInput
-          style="display: none"
-          (change)="onAvatarSelected($event)"
-        />
-      </div>
-    </div>
-    <div class="col-md-8">
-      <form [formGroup]="settingsForm" (ngSubmit)="onSubmit()">
-        <!-- Campi comuni -->
-        <div class="form-group">
-          <label>Email:</label>
-          <input type="email" formControlName="email" class="form-control" />
-        </div>
-        <div class="form-group">
-          <label>Nome:</label>
-          <input type="text" formControlName="name" class="form-control" />
-        </div>
-        <div class="form-group">
-          <label>Cognome:</label>
-          <input type="text" formControlName="surname" class="form-control" />
-        </div>
-        <div class="form-group">
-          <label>Telefono:</label>
+<!-- settings.component.html -->
+<div class="container my-5 p-0" *ngIf="account">
+  <div class="mb-4">
+    <h1 class="display-5 fw-bold mb-1">Impostazioni Account</h1>
+    <hr class="my-3" />
+  </div>
+
+  <div class="user-info-satin">
+    <div class="row">
+      <div class="col-md-4 text-center mb-4 mb-md-0">
+        <div class="avatar-edit d-flex flex-column align-items-center">
+          <img
+            [src]="
+              account.avatar
+                ? imgUrl + account.avatar
+                : 'assets/placeholder.jpg'
+            "
+            alt="Avatar"
+            class="img-fluid rounded-circle"
+          />
+          <button
+            class="btn btn-outline-primary mt-3 mx-auto"
+            (click)="fileInput.click()"
+          >
+            <i class="bi bi-camera me-2"></i>Modifica foto
+          </button>
           <input
-            type="text"
-            formControlName="phoneNumber"
-            class="form-control"
+            type="file"
+            #fileInput
+            class="d-none"
+            (change)="onAvatarSelected($event)"
           />
         </div>
-        <!-- Campi extra per reseller -->
-        <div *ngIf="isReseller">
-          <div class="form-group">
-            <label>Ragione Sociale:</label>
-            <input
-              type="text"
-              formControlName="ragioneSociale"
-              class="form-control"
-            />
+      </div>
+
+      <div class="col-md-8">
+        <form
+          [formGroup]="settingsForm"
+          (ngSubmit)="onSubmit()"
+          class="glass-form p-4"
+        >
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label">Email</label>
+              <input
+                type="email"
+                formControlName="email"
+                class="form-control"
+              />
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label">Telefono</label>
+              <input
+                type="text"
+                formControlName="phoneNumber"
+                class="form-control"
+              />
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label">Nome</label>
+              <input type="text" formControlName="name" class="form-control" />
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label">Cognome</label>
+              <input
+                type="text"
+                formControlName="surname"
+                class="form-control"
+              />
+            </div>
+
+            <div *ngIf="isReseller" class="col-12 mt-3">
+              <h5 class="border-bottom pb-2 mb-3">Dati Aziendali</h5>
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <label class="form-label">Ragione Sociale</label>
+                  <input
+                    type="text"
+                    formControlName="ragioneSociale"
+                    class="form-control"
+                  />
+                </div>
+
+                <div class="col-md-6">
+                  <label class="form-label">Partita IVA</label>
+                  <input
+                    type="text"
+                    formControlName="partitaIva"
+                    class="form-control"
+                  />
+                </div>
+
+                <div class="col-12">
+                  <label class="form-label">Sito Web</label>
+                  <input
+                    type="text"
+                    formControlName="sitoWeb"
+                    class="form-control"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div class="col-12 mt-4">
+              <button
+                type="submit"
+                class="btn btn-primary w-100"
+                [disabled]="!settingsForm.valid"
+              >
+                <i class="bi bi-save me-2"></i>Salva modifiche
+              </button>
+            </div>
           </div>
-          <div class="form-group">
-            <label>Partita IVA:</label>
-            <input
-              type="text"
-              formControlName="partitaIva"
-              class="form-control"
-            />
-          </div>
-          <div class="form-group">
-            <label>Sito Web:</label>
-            <input type="text" formControlName="sitoWeb" class="form-control" />
-          </div>
-        </div>
-        <div class="mt-3">
-          <button
-            type="submit"
-            class="btn btn-success"
-            [disabled]="!settingsForm.valid"
-          >
-            Salva
-          </button>
-        </div>
-      </form>
+        </form>
+      </div>
     </div>
   </div>
 </div>

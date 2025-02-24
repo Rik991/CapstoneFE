@@ -1,0 +1,36 @@
+// settings.component.scss
+.avatar-edit {
+  img {
+    width: 200px;
+    height: 200px;
+    object-fit: contain;
+    border: 4px solid white;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    margin-bottom: 1rem;
+  }
+
+  input[type="file"] {
+    position: absolute;
+    opacity: 0;
+  }
+}
+
+.glass-form {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 20px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
+
+  .form-label {
+    font-weight: 500;
+    color: #2d3748;
+  }
+}
+
+@media (max-width: 767px) {
+  .avatar-edit img {
+    width: 150px;
+    height: 150px;
+  }
+}

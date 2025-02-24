@@ -1,3 +1,92 @@
-.img-fluid {
-  max-width: 500px;
+// reseller.component.scss
+.glass-table {
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
+
+  th {
+    background: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(10px);
+    border-bottom: 2px solid rgba(0, 0, 0, 0.1);
+  }
+
+  td {
+    vertical-align: middle;
+  }
+}
+
+.table-thumb {
+  width: 80px;
+  height: 60px;
+  object-fit: contain;
+  padding: 0.25rem;
+  background: white;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.rating-badge {
+  width: 120px;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+
+  .stars {
+    font-size: 0.8rem;
+    margin-top: 0.25rem;
+  }
+}
+
+.rating-badge-small {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.glass-form {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+@media (max-width: 767px) {
+  .glass-table {
+    border-radius: 16px;
+    overflow: hidden;
+
+    thead {
+      display: none;
+    }
+
+    tr {
+      display: block;
+      margin-bottom: 1rem;
+      background: rgba(255, 255, 255, 0.8);
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    td {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.75rem;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+
+      &::before {
+        content: attr(data-label);
+        font-weight: 500;
+        margin-right: auto;
+        padding-right: 1rem;
+      }
+
+      &:last-child {
+        border-bottom: none;
+      }
+    }
+  }
 }
