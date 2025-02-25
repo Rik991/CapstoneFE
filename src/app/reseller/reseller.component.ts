@@ -1,16 +1,16 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Subscription, take } from 'rxjs';
 import { AuthService } from '../auth/auth.service';
 import { iReseller } from '../interfaces/i-reseller';
 import { iAutopartResponse } from '../interfaces/i-autopart-response';
 import { AutopartsService } from '../services/autopart.service';
 import { environment } from '../../environments/environment.development';
-import { Subscription, take } from 'rxjs';
 import { ResellerService } from '../services/reseller.service';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { iRating } from '../interfaces/i-rating';
 import { RatingService } from '../services/rating.service';
 import { UserService } from '../services/user.service';
+import { FavouriteService } from '../services/favourite.service'; // Assicurati che il percorso sia corretto
 
 @Component({
   selector: 'app-reseller',
@@ -22,22 +22,16 @@ export class ResellerComponent implements OnInit, OnDestroy {
   autoparts: iAutopartResponse[] = [];
   imgUrl: string = environment.imgUrl;
   userRole: string | null = null;
-  username: string | null = null;
   currentPage: number = 1;
   pageSize: number = 10;
   totalItems: number = 0;
   totalPages: number = 0;
   isLoading: boolean = false;
 
-  // Aggiungiamo la proprietà per verificare se l'utente è proprietario
+  // Proprietà per verificare se l'utente è il proprietario (reseller)
   isOwner: boolean = false;
 
-  // Reactive form per la modifica dei dati
-  resellerForm!: FormGroup;
-  editMode: boolean = false;
-  selectedAvatar?: File;
-
-  // Proprietà per gestire il nuovo rating da inviare
+  // Proprietà per la gestione del nuovo rating da inviare
   newRating: iRating = {
     rating: 5,
     comment: '',
@@ -45,9 +39,17 @@ export class ResellerComponent implements OnInit, OnDestroy {
     userId: 0,
   };
 
-  //proprietà per gestire le recensioni lato reseller
+  // Proprietà per le recensioni
   reviews: iRating[] = [];
   showReviews: boolean = false;
+  // Proprietà per rendere il form di valutazione retrattile (per utenti cliente)
+  showRatingForm: boolean = false;
+
+  // Proprietà per la gestione dei preferiti
+  favouriteIds: Set<number> = new Set<number>();
+
+  // Per l'anteprima delle immagini
+  selectedImageUrl: string | null = null;
 
   private subscriptions: Subscription = new Subscription();
 
@@ -56,11 +58,14 @@ export class ResellerComponent implements OnInit, OnDestroy {
     private autopartSvc: AutopartsService,
     private resellerSvc: ResellerService,
     private route: ActivatedRoute,
-    private ratingSvc: RatingService
+    private ratingSvc: RatingService,
+    private userService: UserService,
+    private favouriteSvc: FavouriteService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
-    // Sottoscrizione per ottenere l'utente autenticato e impostare userRole e newRating.userId
+    // Sottoscrizione per ottenere l'utente autenticato
     this.subscriptions.add(
       this.authSvc.user$.subscribe((user) => {
         if (user) {
@@ -70,7 +75,7 @@ export class ResellerComponent implements OnInit, OnDestroy {
       })
     );
 
-    // Carica i dati del reseller: se nella route c'è un id, usalo, altrimenti usa l'utente loggato
+    // Carica i dati del reseller
     this.route.paramMap.pipe(take(1)).subscribe((params) => {
       const idParam = params.get('id');
       if (idParam) {
@@ -89,13 +94,11 @@ export class ResellerComponent implements OnInit, OnDestroy {
     this.subscriptions.unsubscribe();
   }
 
-  // Carica i dati del reseller dal back-end
   private loadResellerData(resellerId: number): void {
     this.resellerSvc.getResellerById(resellerId).subscribe({
       next: (reseller) => {
         this.reseller = reseller;
         this.newRating.resellerId = reseller.id!;
-        // Imposta isOwner confrontando l'id dell'utente loggato con quello del reseller
         const currentUser = this.authSvc.getCurrentUser();
         this.isOwner = currentUser ? currentUser.id === reseller.id : false;
         // Aggiorna il rating medio
@@ -105,24 +108,34 @@ export class ResellerComponent implements OnInit, OnDestroy {
             console.error('Errore nel caricamento del rating medio:', err),
         });
         this.loadAutoparts();
+        this.loadFavourites();
       },
       error: (err) => console.error('Error loading reseller:', err),
     });
   }
 
-  // Carica gli articoli (autoparts) associati
   private loadAutoparts(): void {
     if (!this.reseller?.id) {
       console.error('Reseller ID not available');
       return;
     }
-    this.autopartSvc.getByReseller(this.reseller.id).subscribe({
-      next: (page) => (this.autoparts = page.content),
-      error: (err) => console.error('Error loading autoparts:', err),
-    });
+    this.isLoading = true;
+    this.autopartSvc
+      .getByReseller(this.reseller.id, this.currentPage - 1, this.pageSize)
+      .subscribe({
+        next: (page) => {
+          this.autoparts = page.content;
+          this.totalItems = page.totalElements;
+          this.totalPages = Math.ceil(this.totalItems / this.pageSize);
+          this.isLoading = false;
+        },
+        error: (err) => {
+          console.error('Error loading autoparts:', err);
+          this.isLoading = false;
+        },
+      });
   }
 
-  // Permette di eliminare un articolo (autopart)
   deleteAutopart(autopartId: number): void {
     if (confirm('Are you sure you want to delete this item?')) {
       this.autopartSvc.deleteAutopart(autopartId).subscribe({
@@ -141,9 +154,8 @@ export class ResellerComponent implements OnInit, OnDestroy {
       return;
     }
     this.ratingSvc.submitRating(this.newRating).subscribe({
-      next: (response) => {
+      next: () => {
         alert('Valutazione inviata con successo!');
-        // Dopo l'invio, aggiorniamo il rating medio
         this.ratingSvc.getAverageRating(this.newRating.resellerId).subscribe({
           next: (avg) => (this.reseller.ratingMedio = avg),
           error: (err) =>
@@ -157,18 +169,10 @@ export class ResellerComponent implements OnInit, OnDestroy {
     });
   }
 
-  //toogle per vedere i commenti lato reseller
   toggleReviews(): void {
     if (!this.showReviews) {
       this.ratingSvc.getRatingsForReseller(this.reseller.id!).subscribe({
         next: (reviews) => {
-          // Mappa ogni review per assicurarti che userId sia valorizzato
-          reviews.forEach((review: iRating & { user?: any }) => {
-            if (!review.userId && review.user && review.user.id) {
-              review.userId = review.user.id;
-              this.username = review.user.username;
-            }
-          });
           this.reviews = reviews;
           this.showReviews = true;
         },
@@ -178,5 +182,64 @@ export class ResellerComponent implements OnInit, OnDestroy {
     } else {
       this.showReviews = false;
     }
+  }
+
+  toggleRatingForm(): void {
+    this.showRatingForm = !this.showRatingForm;
+  }
+
+  // Metodi per i preferiti
+  loadFavourites(): void {
+    this.favouriteSvc.getFavouriteByUser().subscribe({
+      next: (favourites: any[]) => {
+        favourites.forEach((fav) => {
+          this.favouriteIds.add(fav.autopartId);
+        });
+      },
+      error: (err) =>
+        console.error('Errore nel caricamento dei preferiti', err),
+    });
+  }
+
+  toggleFavourite(autopartId: number): void {
+    if (this.favouriteIds.has(autopartId)) {
+      this.favouriteSvc.removeFavourite(autopartId).subscribe({
+        next: () => {
+          this.favouriteIds.delete(autopartId);
+          alert('Ricambio rimosso dai preferiti');
+        },
+        error: (err) =>
+          console.error('Errore nella rimozione del preferito', err),
+      });
+    } else {
+      this.favouriteSvc.addFavourite(autopartId).subscribe({
+        next: () => {
+          this.favouriteIds.add(autopartId);
+          alert('Ricambio aggiunto ai preferiti');
+        },
+        error: (err) => console.error('Impossibile aggiungere preferito', err),
+      });
+    }
+  }
+
+  openLightbox(url: string): void {
+    this.selectedImageUrl = url;
+  }
+
+  closeLightbox(): void {
+    this.selectedImageUrl = null;
+  }
+
+  onPageChange(page: number): void {
+    if (page >= 1 && page <= this.totalPages) {
+      this.currentPage = page;
+      this.loadAutoparts();
+    }
+  }
+
+  getPages(): number[] {
+    return Array(this.totalPages)
+      .fill(0)
+      .map((_, i) => i + 1);
   }
 }

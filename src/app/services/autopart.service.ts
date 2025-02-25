@@ -33,9 +33,18 @@ export class AutopartsService {
     );
   }
 
-  getByReseller(resellerId: number): Observable<IPage<iAutopartResponse>> {
+  getByReseller(
+    resellerId: number,
+    page: number = 0,
+    size: number = 20
+  ): Observable<IPage<iAutopartResponse>> {
+    const params = new HttpParams()
+      .set('page', page.toString())
+      .set('size', size.toString());
+
     return this.http.get<IPage<iAutopartResponse>>(
-      `${this.autopartsUrl}/public/reseller/${resellerId}`
+      `${this.autopartsUrl}/public/reseller/${resellerId}`,
+      { params }
     );
   }
 
