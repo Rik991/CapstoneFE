@@ -8,7 +8,7 @@ import {
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { VehicleService } from '../../../services/vehicle.service';
 import { iVehicle } from '../../../interfaces/i-vehicle';
-import { Subscription } from 'rxjs';
+import { debounceTime, distinctUntilChanged, filter, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-autopart-search',
@@ -39,13 +39,48 @@ export class AutopartSearchComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.loadBrands();
-    const formSub = this.searchForm.valueChanges.subscribe((filters) => {
-      if (filters.search) {
-        filters.search = filters.search.toLowerCase();
-      }
-      this.searchChange.emit(filters);
-    });
-    this.subscriptions.add(formSub);
+
+    // debounce per la ricerca
+    const searchControlSub = this.searchForm
+      .get('search')
+      ?.valueChanges.pipe(
+        debounceTime(500),
+        filter((value: string) => !value || value.length >= 3) // Filtro, vuoto o almeno 3 caratteri per partire
+      )
+      .subscribe((value) => {
+        if (value) {
+          const currentFilters = this.searchForm.value;
+          currentFilters.search = (value as string).toLowerCase();
+          this.searchChange.emit(currentFilters);
+        } else if (value === '') {
+          const currentFilters = this.searchForm.value;
+          currentFilters.search = '';
+          this.searchChange.emit(currentFilters);
+        }
+      });
+
+    this.subscriptions.add(searchControlSub);
+
+    // altri campi di ricerca
+    const otherFieldsSub = this.searchForm.valueChanges
+      .pipe(
+        debounceTime(300), // Debounce più breve per gli altri campi
+        distinctUntilChanged((prev, curr) => {
+          // Ignora i cambiamenti del campo 'search' qui, poiché lo gestiamo separatamente
+          const prevWithoutSearch = { ...prev, search: null };
+          const currWithoutSearch = { ...curr, search: null };
+          return (
+            JSON.stringify(prevWithoutSearch) ===
+            JSON.stringify(currWithoutSearch)
+          );
+        })
+      )
+      .subscribe((filters) => {
+        // Non modifichiamo qui il valore di search, perché è gestito separatamente
+        this.searchChange.emit(filters);
+      });
+
+    this.subscriptions.add(otherFieldsSub);
   }
 
   ngOnDestroy(): void {

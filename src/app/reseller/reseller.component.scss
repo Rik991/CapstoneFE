@@ -53,6 +53,20 @@
   border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
+.stars-container {
+  display: flex;
+  font-size: 1rem;
+  line-height: 1;
+
+  .bi-star-fill {
+    color: #ffc107; // Colore dorato per le stelline
+  }
+
+  .bi-star {
+    color: #d1d1d1; // Colore grigio chiaro per le stelline vuote
+  }
+}
+
 @media (max-width: 767px) {
   .glass-table {
     border-radius: 16px;

@@ -4,4 +4,12 @@ export interface iRating {
   comment?: string;
   resellerId: number;
   userId: number;
+  user?: {
+    id: number;
+    username: string;
+  };
+  reseller?: {
+    id: number;
+    username: string;
+  };
 }
