@@ -209,7 +209,6 @@
         <span class="badge bg-primary rounded-pill">{{
           autoparts.length
         }}</span>
-        <!-- Tasto "Carica prodotto" spostato qui per i proprietari -->
         <button
           *ngIf="isOwner"
           class="btn btn-outline-primary"
@@ -261,8 +260,7 @@
             <td>
               <h6 class="mb-0">{{ autopart.nome }}</h6>
               <small
-                class="text-muted text-truncate d-block"
-                style="max-width: 300px"
+                class="text-muted text-truncate d-block d-sm-none d-md-block"
               >
                 {{ autopart.descrizione || "Nessuna descrizione" }}
               </small>
