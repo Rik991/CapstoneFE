@@ -319,15 +319,4 @@
       </div>
     </div>
   </div>
-  <!-- Lightbox per ingrandire le immagini -->
-  <div
-    class="lightbox-overlay"
-    *ngIf="selectedImageUrl"
-    (click)="closeLightbox()"
-  >
-    <div class="lightbox-content" (click)="$event.stopPropagation()">
-      <img [src]="selectedImageUrl" alt="Enlarged image" />
-      <button class="btn-close" (click)="closeLightbox()">×</button>
-    </div>
-  </div>
 </div>
